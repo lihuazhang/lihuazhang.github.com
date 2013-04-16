@@ -1,0 +1,11 @@
+{% capture root_url %}{{ site.root | strip_slash }}{% endcapture %}
+{% include head.html %}
+
+<body>
+{% include header.html %}
+
+{{ content }}
+
+{% include javascript.html %}
+</body>
+</html>

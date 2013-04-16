@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <id>http://8atmyhouse.com</id>
+  <title><![CDATA[晋恒温]]></title>
+  <updated>2013-04-16T23:38:34+08:00</updated>
+  
+  <author>
+    <name><![CDATA[晋恒温]]></name>
+    
+  </author>
+  
+  <link href="http://8atmyhouse.com/atom.xml" rel="self" />
+
+  
+  <entry>
+    <id>http://8atmyhouse.com/blog/using-shjs-for-jekyll</id>
+    <title><![CDATA[Using SHJS for Jekyll]]></title>
+    <updated>2013-02-02T18:32:00+08:00</updated>
+    <link href="http://8atmyhouse.com/blog/using-shjs-for-jekyll.html" />
+    <content type="html"><![CDATA[<p>我不想用Octopress自带的代码高亮插件，所以自己写了个插件，借助 <a href="http://shjs.sourceforge.net">SHJS</a> 实现代码高亮。由于Haml的缩进问题，不得以把每行代码都用code标签包了下～</p>
+
+<p>使用方法：<code>sh [:lang]</code>，<code>[:lang]</code>默认是<code>:js</code>。</p>
+
+<p>插件代码如下：</p>
+<div class="highlight"><pre><code class="ruby"><span class="c1"># To highlight source code in an HTML document using SHJS for Jekyll</span>
+<span class="c1"># (c) 晋恒温 | http://MrZhang.me | MIT Licensed.</span>
+
+<span class="nb">require</span> <span class="s2">&quot;cgi&quot;</span>
+
+<span class="k">module</span> <span class="nn">Jekyll</span>
+
+  <span class="k">class</span> <span class="nc">SHJS</span> <span class="o">&lt;</span> <span class="ss">Liquid</span><span class="p">:</span><span class="ss">:Block</span>
+
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">tag_name</span><span class="p">,</span> <span class="n">markup</span><span class="p">,</span> <span class="n">tokens</span><span class="p">)</span>
+      <span class="vi">@lang</span> <span class="o">=</span> <span class="s2">&quot;js&quot;</span>
+      <span class="k">if</span> <span class="n">markup</span> <span class="o">=~</span> <span class="sr">/\s*:(\w+)/i</span>
+        <span class="vi">@lang</span> <span class="o">=</span> <span class="vg">$1</span>
+      <span class="k">end</span>
+      <span class="vi">@lang</span> <span class="o">=</span> <span class="n">format_lang</span> <span class="vi">@lang</span>
+      <span class="k">super</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+      <span class="n">source</span> <span class="o">=</span> <span class="s2">&quot;&lt;pre class=&#39;sh_</span><span class="si">#{</span> <span class="vi">@lang</span> <span class="si">}</span><span class="s2">&#39;&gt;&quot;</span>
+      <span class="n">code</span> <span class="o">=</span> <span class="no">CGI</span><span class="o">.</span><span class="n">escapeHTML</span> <span class="k">super</span><span class="o">.</span><span class="n">lstrip</span><span class="o">.</span><span class="n">rstrip</span>
+      <span class="n">code</span><span class="o">.</span><span class="n">lines</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">line</span><span class="o">|</span>
+        <span class="n">source</span> <span class="o">+=</span> <span class="s2">&quot;&lt;code&gt;</span><span class="si">#{</span> <span class="n">line</span> <span class="si">}</span><span class="s2">&lt;/code&gt;&quot;</span>
+      <span class="k">end</span>
+      <span class="n">source</span> <span class="o">+=</span> <span class="s2">&quot;&lt;/pre&gt;&quot;</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">format_lang</span><span class="p">(</span><span class="n">lang</span><span class="p">)</span>
+      <span class="k">return</span> <span class="s2">&quot;javascript&quot;</span> <span class="k">if</span> <span class="n">lang</span> <span class="o">==</span> <span class="s2">&quot;js&quot;</span>
+      <span class="k">return</span> <span class="s2">&quot;ruby&quot;</span> <span class="k">if</span> <span class="n">lang</span> <span class="o">==</span> <span class="s2">&quot;ru&quot;</span>
+      <span class="n">lang</span>
+    <span class="k">end</span>
+
+  <span class="k">end</span>
+
+<span class="k">end</span>
+
+<span class="ss">Liquid</span><span class="p">:</span><span class="ss">:Template</span><span class="o">.</span><span class="n">register_tag</span><span class="p">(</span><span class="s2">&quot;sh&quot;</span><span class="p">,</span> <span class="ss">Jekyll</span><span class="p">:</span><span class="ss">:SHJS</span><span class="p">)</span>
+</code></pre></div>]]></content>
+  </entry>
+  
+  <entry>
+    <id>http://8atmyhouse.com/blog/using-shjs-for-jekyll</id>
+    <title><![CDATA[Using SHJS for Jekyll]]></title>
+    <updated>2012-12-02T18:32:00+08:00</updated>
+    <link href="http://8atmyhouse.com/blog/using-shjs-for-jekyll.html" />
+    <content type="html"><![CDATA[<p>我不想用Octopress自带的代码高亮插件，所以自己写了个插件，借助 <a href="http://shjs.sourceforge.net">SHJS</a> 实现代码高亮。由于Haml的缩进问题，不得以把每行代码都用code标签包了下～</p>
+
+<p>使用方法：<code>sh [:lang]</code>，<code>[:lang]</code>默认是<code>:js</code>。</p>
+
+<p>插件代码如下：</p>
+<div class="highlight"><pre><code class="ruby"><span class="c1"># To highlight source code in an HTML document using SHJS for Jekyll</span>
+<span class="c1"># (c) 晋恒温 | http://MrZhang.me | MIT Licensed.</span>
+
+<span class="nb">require</span> <span class="s2">&quot;cgi&quot;</span>
+
+<span class="k">module</span> <span class="nn">Jekyll</span>
+
+  <span class="k">class</span> <span class="nc">SHJS</span> <span class="o">&lt;</span> <span class="ss">Liquid</span><span class="p">:</span><span class="ss">:Block</span>
+
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">tag_name</span><span class="p">,</span> <span class="n">markup</span><span class="p">,</span> <span class="n">tokens</span><span class="p">)</span>
+      <span class="vi">@lang</span> <span class="o">=</span> <span class="s2">&quot;js&quot;</span>
+      <span class="k">if</span> <span class="n">markup</span> <span class="o">=~</span> <span class="sr">/\s*:(\w+)/i</span>
+        <span class="vi">@lang</span> <span class="o">=</span> <span class="vg">$1</span>
+      <span class="k">end</span>
+      <span class="vi">@lang</span> <span class="o">=</span> <span class="n">format_lang</span> <span class="vi">@lang</span>
+      <span class="k">super</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+      <span class="n">source</span> <span class="o">=</span> <span class="s2">&quot;&lt;pre class=&#39;sh_</span><span class="si">#{</span> <span class="vi">@lang</span> <span class="si">}</span><span class="s2">&#39;&gt;&quot;</span>
+      <span class="n">code</span> <span class="o">=</span> <span class="no">CGI</span><span class="o">.</span><span class="n">escapeHTML</span> <span class="k">super</span><span class="o">.</span><span class="n">lstrip</span><span class="o">.</span><span class="n">rstrip</span>
+      <span class="n">code</span><span class="o">.</span><span class="n">lines</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">line</span><span class="o">|</span>
+        <span class="n">source</span> <span class="o">+=</span> <span class="s2">&quot;&lt;code&gt;</span><span class="si">#{</span> <span class="n">line</span> <span class="si">}</span><span class="s2">&lt;/code&gt;&quot;</span>
+      <span class="k">end</span>
+      <span class="n">source</span> <span class="o">+=</span> <span class="s2">&quot;&lt;/pre&gt;&quot;</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">format_lang</span><span class="p">(</span><span class="n">lang</span><span class="p">)</span>
+      <span class="k">return</span> <span class="s2">&quot;javascript&quot;</span> <span class="k">if</span> <span class="n">lang</span> <span class="o">==</span> <span class="s2">&quot;js&quot;</span>
+      <span class="k">return</span> <span class="s2">&quot;ruby&quot;</span> <span class="k">if</span> <span class="n">lang</span> <span class="o">==</span> <span class="s2">&quot;ru&quot;</span>
+      <span class="n">lang</span>
+    <span class="k">end</span>
+
+  <span class="k">end</span>
+
+<span class="k">end</span>
+
+<span class="ss">Liquid</span><span class="p">:</span><span class="ss">:Template</span><span class="o">.</span><span class="n">register_tag</span><span class="p">(</span><span class="s2">&quot;sh&quot;</span><span class="p">,</span> <span class="ss">Jekyll</span><span class="p">:</span><span class="ss">:SHJS</span><span class="p">)</span>
+</code></pre></div>]]></content>
+  </entry>
+  
+  <entry>
+    <id>http://8atmyhouse.com/blog/using-shjs-for-jekyll</id>
+    <title><![CDATA[Using SHJS for Jekyll]]></title>
+    <updated>2012-02-02T18:32:00+08:00</updated>
+    <link href="http://8atmyhouse.com/blog/using-shjs-for-jekyll.html" />
+    <content type="html"><![CDATA[<p>我不想用Octopress自带的代码高亮插件，所以自己写了个插件，借助 <a href="http://shjs.sourceforge.net">SHJS</a> 实现代码高亮。由于Haml的缩进问题，不得以把每行代码都用code标签包了下～</p>
+
+<p>使用方法：<code>sh [:lang]</code>，<code>[:lang]</code>默认是<code>:js</code>。</p>
+
+<p>插件代码如下：</p>
+<div class="highlight"><pre><code class="ruby"><span class="c1"># To highlight source code in an HTML document using SHJS for Jekyll</span>
+<span class="c1"># (c) 晋恒温 | http://MrZhang.me | MIT Licensed.</span>
+
+<span class="nb">require</span> <span class="s2">&quot;cgi&quot;</span>
+
+<span class="k">module</span> <span class="nn">Jekyll</span>
+
+  <span class="k">class</span> <span class="nc">SHJS</span> <span class="o">&lt;</span> <span class="ss">Liquid</span><span class="p">:</span><span class="ss">:Block</span>
+
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">tag_name</span><span class="p">,</span> <span class="n">markup</span><span class="p">,</span> <span class="n">tokens</span><span class="p">)</span>
+      <span class="vi">@lang</span> <span class="o">=</span> <span class="s2">&quot;js&quot;</span>
+      <span class="k">if</span> <span class="n">markup</span> <span class="o">=~</span> <span class="sr">/\s*:(\w+)/i</span>
+        <span class="vi">@lang</span> <span class="o">=</span> <span class="vg">$1</span>
+      <span class="k">end</span>
+      <span class="vi">@lang</span> <span class="o">=</span> <span class="n">format_lang</span> <span class="vi">@lang</span>
+      <span class="k">super</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="n">context</span><span class="p">)</span>
+      <span class="n">source</span> <span class="o">=</span> <span class="s2">&quot;&lt;pre class=&#39;sh_</span><span class="si">#{</span> <span class="vi">@lang</span> <span class="si">}</span><span class="s2">&#39;&gt;&quot;</span>
+      <span class="n">code</span> <span class="o">=</span> <span class="no">CGI</span><span class="o">.</span><span class="n">escapeHTML</span> <span class="k">super</span><span class="o">.</span><span class="n">lstrip</span><span class="o">.</span><span class="n">rstrip</span>
+      <span class="n">code</span><span class="o">.</span><span class="n">lines</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">line</span><span class="o">|</span>
+        <span class="n">source</span> <span class="o">+=</span> <span class="s2">&quot;&lt;code&gt;</span><span class="si">#{</span> <span class="n">line</span> <span class="si">}</span><span class="s2">&lt;/code&gt;&quot;</span>
+      <span class="k">end</span>
+      <span class="n">source</span> <span class="o">+=</span> <span class="s2">&quot;&lt;/pre&gt;&quot;</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">format_lang</span><span class="p">(</span><span class="n">lang</span><span class="p">)</span>
+      <span class="k">return</span> <span class="s2">&quot;javascript&quot;</span> <span class="k">if</span> <span class="n">lang</span> <span class="o">==</span> <span class="s2">&quot;js&quot;</span>
+      <span class="k">return</span> <span class="s2">&quot;ruby&quot;</span> <span class="k">if</span> <span class="n">lang</span> <span class="o">==</span> <span class="s2">&quot;ru&quot;</span>
+      <span class="n">lang</span>
+    <span class="k">end</span>
+
+  <span class="k">end</span>
+
+<span class="k">end</span>
+
+<span class="ss">Liquid</span><span class="p">:</span><span class="ss">:Template</span><span class="o">.</span><span class="n">register_tag</span><span class="p">(</span><span class="s2">&quot;sh&quot;</span><span class="p">,</span> <span class="ss">Jekyll</span><span class="p">:</span><span class="ss">:SHJS</span><span class="p">)</span>
+</code></pre></div>]]></content>
+  </entry>
+  
+</feed>
