@@ -1,7 +1,39 @@
 html, body {
+  background-color: rgba(255, 255, 255, 0.93);
   color: #000000;
   font-size: 16px;
 }
 #authorname {
   margin-top: 12px;
+}
+
+code, pre {
+-webkit-border-radius: 0px;
+-moz-border-radius: 0px;
+border-radius: 0px;
+}
+
+.entry {
+  padding-top: 30px;
+  border-bottom: 1px dashed #ddd;
+  text-align: left;
+}
+.entry>header {
+  text-align: center;
+  color: #000;
+}
+
+.entry .entry-title {
+  color: #000;
+}
+
+.entry .entry-meta {
+  color: #999999;
+  font-size: 0.9em;
+  line-height: 2;
+}
+
+.entry .entry-meta:before {
+  font-family: 'IcoMoon';
+  content: "I";
 }
