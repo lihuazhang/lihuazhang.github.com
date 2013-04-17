@@ -8,7 +8,7 @@
    <meta charset="utf-8" />
    <!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame -->
    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-   
+
    <title>{% if page.title %}{{ page.title }} - {% endif %}{{ site.title }}</title>
 	{% capture description %}{% if page.description %}{{ page.description }}{% else %}{{ content | raw_content }}{% endif %}{% endcapture %}
 	<meta name="description" content="{{ description | strip_html | condense_spaces | truncate:150 }}">
@@ -20,22 +20,24 @@
    <meta name="robots" content="noindex, nofollow">
    <meta name="keywords" content="metro, metroui, metro-ui, metro ui, windows 8, metro style, bootstrap, framework, web framework, css, html" />
    <meta name="author" content="{{site.author}}"/>
-   
+
    <!-- remove or comment this line if you want to use the local fonts -->
    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700' rel='stylesheet' type='text/css'>
 
-   <link rel="stylesheet" type="text/css" href="{{ root_url }}/content/css/bootstrap.css">
-   <link rel="stylesheet" type="text/css" href="{{ root_url }}/content/css/bootstrap-responsive.css">
-   <link rel="stylesheet" type="text/css" href="{{ root_url }}/content/css/bootmetro.css">
-   <link rel="stylesheet" type="text/css" href="{{ root_url }}/content/css/bootmetro-tiles.css">
-   <link rel="stylesheet" type="text/css" href="{{ root_url }}/content/css/bootmetro-charms.css">
-   <link rel="stylesheet" type="text/css" href="{{ root_url }}/content/css/metro-ui-light.css">
-   <link rel="stylesheet" type="text/css" href="{{ root_url }}/content/css/icomoon.css">
+   <link rel="stylesheet" type="text/css" href="{{ root_url }}/bootmetro/css/bootstrap.css">
+   <link rel="stylesheet" type="text/css" href="{{ root_url }}/bootmetro/css/bootstrap-responsive.css">
+   <link rel="stylesheet" type="text/css" href="{{ root_url }}/bootmetro/css/bootmetro.css">
+   <link rel="stylesheet" type="text/css" href="{{ root_url }}/bootmetro/css/bootmetro-tiles.css">
+   <link rel="stylesheet" type="text/css" href="{{ root_url }}/bootmetro/css/bootmetro-charms.css">
+   <link rel="stylesheet" type="text/css" href="{{ root_url }}/bootmetro/css/metro-ui-light.css">
+   <link rel="stylesheet" type="text/css" href="{{ root_url }}/bootmetro/css/icomoon.css">
+   <link rel="stylesheet" type="text/css" href="{{ root_url }}/stylesheets/syntax.css">
+   <link rel="stylesheet" type="text/css" href="{{ root_url }}/stylesheets/custom.css">
 
 
    <!-- Le fav and touch icons -->
-   <link rel="shortcut icon" href="{{ root_url }}/content/ico/favicon.ico">
-  
+   <link rel="shortcut icon" href="{{ root_url }}/images/favicon.ico">
+
    <!-- All JavaScript at the bottom, except for Modernizr and Respond.
       Modernizr enables HTML5 elements & feature detects; Respond is a polyfill for min/max-width CSS3 Media Queries
       For optimal performance, use a custom Modernizr build: www.modernizr.com/download/ -->
@@ -43,4 +45,4 @@
 </head>
 <!-- Prompt IE 6 users to install Chrome Frame. Remove this if you support IE 6.
      chromium.org/developers/how-tos/chrome-frame-getting-started -->
-<!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]--> 
+<!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
