@@ -56,3 +56,7 @@ height: 32px;
 #weather {
   background-color: #2E93D9;
 }
+
+#recent-comments, #recent-comments a {
+  color: white;
+}

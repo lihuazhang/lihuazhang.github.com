@@ -12,7 +12,7 @@ isHome: true
 
         <div id="section1" class="metro-section tile-span-4">
           {% for post in site.posts limit:3 %}
-          <a class="tile wide imagetext {% cycle 'bg-color-pink', 'bg-color-greenDark', 'bg-color-gree' %} " href="{{post.url}}">
+          <a class="tile wide imagetext {% cycle 'bg-color-pink', 'bg-color-orange', 'bg-color-green' %} " href="{{post.url}}">
             <div class="image-wrapper">
               <span class="icon icon-article"></span>
             </div>
@@ -38,6 +38,28 @@ isHome: true
             </div>
             <span class="app-label">分类</span>
           </a>
+
+
+          <div class="tile wide text" id="recent-comments">
+              <ul class="ds-recent-comments" data-num-items="2" data-show-title="0"></ul>
+              <!--多说js加载开始，一个页面只需要加载一次 -->
+              <script type="text/javascript">
+
+              var duoshuoQuery = {short_name:"jinhengwen"};
+              (function() {
+                  var ds = document.createElement('script');
+                  ds.type = 'text/javascript';ds.async = true;
+                  ds.src = 'http://static.duoshuo.com/embed.js';
+                  ds.charset = 'UTF-8';
+                  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+              })();
+              </script>
+              <!--多说js加载结束，一个页面只需要加载一次 -->
+              <span class="app-label">最新评论</span>
+          </div>
+
+
+
           <a class="tile app bg-color-blue" href="/atom.xml">
             <div class="image-wrapper">
               <span class="icon icon-feed-2"></span>
