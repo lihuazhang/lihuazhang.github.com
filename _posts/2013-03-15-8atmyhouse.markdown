@@ -3,7 +3,7 @@ layout: post
 title: "8atmyHouse"
 date: 2013-03-15 22:18
 comments: true
-categories: 
+categories: 生活杂记
 ---
 
 我工作 6 年。 2 年徐汇， 2 年 黄浦， 2 年 浦东。我住宝山区。我从一开始的愿望就是能踏着晨光上班，踩着夕阳下班。
