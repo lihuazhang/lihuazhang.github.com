@@ -3,7 +3,7 @@ layout: post
 title: "告别2012"
 date: 2013-02-12 10:57
 comments: true
-categories: 日记
+categories: 生活杂记
 ---
 
 2011年6月我离开AMD，进入现在这家公司，转眼2年快过去了。现在每次和同事聊起来，都觉得其实现在的这家公司很亏。
