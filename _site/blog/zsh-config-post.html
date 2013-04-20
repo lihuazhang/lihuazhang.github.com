@@ -1,0 +1,189 @@
+
+<!doctype html>
+<!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+   <meta charset="utf-8" />
+   <!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame -->
+   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+   <title>oh my zsh - 8:00 PM at My House</title>
+	
+	<meta name="description" content="
+
+  
+    
+       2012-03-04
+        zsh 
+      
+       comments
+    
+  
+  Mac自带zsh， 先设置你的默认shell为zsh
+
+
+chsh -s /bin/zsh
+
+
+
+然后使用oh-my-zsh的配置。参见oh my...">
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<link href="" rel="alternate" title="8:00 PM at My House" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.png" rel="shortcut icon">
+   <meta name="robots" content="noindex, nofollow">
+   <meta name="keywords" content="metro, metroui, metro-ui, metro ui, windows 8, metro style, bootstrap, framework, web framework, css, html" />
+   <meta name="author" content="晋恒温"/>
+
+   <!-- remove or comment this line if you want to use the local fonts -->
+   <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700' rel='stylesheet' type='text/css'>
+
+   <link rel="stylesheet" type="text/css" href="/bootmetro/css/bootstrap.css">
+   <link rel="stylesheet" type="text/css" href="/bootmetro/css/bootstrap-responsive.css">
+   <link rel="stylesheet" type="text/css" href="/bootmetro/css/bootmetro.css">
+   <link rel="stylesheet" type="text/css" href="/bootmetro/css/bootmetro-tiles.css">
+   <link rel="stylesheet" type="text/css" href="/bootmetro/css/metro-ui-light.css">
+   <link rel="stylesheet" type="text/css" href="/bootmetro/css/icomoon.css">
+   <link rel="stylesheet" type="text/css" href="/stylesheets/syntax.css">
+   <link rel="stylesheet" type="text/css" href="/stylesheets/custom.css">
+
+   <!-- All JavaScript at the bottom, except for Modernizr and Respond.
+      Modernizr enables HTML5 elements & feature detects; Respond is a polyfill for min/max-width CSS3 Media Queries
+      For optimal performance, use a custom Modernizr build: www.modernizr.com/download/ -->
+   <script src="/scripts/modernizr-2.6.1.min.js"></script>
+</head>
+<!-- Prompt IE 6 users to install Chrome Frame. Remove this if you support IE 6.
+     chromium.org/developers/how-tos/chrome-frame-getting-started -->
+<!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
+
+
+<body>
+<header id="nav-bar" class="container-fluid">
+   <div class="row-fluid">
+      <div class="span8">
+         <div id="header-container">
+            <a id="backbutton" class="win-backbutton" href ="javascript:history.go(-1);"></a>
+            <h5>8:00 PM at My House</h5>
+            <div class="dropdown">
+               <a class="header-dropdown dropdown-toggle accent-color" data-toggle="dropdown" href="#">
+                 oh my zsh
+                  <b class="caret"></b>
+               </a>
+               <ul class="dropdown-menu">
+               	<li><a href="/archives.html">存档</a></li>
+               	<li><a href="/categories.html">分类</a></li>
+               <li class="divider"></li>
+               <li><a href="/index.html">Home</a></li>
+            </ul>
+         </div>
+         </div>
+      </div>
+      <div id="top-info" class="pull-right">
+      <a href="/about_me.html" class="pull-left">
+         <div id="authorname" class="top-info-block">
+           <h3>晋恒温</h3>
+         </div>
+         <div class="top-info-block">
+            <b class="icon-user"></b>
+         </div>
+      </a>
+   </div>
+</div>
+</header>
+
+
+<div class="container">
+<article class="entry" id="/blog/zsh-config-post">
+  <header>
+    <p class="entry-meta">
+      <i aria-hidden="true" class="icon-pen-alt-fill"></i> <time>2012-03-04</time>
+      <i aria-hidden="true" class="icon-folder"></i> <a href="/categories.html#zsh-ref"> zsh </a>
+      
+      <i aria-hidden="true" class="icon-comments-3"></i> <a href="#comment">comments</a>
+    </p>
+  </header>
+  <p>Mac自带zsh， 先设置你的默认shell为zsh</p>
+
+<pre class="prettyprint">
+chsh -s /bin/zsh
+</pre>
+
+<p>
+然后使用oh-my-zsh的配置。参见<a href="https://github.com/robbyrussell/oh-my-zsh/">oh my zsh</a>
+<pre class="prettyprint">
+cd ~
+curl -L https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh | sh</pre>
+</p>
+
+<p>修改.zshrc,把你需要的环境变量配置全部加到.zshrc中去。定义自己的主题。可以在.oh-my-zsh/themes下面找到所有的主题
+同时你也可以去<a href="https://github.com/robbyrussell/oh-my-zsh/wiki/themes">themes</a>里去找你喜欢的主题。个人比较喜欢gnzh.
+<pre class="prettyprint">
+zhangmatoMacBook-Pro.local ~/.oh-my-zsh/themes  ‹master› 
+Soliah.zsh-theme              daveverwer.zsh-theme          frisk.zsh-theme               josh.zsh-theme                mikeh.zsh-theme               rgm.zsh-theme                 suvash.zsh-theme
+afowler.zsh-theme             dieter.zsh-theme              funky.zsh-theme               jreese.zsh-theme              miloshadzic.zsh-theme         risto.zsh-theme               takashiyoshida.zsh-theme
+...
+</pre>
+</p>
+
+<p>安装插件，在.zshrc文件里找到"plugins=",然后在里面添加你所需要的插件，你安装的插件可以在.oh-my-zsh/plugins下面找到。
+<pre class="prettyprint">
+plugins=(rails3 rails git textmate ruby rvm gem git github brew bundler textmate pow)
+</pre>
+</p>
+
+<p>
+重启下终端，然后就可以使用订制好的zsh了。
+</p>
+
+<p>
+<img src="/photos/zsh.png"></img>
+</p>
+
+</article>
+
+
+<section id="comment">
+  <!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread"></div>
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"jinhengwen" };
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- Duoshuo Comment END -->
+
+
+</section>
+
+
+
+</div>
+
+
+
+<!-- Grab Google CDN's jQuery. fall back to local if necessary -->
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script>window.jQuery || document.write("<script src='/scripts/jquery-1.8.2.min.js'>\x3C/script>")</script>
+<script type="text/javascript" src="/scripts/jquery.mousewheel.js"></script>
+<script type="text/javascript" src="/scripts/jquery.scrollTo.js"></script>
+<script type="text/javascript" src="/scripts/bootstrap.min.js"></script>
+<script type="text/javascript" src="/scripts/bootstrap-carousel.js"></script>
+<script type="text/javascript" src="/scripts/bootmetro.js"></script>
+<script type="text/javascript" src="/scripts/holder.js"></script>
+<script type="text/javascript" src="/scripts/tile-slider.js"></script>
+<script type="text/javascript">
+   $(".metro").metro();
+</script>
+
+</body>
+</html>

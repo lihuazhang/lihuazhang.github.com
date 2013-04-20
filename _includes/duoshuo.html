@@ -1,5 +1,15 @@
-{% if site.duoshuo and page.comment != false %}
-<div class="ds-thread" data-title="{{ page.title }}" data-image="http://tp3.sinaimg.cn/1649383490/180/5600400876/1"></div>
-<script>var duoshuoQuery = { short_name: '{{ site.duoshuo }}' }</script>
-<script src="http://static.duoshuo.com/embed.js" async="async"></script>
-{% endif %}
+<!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread"></div>
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"{{ site.duoshuo_short_name }}" };
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- Duoshuo Comment END -->
+

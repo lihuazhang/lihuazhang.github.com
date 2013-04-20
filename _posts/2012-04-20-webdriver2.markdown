@@ -1,0 +1,233 @@
+---
+layout: post
+title: "WebDriver 2: PageObject"
+date: 2012-04-20 19:07
+comments: true
+categories: WebDriver
+---
+在上篇中，已经搭建好了环境。假设我们已经有这样一个环境
+
+```bash
+── pom.xml
+── src
+   ├── main
+   │   └── java
+   │       └── com
+   │           └── ahchoo
+   │               └── automation
+   │                   └── App.java
+   └── test
+       └── java
+           └── com
+               └── ahchoo
+                   └── automation
+                       └── AppTest.java
+
+```
+在这个基础上，我们要实现一个访问百度，查询一个关键字之后，跳转到结果界面。
+
++ 开始之前，我们先想想传统的WebDriver代码应该怎么写？
+
+```java 
+package com.ahchoo.automation;
+import static org.junit.Assert.*;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+
+public class SearchTest {
+    private WebDriver driver;
+
+    @Before
+    public void setUp() {
+        driver = new FirefoxDriver();
+    }
+
+    @After
+    public void tearDown() {
+        driver.close();
+    }
+
+    @Test
+    public void searchTest() {
+        driver.get("http://www.baidu.com");
+        WebElement input = driver.findElement(By.id("kw"));
+        input.clear();
+        input.sendKeys("Pizza");
+        input.submit();
+        assertTrue(driver.getTitle().contains("Pizza"));
+        assertTrue(driver.getContent().contains("Pizza"));
+    }
+}
+
+```
+
+如果只有一个测试用例，这样写也很清爽，但是如果有许许多多这样的测试用例，如果input的id发生变化了，就要把
+所有的用到这个input的用例找出来，一一修改，这无疑是个大工程。
+
++ 让我们再来看看PageObjects，首先，我们要创建页面对象， 整个过程涉及2个页面
+
+    1. 百度首页
+    2. search结果页
+
+所以我们也就有两个pageobjects， 将pageobjects class放在main source下。
+
+```java
+
+package com.ahchoo.automation.page;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+
+public class BaiduIndexPage {
+
+    private WebDriver driver;
+    private final String url = "http://www.baidu.com";
+
+    public BaiduIndexPage(WebDriver driver) {
+        this.driver = driver;
+        driver.get(url);
+    }
+
+    public SearchResultPage searchFor(String term) {
+        // Baidu search input id is "kw"
+        WebElement searchField = driver.findElement(By.id("kw"));
+        searchField.clear();
+        searchField.sendKeys(term);
+        searchField.submit();
+        return new SearchResultPage(driver);
+    }
+}
+```
+
+```java
+
+package com.ahchoo.automation.page;
+
+import org.openqa.selenium.WebDriver;
+
+public class SearchResultPage {
+
+    private WebDriver driver;
+    public SearchResultPage(WebDriver driver) {
+        this.driver = driver;
+    }
+
+    public String getTitle() {
+        return driver.getTitle();
+    }
+    
+    public String getContent() {
+        return driver.getPageSource();
+    }
+}
+
+```
+
++ 接着创建testcase，把测试用例放在test source目录下
+
+```java
+
+package com.ahchoo.automation;
+
+import static org.junit.Assert.*;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+
+import com.ahchoo.automation.page.BaiduIndexPage;
+import com.ahchoo.automation.page.SearchResultPage;
+
+public class SearchTest {
+    private WebDriver driver;
+
+    @Before
+    public void setUp() {
+        driver = new FirefoxDriver();
+    }
+
+    @After
+    public void tearDown() {
+        driver.close();
+    }
+
+    @Test
+    public void searchTest() {
+        BaiduIndexPage home = new BaiduIndexPage(driver);
+        SearchResultPage searchResult = home.searchFor("pizza");
+        assertTrue(searchResult.getTitle().contains("pizza"));
+        assertTrue(searchResult.getContent().contains("pizza"));
+    }
+}
+
+```
+
+然后我们运行下看看
+
+```
+➜  ahcoo  mvn test
+[INFO] Scanning for projects...
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building ahcoo 1.0-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-resources-plugin:2.4.3:resources (default-resources) @ ahcoo ---
+[WARNING] Using platform encoding (EUC_CN actually) to copy filtered resources, i.e. build is platform dependent!
+[INFO] skip non existing resourceDirectory /Volumes/MacBackUp/ahcoo/src/main/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:2.3.2:compile (default-compile) @ ahcoo ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- maven-resources-plugin:2.4.3:testResources (default-testResources) @ ahcoo ---
+[WARNING] Using platform encoding (EUC_CN actually) to copy filtered resources, i.e. build is platform dependent!
+[INFO] skip non existing resourceDirectory /Volumes/MacBackUp/ahcoo/src/test/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:2.3.2:testCompile (default-testCompile) @ ahcoo ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.7.2:test (default-test) @ ahcoo ---
+[INFO] Surefire report directory: /Volumes/MacBackUp/ahcoo/target/surefire-reports
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running com.ahchoo.automation.SearchTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 21.474 sec
+
+Results :
+
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 25.953s
+[INFO] Finished at: Fri Apr 20 21:53:03 CST 2012
+[INFO] Final Memory: 5M/81M
+[INFO] ------------------------------------------------------------------------
+
+```
+
+Pass！
+
+这就是当下流行的pageobjects，将页面固有的属性和逻辑抽象成类。然后在测试代码里面调用，这样有一个很大的好处，
+如果页面变动了，只需要变动页面对象，不需要去无数测试用例里去寻找并更改。
+
+<blockquote>
+<p>Within your web app's UI there are areas that your tests interact with. A Page Object simply models these as objects within the test code. This reduces the amount of duplicated code and means that if the UI changes, the fix need only be applied in one place.
+</p>
+<small>
+ simon.m.stewart  [PageObject](http://code.google.com/p/selenium/wiki/PageObjects) 
+</small>
+</endblockquote>
+

@@ -1,0 +1,576 @@
+
+<!doctype html>
+<!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+   <meta charset="utf-8" />
+   <!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame -->
+   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+   <title>我的vimrc - 8:00 PM at My House</title>
+	
+	<meta name="description" content="
+
+  
+    
+       2012-08-04
+        Vim 
+      
+       comments
+    
+  
+  网上有很多 vim 套件， 之前一直用 spf13， 后来又用 janus。
+时间久了，就自己琢磨着凑了一套自己的， 在公司里推广了一把，感觉效果...">
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<link href="" rel="alternate" title="8:00 PM at My House" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.png" rel="shortcut icon">
+   <meta name="robots" content="noindex, nofollow">
+   <meta name="keywords" content="metro, metroui, metro-ui, metro ui, windows 8, metro style, bootstrap, framework, web framework, css, html" />
+   <meta name="author" content="晋恒温"/>
+
+   <!-- remove or comment this line if you want to use the local fonts -->
+   <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700' rel='stylesheet' type='text/css'>
+
+   <link rel="stylesheet" type="text/css" href="/bootmetro/css/bootstrap.css">
+   <link rel="stylesheet" type="text/css" href="/bootmetro/css/bootstrap-responsive.css">
+   <link rel="stylesheet" type="text/css" href="/bootmetro/css/bootmetro.css">
+   <link rel="stylesheet" type="text/css" href="/bootmetro/css/bootmetro-tiles.css">
+   <link rel="stylesheet" type="text/css" href="/bootmetro/css/metro-ui-light.css">
+   <link rel="stylesheet" type="text/css" href="/bootmetro/css/icomoon.css">
+   <link rel="stylesheet" type="text/css" href="/stylesheets/syntax.css">
+   <link rel="stylesheet" type="text/css" href="/stylesheets/custom.css">
+
+   <!-- All JavaScript at the bottom, except for Modernizr and Respond.
+      Modernizr enables HTML5 elements & feature detects; Respond is a polyfill for min/max-width CSS3 Media Queries
+      For optimal performance, use a custom Modernizr build: www.modernizr.com/download/ -->
+   <script src="/scripts/modernizr-2.6.1.min.js"></script>
+</head>
+<!-- Prompt IE 6 users to install Chrome Frame. Remove this if you support IE 6.
+     chromium.org/developers/how-tos/chrome-frame-getting-started -->
+<!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
+
+
+<body>
+<header id="nav-bar" class="container-fluid">
+   <div class="row-fluid">
+      <div class="span8">
+         <div id="header-container">
+            <a id="backbutton" class="win-backbutton" href ="javascript:history.go(-1);"></a>
+            <h5>8:00 PM at My House</h5>
+            <div class="dropdown">
+               <a class="header-dropdown dropdown-toggle accent-color" data-toggle="dropdown" href="#">
+                 我的vimrc
+                  <b class="caret"></b>
+               </a>
+               <ul class="dropdown-menu">
+               	<li><a href="/archives.html">存档</a></li>
+               	<li><a href="/categories.html">分类</a></li>
+               <li class="divider"></li>
+               <li><a href="/index.html">Home</a></li>
+            </ul>
+         </div>
+         </div>
+      </div>
+      <div id="top-info" class="pull-right">
+      <a href="/about_me.html" class="pull-left">
+         <div id="authorname" class="top-info-block">
+           <h3>晋恒温</h3>
+         </div>
+         <div class="top-info-block">
+            <b class="icon-user"></b>
+         </div>
+      </a>
+   </div>
+</div>
+</header>
+
+
+<div class="container">
+<article class="entry" id="/blog/wo-de-vimrc">
+  <header>
+    <p class="entry-meta">
+      <i aria-hidden="true" class="icon-pen-alt-fill"></i> <time>2012-08-04</time>
+      <i aria-hidden="true" class="icon-folder"></i> <a href="/categories.html#Vim-ref"> Vim </a>
+      
+      <i aria-hidden="true" class="icon-comments-3"></i> <a href="#comment">comments</a>
+    </p>
+  </header>
+  <p>网上有很多 vim 套件， 之前一直用 <a href="http://spf13.com/project/spf13-vim">spf13</a>， 后来又用 janus。
+时间久了，就自己琢磨着凑了一套自己的， 在公司里推广了一把，感觉效果不错， 吸引了几个同事转投 vim。
+我试着解释下 .vimrc 里面的内容， 虽然很多我也不知道，（估计是哪里拷贝来的，还没来得及研究）</p>
+<div class="highlight"><pre><code class="vim">先看这个Modeline， Modeline 就是指定这个文件的格式，
+告诉别人下次用 <span class="k">vim</span> 打开这个文件时候，采用相同的设置。
+默认的情况下，<span class="k">vim</span> 会在开头和结尾的 <span class="m">5</span> 行<span class="p">(</span>由 <span class="s1">&#39;modelines&#39;</span> 控制<span class="p">)</span>
+内查找包含 <span class="k">vim</span>: 或者 <span class="k">vi</span>: 之类内容的行，然后根据这行的内容配置本地变量。
+所以这里就是告诉 <span class="k">vim</span> 使用大括号来折叠。
+
+<span class="c">&quot; Modeline {</span>
+<span class="c">&quot; vim: set foldmarker={,} foldlevel=0 foldmethod=marker :</span>
+<span class="c">&quot; }</span>
+
+下面是 Vundle， 这是一个管理 Vim 插件的工具。
+具体的可以参见 https:<span class="sr">//</span>github.<span class="k">com</span><span class="sr">/gmarik/</span>vundle/
+按照它的说明，你就可以轻松的使用各种插件。
+常用的插件不多：
+<span class="m">1</span>. nerdtree
+<span class="m">2</span>. ctrlp
+<span class="m">3</span>. snipmate<span class="p">-</span>snippets
+<span class="m">4</span>. The<span class="p">-</span>NERD<span class="p">-</span>Commenter
+<span class="m">5</span>. <span class="k">vim</span><span class="p">-</span>fugitive
+<span class="m">6</span>. <span class="k">vim</span><span class="p">-</span>surround
+<span class="m">7</span>. <span class="k">vim</span><span class="p">-</span>rails
+
+我基本就用这几个插件。别的还没发现是什么作用，但是就放在那里了。。。
+插件的功能我就不介绍了。网上教程一大堆。
+
+<span class="c">&quot; Vundle {</span>
+<span class="k">set</span> <span class="nb">nocompatible</span>               <span class="c">&quot; be iMproved</span>
+<span class="k">filetype</span> off                   <span class="c">&quot; required!</span>
+
+<span class="k">set</span> <span class="nb">rtp</span><span class="p">+=~</span><span class="sr">/.vim/</span>bundle<span class="sr">/vundle/</span>
+<span class="k">call</span> vundle#rc<span class="p">()</span>
+
+<span class="c">&quot; let Vundle manage Vundle</span>
+<span class="c">&quot; required!</span>
+Bundle <span class="s1">&#39;gmarik/vundle&#39;</span>
+
+<span class="c">&quot; My Bundles here:</span>
+<span class="c">&quot;</span>
+<span class="c">&quot; original repos on github</span>
+Bundle <span class="s1">&#39;Lokaltog/vim-easymotion&#39;</span>
+<span class="c">&quot; vim-scripts repos</span>
+Bundle <span class="s1">&#39;L9&#39;</span>
+Bundle <span class="s1">&#39;FuzzyFinder&#39;</span>
+<span class="c">&quot; non github repos</span>
+Bundle <span class="s1">&#39;git://git.wincent.com/command-t.git&#39;</span>
+<span class="c">&quot;--------------------------</span>
+<span class="c">&quot; tpope plugins</span>
+<span class="c">&quot;--------------------------</span>
+<span class="c">&quot; disable pathogen, use vundle instead</span>
+<span class="c">&quot;runtime bundle/pathogen/autoload/pathogen.vim</span>
+<span class="c">&quot;call pathogen#infect()</span>
+<span class="c">&quot;Bundle &#39;tpope/tpope/vim-pathogen&#39;</span>
+Bundle <span class="s1">&#39;tpope/vim-fugitive&#39;</span>
+Bundle <span class="s1">&#39;tpope/vim-surround&#39;</span>
+Bundle <span class="s1">&#39;tpope/vim-abolish&#39;</span>
+Bundle <span class="s1">&#39;tpope/vim-speeddating&#39;</span>
+Bundle <span class="s1">&#39;tpope/vim-repeat&#39;</span>
+Bundle <span class="s1">&#39;tpope/vim-unimpaired&#39;</span>
+Bundle <span class="s1">&#39;tpope/vim-rails&#39;</span>
+
+<span class="c">&quot;--------------------------</span>
+<span class="c">&quot; utility</span>
+<span class="c">&quot;--------------------------</span>
+Bundle <span class="s1">&#39;edsono/vim-matchit&#39;</span>
+Bundle <span class="s1">&#39;Raimondi/delimitMate&#39;</span>
+Bundle <span class="s1">&#39;greyblake/vim-preview&#39;</span>
+Bundle <span class="s1">&#39;vim-scripts/jsbeautify&#39;</span>
+Bundle <span class="s1">&#39;vim-scripts/The-NERD-Commenter&#39;</span>
+Bundle <span class="s1">&#39;godlygeek/tabular&#39;</span>
+Bundle <span class="s1">&#39;nvie/vim-togglemouse&#39;</span>
+Bundle <span class="s1">&#39;mattn/zencoding-vim&#39;</span>
+<span class="c">&quot; alternative for zencoding</span>
+Bundle <span class="s1">&#39;rstacruz/sparkup&#39;</span><span class="p">,</span> {<span class="s1">&#39;rtp&#39;</span>: <span class="s1">&#39;vim/&#39;</span>}
+Bundle <span class="s1">&#39;wojtekmach/vim-rename&#39;</span>
+Bundle <span class="s1">&#39;vim-scripts/loremipsum&#39;</span>
+
+<span class="c">&quot;--------------------------</span>
+<span class="c">&quot; tool for explorer</span>
+<span class="c">&quot;--------------------------</span>
+Bundle <span class="s1">&#39;corntrace/bufexplorer&#39;</span>
+Bundle <span class="s1">&#39;scrooloose/nerdtree&#39;</span>
+Bundle <span class="s1">&#39;majutsushi/tagbar&#39;</span>
+Bundle <span class="s1">&#39;kien/ctrlp.vim&#39;</span>
+Bundle <span class="s1">&#39;vim-scripts/ctags.vim&#39;</span>
+Bundle <span class="s1">&#39;mileszs/ack.vim&#39;</span>
+
+<span class="c">&quot;--------------------------</span>
+<span class="c">&quot; filetype syntax highlight</span>
+<span class="c">&quot;--------------------------</span>
+Bundle <span class="s1">&#39;groenewege/vim-less&#39;</span>
+Bundle <span class="s1">&#39;kchmck/vim-coffee-script&#39;</span>
+Bundle <span class="s1">&#39;plasticboy/vim-markdown&#39;</span>
+Bundle <span class="s1">&#39;depuracao/vim-rdoc&#39;</span>
+Bundle <span class="s1">&#39;mamut/vim-css-hex&#39;</span>
+Bundle <span class="s1">&#39;git://github.com/chrisbra/color_highlight.git&#39;</span>
+<span class="c">&quot;--------------------------</span>
+<span class="c">&quot; color scheme</span>
+<span class="c">&quot;--------------------------</span>
+Bundle <span class="s1">&#39;rickharris/vim-blackboard&#39;</span>
+Bundle <span class="s1">&#39;altercation/vim-colors-solarized&#39;</span>
+Bundle <span class="s1">&#39;endel/vim-github-colorscheme&#39;</span>
+Bundle <span class="s1">&#39;git://github.com/tomasr/molokai.git&#39;</span>
+
+<span class="c">&quot;--------------------------</span>
+<span class="c">&quot; snipmate</span>
+<span class="c">&quot;--------------------------</span>
+Bundle <span class="s1">&#39;garbas/vim-snipmate&#39;</span>
+Bundle <span class="s1">&#39;honza/snipmate-snippets&#39;</span>
+Bundle <span class="s1">&#39;git://github.com/Shougo/neocomplcache.git&#39;</span>
+Bundle <span class="s1">&#39;tomtom/tlib_vim&#39;</span>
+Bundle <span class="s1">&#39;MarcWeber/vim-addon-mw-utils&#39;</span>
+Bundle <span class="s1">&#39;git://github.com/drmingdrmer/xptemplate.git&#39;</span>
+Bundle <span class="s1">&#39;git://github.com/ervandew/supertab.git&#39;</span>
+
+
+<span class="k">filetype</span> plugin indent <span class="k">on</span>     <span class="c">&quot; required!</span>
+<span class="c">&quot;</span>
+<span class="c">&quot; Brief help</span>
+<span class="c">&quot; :BundleList          - list configured bundles</span>
+<span class="c">&quot; :BundleInstall(!)    - install(update) bundles</span>
+<span class="c">&quot; :BundleSearch(!) foo - search(or refresh cache first) for foo</span>
+<span class="c">&quot; :BundleClean(!)      - confirm(or auto-approve) removal of unused bundles</span>
+<span class="c">&quot;</span>
+<span class="c">&quot; see :h vundle for more details or wiki for FAQ</span>
+<span class="c">&quot; NOTE: comments after Bundle command are not allowed..</span>
+<span class="c">&quot; }</span>
+
+这里就是一些基本的配置， 比如 leader 映射成逗号。
+主题是用 molokai。每条后面都有基本说明。
+
+<span class="c">&quot; Basic setting {</span>
+
+<span class="k">let</span> mapleader <span class="p">=</span> <span class="s2">&quot;,&quot;</span>
+<span class="k">color</span> molokai
+<span class="k">set</span> <span class="nb">nocompatible</span>      <span class="c">&quot; Use vim, no vi defaults</span>
+<span class="k">set</span> <span class="k">number</span>            <span class="c">&quot; Show line numbers</span>
+<span class="nb">syntax</span> enable         <span class="c">&quot; Turn on syntax highlighting allowing local overrides</span>
+<span class="k">set</span> <span class="nb">foldenable</span>
+
+<span class="k">set</span> <span class="nb">encoding</span><span class="p">=</span>utf<span class="m">-8</span>    <span class="s2">&quot; Set default encoding to UTF-8&quot;</span>
+
+<span class="k">set</span> <span class="nb">shiftwidth</span><span class="p">=</span><span class="m">4</span>                <span class="c">&quot; use indents of 4 spaces</span>
+<span class="k">set</span> <span class="nb">tabstop</span><span class="p">=</span><span class="m">4</span>                   <span class="c">&quot; an indentation every four columns</span>
+<span class="k">set</span> <span class="nb">softtabstop</span><span class="p">=</span><span class="m">4</span>               <span class="c">&quot; let backspace delete indent</span>
+<span class="k">set</span> <span class="nb">expandtab</span>                   <span class="c">&quot; tabs are spaces, not tabs</span>
+<span class="k">set</span> <span class="nb">nowrap</span>
+<span class="k">set</span> <span class="nb">autoindent</span>
+
+<span class="k">set</span> <span class="nb">hlsearch</span>    <span class="c">&quot; highlight matches</span>
+<span class="k">set</span> <span class="nb">incsearch</span>   <span class="c">&quot; incremental searching</span>
+<span class="k">set</span> <span class="nb">ignorecase</span>  <span class="c">&quot; searches are case insensitive...</span>
+<span class="k">set</span> <span class="nb">smartcase</span>   <span class="s2">&quot; ... unless they contain at least one capital letter&quot;</span>
+
+<span class="nb">ruler</span> 和 <span class="nb">statusline</span> 就是最底下的一堆信息， 比如文件名啊， git的信息啊等等。
+
+<span class="k">if</span> has<span class="p">(</span><span class="s1">&#39;cmdline_info&#39;</span><span class="p">)</span>
+    <span class="k">set</span> <span class="nb">ruler</span>                   <span class="c">&quot; show the ruler</span>
+    <span class="k">set</span> <span class="nb">rulerformat</span><span class="p">=</span>%<span class="m">30</span><span class="p">(</span>%<span class="p">=</span>\:<span class="k">b</span>%<span class="k">n</span>%<span class="k">y</span>%<span class="k">m</span>%<span class="k">r</span>%<span class="k">w</span>\ %<span class="k">l</span><span class="p">,</span>%<span class="k">c</span>%V\ %<span class="k">P</span>%<span class="p">)</span> <span class="c">&quot; a ruler on steroids</span>
+    <span class="k">set</span> <span class="nb">showcmd</span>                 <span class="c">&quot; show partial commands in status line and</span>
+<span class="c">    &quot; selected characters/lines in visual mode</span>
+<span class="k">endif</span>
+
+<span class="k">if</span> has<span class="p">(</span><span class="s1">&#39;statusline&#39;</span><span class="p">)</span>
+    <span class="k">set</span> <span class="nb">laststatus</span><span class="p">=</span><span class="m">2</span>
+
+<span class="c">    &quot; Broken down into easily includeable segments</span>
+    <span class="k">set</span> <span class="nb">statusline</span><span class="p">=</span>%<span class="p">&lt;</span>%<span class="k">f</span>\    <span class="c">&quot; Filename</span>
+    <span class="k">set</span> <span class="nb">statusline</span><span class="p">+=</span>%<span class="k">w</span>%<span class="k">h</span>%<span class="k">m</span>%<span class="k">r</span> <span class="c">&quot; Options</span>
+    <span class="k">set</span> <span class="nb">statusline</span><span class="p">+=</span>%{fugitive#<span class="nb">statusline</span><span class="p">()</span>} <span class="c">&quot;  Git Hotness</span>
+    <span class="k">set</span> <span class="nb">statusline</span><span class="p">+=</span>\ [%{&amp;<span class="nb">ff</span>}/%Y]            <span class="c">&quot; filetype</span>
+    <span class="k">set</span> <span class="nb">statusline</span><span class="p">+=</span>\ [%{getcwd<span class="p">()</span>}]          <span class="c">&quot; current dir</span>
+    <span class="k">set</span> <span class="nb">statusline</span><span class="p">+=</span>%<span class="p">=</span>%<span class="m">-14</span>.<span class="p">(</span>%<span class="k">l</span><span class="p">,</span>%<span class="k">c</span>%V%<span class="p">)</span>\ %<span class="k">p</span>%%  <span class="c">&quot; Right aligned file nav info</span>
+<span class="k">endif</span>
+
+这里是设置光标所在的这一行的高亮属性。
+
+<span class="k">set</span> <span class="nb">cursorline</span>
+<span class="nb">highlight</span> <span class="nb">cursorline</span> <span class="nb">term</span><span class="p">=</span><span class="nb">underline</span> cterm<span class="p">=</span><span class="nb">NONE</span> ctermbg<span class="p">=</span><span class="m">0</span> <span class="k">gui</span><span class="p">=</span><span class="nb">NONE</span> guibg<span class="p">=</span>Grey40
+<span class="k">if</span> has<span class="p">(</span><span class="s2">&quot;autocmd&quot;</span><span class="p">)</span>
+<span class="c">    &quot; current line</span>
+    <span class="k">au</span> <span class="nb">WinLeave</span> * <span class="k">set</span> <span class="nb">nocursorline</span>
+    <span class="k">au</span> <span class="nb">WinEnter</span> * <span class="k">set</span> <span class="nb">cursorline</span>
+<span class="k">endif</span>
+
+<span class="nb">highlight</span> LineNr ctermbg<span class="p">=</span>black guibg<span class="p">=</span>black
+<span class="nb">highlight</span> LineNr guifg<span class="p">=</span>grey
+<span class="nb">highlight</span> LineNr ctermfg<span class="p">=</span>grey
+
+nmap <span class="p">&lt;</span>leader<span class="p">&gt;</span><span class="k">l</span> :<span class="k">set</span> <span class="nb">list</span><span class="p">!&lt;</span>CR<span class="p">&gt;</span>
+nmap <span class="p">&lt;</span>leader<span class="p">&gt;</span><span class="k">s</span> :<span class="k">set</span> <span class="k">spell</span><span class="p">!&lt;</span>CR<span class="p">&gt;</span>
+<span class="k">set</span> <span class="nb">pastetoggle</span><span class="p">=&lt;</span>leader<span class="p">&gt;</span><span class="k">p</span>
+cmap <span class="k">w</span><span class="p">!!</span> %<span class="p">!</span>sudo tee <span class="p">&gt;</span> <span class="sr">/dev/</span>null %
+
+显示<span class="k">tab</span>为这个小三角符号。
+
+<span class="k">set</span> <span class="nb">listchars</span><span class="p">=</span><span class="k">tab</span>:▸\ <span class="p">,</span><span class="nb">eol</span>:¬
+<span class="nb">highlight</span> NonText guifg<span class="p">=</span><span class="mh">#4a4a59</span>
+<span class="nb">highlight</span> SpecialKey guifg<span class="p">=</span><span class="mh">#4a4a59</span>
+
+这个函数是说将每行最后的空格删除。我在每次保存的时候调用。
+
+<span class="k">function</span><span class="p">!</span> <span class="p">&lt;</span>SID<span class="p">&gt;</span>StripTrailingWhitespaces<span class="p">()</span>
+<span class="c">    &quot; Preparation: save last search, and cursor position.</span>
+    <span class="k">let</span> _s<span class="p">=</span>@/
+    <span class="k">let</span> <span class="k">l</span> <span class="p">=</span> line<span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+    <span class="k">let</span> <span class="k">c</span> <span class="p">=</span> <span class="k">col</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+<span class="c">    &quot; Do the business:</span>
+    %<span class="k">s</span><span class="sr">/\s\+$/</span>/<span class="k">e</span>
+<span class="c">    &quot; Clean up: restore previous search history, and cursor position</span>
+    <span class="k">let</span> @/<span class="p">=</span>_s
+    <span class="k">call</span> cursor<span class="p">(</span><span class="k">l</span><span class="p">,</span> <span class="k">c</span><span class="p">)</span>
+<span class="k">endfunction</span>
+
+autocmd <span class="nb">BufWritePre</span> * :<span class="k">call</span> <span class="p">&lt;</span>SID<span class="p">&gt;</span>StripTrailingWhitespaces<span class="p">()</span>
+
+<span class="k">set</span> <span class="nb">wildignore</span><span class="p">+=</span>*.<span class="k">o</span><span class="p">,</span>*.out<span class="p">,</span>*.obj<span class="p">,</span>.git<span class="p">,</span>*.rbc<span class="p">,</span>*.rbo<span class="p">,</span>*.class<span class="p">,</span>.svn<span class="p">,</span>*.gem
+<span class="k">set</span> <span class="nb">wildignore</span><span class="p">+=</span>*.zip<span class="p">,</span>*.tar.gz<span class="p">,</span>*.tar.bz2<span class="p">,</span>*.rar<span class="p">,</span>*.tar.xz
+<span class="k">set</span> <span class="nb">wildignore</span><span class="p">+=</span>*<span class="sr">/vendor/</span>gems<span class="sr">/*,*/</span>vendor<span class="sr">/cache/</span>*<span class="p">,</span>*<span class="sr">/.bundle/</span>*<span class="p">,</span>*<span class="sr">/.sass-cache/</span>*
+<span class="k">set</span> <span class="nb">wildignore</span><span class="p">+=</span>*.swp<span class="p">,</span>*<span class="p">~,</span>._*
+<span class="k">set</span> <span class="nb">wildignore</span><span class="p">+=</span>*.<span class="k">o</span><span class="p">,</span>*.obj<span class="p">,</span>.git<span class="p">,</span>*.pyc
+
+<span class="k">set</span> <span class="nb">autowrite</span>
+<span class="k">set</span> <span class="nb">backup</span>
+<span class="k">set</span> <span class="nb">backupdir</span><span class="p">=~</span><span class="sr">/.vim/</span><span class="nb">backup</span>    <span class="c">&quot; where to put backup files.</span>
+<span class="k">set</span> <span class="nb">backupext</span><span class="p">=</span>.bak
+<span class="k">set</span> <span class="nb">directory</span><span class="p">=~</span><span class="sr">/.vim/</span>temp      <span class="c">&quot; where to put swap files.</span>
+
+<span class="k">set</span> <span class="nb">sessionoptions</span><span class="p">=</span>blank<span class="p">,</span><span class="k">buffers</span><span class="p">,</span>curdir<span class="p">,</span>folds<span class="p">,</span>tabpages<span class="p">,</span>winsize
+autocmd <span class="nb">BufReadPost</span> *
+            \ <span class="k">if</span> line<span class="p">(</span><span class="s2">&quot;&#39;\&quot;&quot;</span><span class="p">)</span> <span class="p">&gt;</span> <span class="m">1</span> &amp;&amp; line<span class="p">(</span><span class="s2">&quot;&#39;\&quot;&quot;</span><span class="p">)</span> <span class="p">&lt;=</span> line<span class="p">(</span><span class="s2">&quot;$&quot;</span><span class="p">)</span> <span class="p">|</span>
+            \   exe <span class="s2">&quot;normal! g`\&quot;&quot;</span> <span class="p">|</span>
+            \ <span class="k">endif</span>
+
+<span class="c">&quot; }</span>
+
+<span class="c">&quot; NerdTree {</span>
+map <span class="p">&lt;</span>leader<span class="p">&gt;</span><span class="k">n</span> :NERDTreeToggle<span class="p">&lt;</span>CR<span class="p">&gt;</span>:NERDTreeMirror<span class="p">&lt;</span>CR<span class="p">&gt;</span>
+map <span class="p">&lt;</span>leader<span class="p">&gt;</span><span class="k">e</span> :NERDTreeFind<span class="p">&lt;</span>CR<span class="p">&gt;</span>
+nmap <span class="p">&lt;</span>leader<span class="p">&gt;</span>nt :NERDTreeFind<span class="p">&lt;</span>CR<span class="p">&gt;</span>
+
+<span class="k">let</span> NERDTreeShowBookmarks<span class="p">=</span><span class="m">1</span>
+<span class="k">let</span> NERDChristmasTree<span class="p">=</span><span class="m">1</span>
+<span class="k">let</span> NERDTreeIgnore<span class="p">=</span>[<span class="s1">&#39;\.pyc&#39;</span><span class="p">,</span> <span class="s1">&#39;\~$&#39;</span><span class="p">,</span> <span class="s1">&#39;\.swo$&#39;</span><span class="p">,</span> <span class="s1">&#39;\.swp$&#39;</span><span class="p">,</span> <span class="s1">&#39;\.git&#39;</span><span class="p">,</span> <span class="s1">&#39;\.hg&#39;</span><span class="p">,</span> <span class="s1">&#39;\.svn&#39;</span><span class="p">,</span> <span class="s1">&#39;\.bzr&#39;</span>]
+<span class="k">let</span> NERDTreeChDirMode<span class="p">=</span><span class="m">0</span>
+<span class="k">let</span> NERDTreeQuitOnOpen<span class="p">=</span><span class="m">1</span>
+<span class="k">let</span> NERDTreeShowHidden<span class="p">=</span><span class="m">1</span>
+<span class="k">let</span> NERDTreeKeepTreeInNewTab<span class="p">=</span><span class="m">1</span>
+
+autocmd <span class="nb">WinEnter</span> * <span class="k">call</span> <span class="k">s</span>:CloseIfOnlyNerdTreeLeft<span class="p">()</span>
+
+<span class="c">&quot; Close all open buffers on entering a window if the only</span>
+<span class="c">&quot; buffer that&#39;s left is the NERDTree buffer</span>
+<span class="k">function</span><span class="p">!</span> <span class="k">s</span>:CloseIfOnlyNerdTreeLeft<span class="p">()</span>
+    <span class="k">if</span> exists<span class="p">(</span><span class="s2">&quot;t:NERDTreeBufName&quot;</span><span class="p">)</span>
+        <span class="k">if</span> bufwinnr<span class="p">(</span><span class="k">t</span>:NERDTreeBufName<span class="p">)</span> <span class="p">!=</span> <span class="m">-1</span>
+            <span class="k">if</span> winnr<span class="p">(</span><span class="s2">&quot;$&quot;</span><span class="p">)</span> <span class="p">==</span> <span class="m">1</span>
+                <span class="k">q</span>
+            <span class="k">endif</span>
+        <span class="k">endif</span>
+    <span class="k">endif</span>
+<span class="k">endfunction</span>
+<span class="c">&quot; }</span>
+
+<span class="c">&quot; Fugitive {</span>
+<span class="nb">nnoremap</span> <span class="p">&lt;</span><span class="k">silent</span><span class="p">&gt;</span> <span class="p">&lt;</span>leader<span class="p">&gt;</span><span class="k">gs</span> :Gstatus<span class="p">&lt;</span>CR<span class="p">&gt;</span>
+<span class="nb">nnoremap</span> <span class="p">&lt;</span><span class="k">silent</span><span class="p">&gt;</span> <span class="p">&lt;</span>leader<span class="p">&gt;</span><span class="nb">gd</span> :Gdiff<span class="p">&lt;</span>CR<span class="p">&gt;</span>
+<span class="nb">nnoremap</span> <span class="p">&lt;</span><span class="k">silent</span><span class="p">&gt;</span> <span class="p">&lt;</span>leader<span class="p">&gt;</span>gc :Gcommit<span class="p">&lt;</span>CR<span class="p">&gt;</span>
+<span class="nb">nnoremap</span> <span class="p">&lt;</span><span class="k">silent</span><span class="p">&gt;</span> <span class="p">&lt;</span>leader<span class="p">&gt;</span>gb :Gblame<span class="p">&lt;</span>CR<span class="p">&gt;</span>
+<span class="nb">nnoremap</span> <span class="p">&lt;</span><span class="k">silent</span><span class="p">&gt;</span> <span class="p">&lt;</span>leader<span class="p">&gt;</span>gl :Glog<span class="p">&lt;</span>CR<span class="p">&gt;</span>
+<span class="nb">nnoremap</span> <span class="p">&lt;</span><span class="k">silent</span><span class="p">&gt;</span> <span class="p">&lt;</span>leader<span class="p">&gt;</span><span class="nb">gp</span> :Git push<span class="p">&lt;</span>CR<span class="p">&gt;</span>
+<span class="c">&quot;}</span>
+
+<span class="c">&quot; Tabularize {</span>
+<span class="k">if</span> exists<span class="p">(</span><span class="s2">&quot;:Tabularize&quot;</span><span class="p">)</span>
+    nmap <span class="p">&lt;</span>Leader<span class="p">&gt;</span><span class="k">a</span><span class="p">=</span> :Tabularize /<span class="p">=&lt;</span>CR<span class="p">&gt;</span>
+    vmap <span class="p">&lt;</span>Leader<span class="p">&gt;</span><span class="k">a</span><span class="p">=</span> :Tabularize /<span class="p">=&lt;</span>CR<span class="p">&gt;</span>
+    nmap <span class="p">&lt;</span>Leader<span class="p">&gt;</span><span class="k">a</span>: :Tabularize /:\zs<span class="p">&lt;</span>CR<span class="p">&gt;</span>
+    vmap <span class="p">&lt;</span>Leader<span class="p">&gt;</span><span class="k">a</span>: :Tabularize /:\zs<span class="p">&lt;</span>CR<span class="p">&gt;</span>
+<span class="k">endif</span>
+<span class="c">&quot;}</span>
+
+<span class="c">&quot; CommandT {</span>
+<span class="k">let</span> <span class="k">g</span>:CommandTMaxHeight <span class="p">=</span> <span class="m">15</span>
+<span class="c">&quot;}</span>
+
+<span class="c">&quot; OmniComplete {</span>
+<span class="k">if</span> has<span class="p">(</span><span class="s2">&quot;autocmd&quot;</span><span class="p">)</span> &amp;&amp; exists<span class="p">(</span><span class="s2">&quot;+omnifunc&quot;</span><span class="p">)</span>
+    autocmd Filetype *
+                \<span class="k">if</span> &amp;<span class="nb">omnifunc</span> <span class="p">==</span> <span class="s2">&quot;&quot;</span> <span class="p">|</span>
+                \<span class="k">setlocal</span> <span class="nb">omnifunc</span><span class="p">=</span>syntaxcomplete#Complete <span class="p">|</span>
+                \<span class="k">endif</span>
+<span class="k">endif</span>
+<span class="k">hi</span> Pmenu  guifg<span class="p">=</span><span class="mh">#000000</span> guibg<span class="p">=</span>#F8F8F8 ctermfg<span class="p">=</span>black ctermbg<span class="p">=</span>Lightgray
+<span class="k">hi</span> PmenuSbar  guifg<span class="p">=</span>#<span class="m">8</span>A<span class="m">95</span>A<span class="m">7</span> guibg<span class="p">=</span>#F8F8F8 <span class="k">gui</span><span class="p">=</span><span class="nb">NONE</span> ctermfg<span class="p">=</span>darkcyan ctermbg<span class="p">=</span>lightgray cterm<span class="p">=</span><span class="nb">NONE</span>
+<span class="k">hi</span> PmenuThumb  guifg<span class="p">=</span>#F8F8F8 guibg<span class="p">=</span>#<span class="m">8</span>A<span class="m">95</span>A<span class="m">7</span> <span class="k">gui</span><span class="p">=</span><span class="nb">NONE</span> ctermfg<span class="p">=</span>lightgray ctermbg<span class="p">=</span>darkcyan cterm<span class="p">=</span><span class="nb">NONE</span>
+<span class="k">set</span> <span class="nb">completeopt</span><span class="p">=</span>menu<span class="p">,</span>preview<span class="p">,</span>longest
+
+autocmd Filetype <span class="k">c</span>      <span class="k">set</span> <span class="nb">omnifunc</span><span class="p">=</span>ccomplete#Complete
+autocmd Filetype xml    <span class="k">set</span> <span class="nb">omnifunc</span><span class="p">=</span>xmlcomplete#CompleteTags
+autocmd <span class="nb">FileType</span> html <span class="k">set</span> <span class="nb">omnifunc</span><span class="p">=</span>htmlcomplete#CompleteTags
+autocmd <span class="nb">FileType</span> css <span class="k">set</span> <span class="nb">omnifunc</span><span class="p">=</span>csscomplete#CompleteCSS
+autocmd <span class="nb">FileType</span> javascript <span class="k">set</span> <span class="nb">omnifunc</span><span class="p">=</span>javascriptcomplete#CompleteJS
+autocmd Filetype tex    <span class="k">set</span> <span class="nb">omnifunc</span><span class="p">=</span>syntaxcomplete#Complete&quot;
+autocmd <span class="nb">FileType</span> python <span class="k">set</span> <span class="nb">omnifunc</span><span class="p">=</span>pythoncomplete#Complete
+autocmd <span class="nb">FileType</span> php <span class="k">set</span> <span class="nb">omnifunc</span><span class="p">=</span>phpcomplete#CompletePHP
+autocmd <span class="nb">FileType</span> <span class="k">ruby</span><span class="p">,</span>eruby <span class="k">set</span> <span class="nb">omnifunc</span><span class="p">=</span>rubycomplete#Complete
+autocmd <span class="nb">FileType</span> <span class="k">ruby</span><span class="p">,</span>eruby <span class="k">let</span> <span class="k">g</span>:rubycomplete_buffer_loading <span class="p">=</span> <span class="m">1</span>
+autocmd <span class="nb">FileType</span> <span class="k">ruby</span><span class="p">,</span>eruby <span class="k">let</span> <span class="k">g</span>:rubycomplete_rails <span class="p">=</span> <span class="m">1</span>
+autocmd <span class="nb">FileType</span> <span class="k">ruby</span><span class="p">,</span>eruby <span class="k">let</span> <span class="k">g</span>:rubycomplete_classes_in_global <span class="p">=</span> <span class="m">1</span>
+<span class="c">&quot;}</span>
+
+<span class="c">&quot; neocomplcache {</span>
+<span class="c">&quot; Disable AutoComplPop.</span>
+<span class="k">let</span> <span class="k">g</span>:acp_enableAtStartup <span class="p">=</span> <span class="m">0</span>
+<span class="c">&quot; Use neocomplcache.</span>
+<span class="k">let</span> <span class="k">g</span>:neocomplcache_enable_at_startup <span class="p">=</span> <span class="m">1</span>
+<span class="c">&quot; Use smartcase.</span>
+<span class="k">let</span> <span class="k">g</span>:neocomplcache_enable_smart_case <span class="p">=</span> <span class="m">1</span>
+<span class="c">&quot; Use camel case completion.</span>
+<span class="k">let</span> <span class="k">g</span>:neocomplcache_enable_camel_case_completion <span class="p">=</span> <span class="m">1</span>
+<span class="c">&quot; Use underbar completion.</span>
+<span class="k">let</span> <span class="k">g</span>:neocomplcache_enable_underbar_completion <span class="p">=</span> <span class="m">1</span>
+<span class="c">&quot; Set minimum syntax keyword length.</span>
+<span class="k">let</span> <span class="k">g</span>:neocomplcache_min_syntax_length <span class="p">=</span> <span class="m">3</span>
+<span class="k">let</span> <span class="k">g</span>:neocomplcache_lock_buffer_name_pattern <span class="p">=</span> <span class="s1">&#39;\*ku\*&#39;</span>
+
+<span class="c">&quot; Define dictionary.</span>
+<span class="k">let</span> <span class="k">g</span>:neocomplcache_dictionary_filetype_lists <span class="p">=</span> {
+            \ <span class="s1">&#39;default&#39;</span> : <span class="s1">&#39;&#39;</span><span class="p">,</span>
+            \ <span class="s1">&#39;vimshell&#39;</span> : $HOME.<span class="s1">&#39;/.vimshell_hist&#39;</span><span class="p">,</span>
+            \ <span class="s1">&#39;scheme&#39;</span> : $HOME.<span class="s1">&#39;/.gosh_completions&#39;</span>
+            \ }
+
+<span class="c">&quot; Define keyword.</span>
+<span class="k">if</span> <span class="p">!</span>exists<span class="p">(</span><span class="s1">&#39;g:neocomplcache_keyword_patterns&#39;</span><span class="p">)</span>
+    <span class="k">let</span> <span class="k">g</span>:neocomplcache_keyword_patterns <span class="p">=</span> {}
+<span class="k">endif</span>
+<span class="k">let</span> <span class="k">g</span>:neocomplcache_keyword_patterns[<span class="s1">&#39;default&#39;</span>] <span class="p">=</span> <span class="s1">&#39;\h\w*&#39;</span>
+
+<span class="c">&quot; Plugin key-mappings.</span>
+imap <span class="p">&lt;</span>C<span class="p">-</span><span class="k">k</span><span class="p">&gt;</span>     <span class="p">&lt;</span>Plug<span class="p">&gt;(</span>neocomplcache_snippets_expand<span class="p">)</span>
+<span class="k">smap</span> <span class="p">&lt;</span>C<span class="p">-</span><span class="k">k</span><span class="p">&gt;</span>     <span class="p">&lt;</span>Plug<span class="p">&gt;(</span>neocomplcache_snippets_expand<span class="p">)</span>
+<span class="nb">inoremap</span> <span class="p">&lt;</span>expr<span class="p">&gt;&lt;</span>C<span class="p">-</span><span class="k">g</span><span class="p">&gt;</span>     neocomplcache#undo_completion<span class="p">()</span>
+<span class="nb">inoremap</span> <span class="p">&lt;</span>expr<span class="p">&gt;&lt;</span>C<span class="p">-</span><span class="k">l</span><span class="p">&gt;</span>     neocomplcache#complete_common_string<span class="p">()</span>
+
+<span class="c">&quot; SuperTab like snippets behavior.</span>
+<span class="c">&quot;imap &lt;expr&gt;&lt;TAB&gt; neocomplcache#sources#snippets_complete#expandable() ? &quot;\&lt;Plug&gt;(neocomplcache_snippets_expand)&quot; : pumvisible() ? &quot;\&lt;C-n&gt;&quot; : &quot;\&lt;TAB&gt;&quot;</span>
+
+<span class="c">&quot; Recommended key-mappings.</span>
+<span class="c">&quot; &lt;CR&gt;: close popup and save indent.</span>
+<span class="nb">inoremap</span> <span class="p">&lt;</span>expr<span class="p">&gt;&lt;</span>CR<span class="p">&gt;</span>  neocomplcache#smart_close_popup<span class="p">()</span> . <span class="s2">&quot;\&lt;CR&gt;&quot;</span>
+<span class="c">&quot; &lt;TAB&gt;: completion.</span>
+<span class="nb">inoremap</span> <span class="p">&lt;</span>expr<span class="p">&gt;&lt;</span>TAB<span class="p">&gt;</span>  pumvisible<span class="p">()</span> ? <span class="s2">&quot;\&lt;C-n&gt;&quot;</span> : <span class="s2">&quot;\&lt;TAB&gt;&quot;</span>
+<span class="c">&quot; &lt;C-h&gt;, &lt;BS&gt;: close popup and delete backword char.</span>
+<span class="nb">inoremap</span> <span class="p">&lt;</span>expr<span class="p">&gt;&lt;</span>C<span class="p">-</span><span class="k">h</span><span class="p">&gt;</span> neocomplcache#smart_close_popup<span class="p">()</span>.<span class="s2">&quot;\&lt;C-h&gt;&quot;</span>
+<span class="nb">inoremap</span> <span class="p">&lt;</span>expr<span class="p">&gt;&lt;</span>BS<span class="p">&gt;</span> neocomplcache#smart_close_popup<span class="p">()</span>.<span class="s2">&quot;\&lt;C-h&gt;&quot;</span>
+<span class="nb">inoremap</span> <span class="p">&lt;</span>expr<span class="p">&gt;&lt;</span>C<span class="p">-</span><span class="k">y</span><span class="p">&gt;</span>  neocomplcache#close_popup<span class="p">()</span>
+<span class="nb">inoremap</span> <span class="p">&lt;</span>expr<span class="p">&gt;&lt;</span>C<span class="p">-</span><span class="k">e</span><span class="p">&gt;</span>  neocomplcache#cancel_popup<span class="p">()</span>
+
+<span class="c">&quot; AutoComplPop like behavior.</span>
+<span class="c">&quot;let g:neocomplcache_enable_auto_select = 1</span>
+
+<span class="c">&quot; Shell like behavior(not recommended).</span>
+<span class="c">&quot;set completeopt+=longest</span>
+<span class="c">&quot;let g:neocomplcache_enable_auto_select = 1</span>
+<span class="c">&quot;let g:neocomplcache_disable_auto_complete = 1</span>
+<span class="c">&quot;inoremap &lt;expr&gt;&lt;TAB&gt;  pumvisible() ? &quot;\&lt;Down&gt;&quot; : &quot;\&lt;TAB&gt;&quot;</span>
+<span class="c">&quot;inoremap &lt;expr&gt;&lt;CR&gt;  neocomplcache#smart_close_popup() . &quot;\&lt;CR&gt;&quot;</span>
+
+<span class="c">&quot; Enable omni completion.</span>
+autocmd <span class="nb">FileType</span> css <span class="k">setlocal</span> <span class="nb">omnifunc</span><span class="p">=</span>csscomplete#CompleteCSS
+autocmd <span class="nb">FileType</span> html<span class="p">,</span>markdown <span class="k">setlocal</span> <span class="nb">omnifunc</span><span class="p">=</span>htmlcomplete#CompleteTags
+autocmd <span class="nb">FileType</span> javascript <span class="k">setlocal</span> <span class="nb">omnifunc</span><span class="p">=</span>javascriptcomplete#CompleteJS
+autocmd <span class="nb">FileType</span> python <span class="k">setlocal</span> <span class="nb">omnifunc</span><span class="p">=</span>pythoncomplete#Complete
+autocmd <span class="nb">FileType</span> xml <span class="k">setlocal</span> <span class="nb">omnifunc</span><span class="p">=</span>xmlcomplete#CompleteTags
+
+<span class="c">&quot; Enable heavy omni completion.</span>
+<span class="k">if</span> <span class="p">!</span>exists<span class="p">(</span><span class="s1">&#39;g:neocomplcache_omni_patterns&#39;</span><span class="p">)</span>
+    <span class="k">let</span> <span class="k">g</span>:neocomplcache_omni_patterns <span class="p">=</span> {}
+<span class="k">endif</span>
+<span class="k">let</span> <span class="k">g</span>:neocomplcache_omni_patterns.<span class="k">ruby</span> <span class="p">=</span> <span class="s1">&#39;[^. *\t]\.\w*\|\h\w*::&#39;</span>
+<span class="c">&quot;autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete</span>
+<span class="k">let</span> <span class="k">g</span>:neocomplcache_omni_patterns.php <span class="p">=</span> <span class="s1">&#39;[^. \t]-&gt;\h\w*\|\h\w*::&#39;</span>
+<span class="k">let</span> <span class="k">g</span>:neocomplcache_omni_patterns.<span class="k">c</span> <span class="p">=</span> <span class="s1">&#39;\%(\.\|-&gt;\)\h\w*&#39;</span>
+<span class="k">let</span> <span class="k">g</span>:neocomplcache_omni_patterns.cpp <span class="p">=</span> <span class="s1">&#39;\h\w*\%(\.\|-&gt;\)\h\w*\|\h\w*::&#39;</span>
+<span class="c">&quot; }</span>
+
+<span class="c">&quot; ctrlp {</span>
+<span class="k">let</span> <span class="k">g</span>:ctrlp_working_path_mode <span class="p">=</span> <span class="m">2</span>
+<span class="k">let</span> <span class="k">g</span>:ctrlp_switch_buffer <span class="p">=</span> <span class="m">2</span>
+<span class="nb">nnoremap</span> <span class="p">&lt;</span><span class="k">silent</span><span class="p">&gt;</span> <span class="p">&lt;</span>C<span class="p">-</span><span class="k">r</span><span class="p">&gt;</span> :CtrlPMRU<span class="p">&lt;</span>CR<span class="p">&gt;</span>
+<span class="nb">nnoremap</span> <span class="p">&lt;</span><span class="k">silent</span><span class="p">&gt;</span> <span class="p">&lt;</span>leader<span class="p">&gt;</span><span class="k">b</span> :CtrlPBuffer<span class="p">&lt;</span>CR<span class="p">&gt;</span>
+<span class="k">let</span> <span class="k">g</span>:ctrlp_custom_ignore <span class="p">=</span> {
+            \ <span class="s1">&#39;dir&#39;</span>:  <span class="s1">&#39;\.git$\|\.hg$\|\.svn$&#39;</span><span class="p">,</span>
+            \ <span class="s1">&#39;file&#39;</span>: <span class="s1">&#39;\.exe$\|\.so$\|\.dll$&#39;</span> }
+<span class="c">&quot;}</span>
+
+<span class="c">&quot; ColorHighlight {</span>
+<span class="k">let</span> <span class="k">g</span>:colorizer_auto_color <span class="p">=</span> <span class="m">1</span>
+<span class="k">let</span> <span class="k">g</span>:colorizer_auto_filetype<span class="p">=</span><span class="s1">&#39;css,html&#39;</span>
+<span class="c">&quot; }</span>
+
+<span class="c">&quot; GUI for MACVim {</span>
+<span class="k">if</span> has<span class="p">(</span><span class="s2">&quot;gui_running&quot;</span><span class="p">)</span>
+    <span class="k">set</span> <span class="k">go</span><span class="p">=</span>aAce              <span class="c">&quot; 去掉难看的工具栏和滑动条</span>
+<span class="c">    &quot;set transparency=30      &quot; 透明背景</span>
+    <span class="k">set</span> <span class="nb">guifont</span><span class="p">=</span>Monaco:h13   <span class="c">&quot; 设置默认字体为monaco</span>
+    <span class="k">set</span> <span class="nb">showtabline</span><span class="p">=</span><span class="m">2</span>        <span class="c">&quot; 开启自带的tab栏</span>
+    <span class="k">set</span> <span class="nb">columns</span><span class="p">=</span><span class="m">140</span>          <span class="c">&quot; 设置宽</span>
+    <span class="k">set</span> <span class="nb">lines</span><span class="p">=</span><span class="m">40</span>             <span class="c">&quot; 设置长</span>
+    <span class="nb">noremap</span> <span class="p">&lt;</span>D<span class="p">-</span>M<span class="p">-</span>Left<span class="p">&gt;</span> :<span class="k">tabprevious</span><span class="p">&lt;</span><span class="k">cr</span><span class="p">&gt;</span>
+    <span class="nb">noremap</span> <span class="p">&lt;</span>D<span class="p">-</span>M<span class="p">-</span>Right<span class="p">&gt;</span> :tabnext<span class="p">&lt;</span><span class="k">cr</span><span class="p">&gt;</span>
+    map <span class="p">&lt;</span>D<span class="m">-1</span><span class="p">&gt;</span> <span class="m">1</span>gt
+    map <span class="p">&lt;</span>D<span class="m">-2</span><span class="p">&gt;</span> <span class="m">2</span>gt
+    map <span class="p">&lt;</span>D<span class="m">-3</span><span class="p">&gt;</span> <span class="m">3</span>gt
+    map <span class="p">&lt;</span>D<span class="m">-4</span><span class="p">&gt;</span> <span class="m">4</span>gt
+    map <span class="p">&lt;</span>D<span class="m">-5</span><span class="p">&gt;</span> <span class="m">5</span>gt
+    map <span class="p">&lt;</span>D<span class="m">-6</span><span class="p">&gt;</span> <span class="m">6</span>gt
+    map <span class="p">&lt;</span>D<span class="m">-7</span><span class="p">&gt;</span> <span class="m">7</span>gt
+    map <span class="p">&lt;</span>D<span class="m">-8</span><span class="p">&gt;</span> <span class="m">8</span>gt
+    map <span class="p">&lt;</span>D<span class="m">-9</span><span class="p">&gt;</span> <span class="m">9</span>gt
+    map <span class="p">&lt;</span>D<span class="m">-0</span><span class="p">&gt;</span> :<span class="k">tablast</span><span class="p">&lt;</span>CR<span class="p">&gt;</span>
+<span class="k">endif</span>
+<span class="c">&quot;}</span>
+</code></pre></div>
+<p>参见我的<a href="https://github.com/lihuazhang/vim">vim</a>。</p>
+
+</article>
+
+
+<section id="comment">
+  <!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread"></div>
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"jinhengwen" };
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- Duoshuo Comment END -->
+
+
+</section>
+
+
+
+</div>
+
+
+
+<!-- Grab Google CDN's jQuery. fall back to local if necessary -->
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script>window.jQuery || document.write("<script src='/scripts/jquery-1.8.2.min.js'>\x3C/script>")</script>
+<script type="text/javascript" src="/scripts/jquery.mousewheel.js"></script>
+<script type="text/javascript" src="/scripts/jquery.scrollTo.js"></script>
+<script type="text/javascript" src="/scripts/bootstrap.min.js"></script>
+<script type="text/javascript" src="/scripts/bootstrap-carousel.js"></script>
+<script type="text/javascript" src="/scripts/bootmetro.js"></script>
+<script type="text/javascript" src="/scripts/holder.js"></script>
+<script type="text/javascript" src="/scripts/tile-slider.js"></script>
+<script type="text/javascript">
+   $(".metro").metro();
+</script>
+
+</body>
+</html>

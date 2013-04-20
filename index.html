@@ -5,137 +5,104 @@ isHome: true
 ---
 
 
-   <div class="container-fluid">
-      <div class="row-fluid">
-         <div class="metro span12">
-            <div class="metro-sections">
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="metro span12">
+      <div class="metro-sections">
 
-               <div id="section1" class="metro-section tile-span-4">
-
-                  <a class="tile wide imagetext bg-color-blueDark" href="./tiles-templates.html">
-                     <div class="image-wrapper">
-                        <img src="content/img/metro-tiles.jpg" />
-                     </div>
-                     <div class="column-text">
-                        <div class="text4">List of all tile templates: square, wide, widepeek, with images or text only.</div>
-                     </div>
-                     <div class="app-label">Tiles Templates</div>
-                  </a>
-
-                  <a class="tile wide imagetext wideimage bg-color-orange" href="./appbar-demo.html">
-                     <img src="content/img/appbar.png" alt=""/>
-                     <div class="textover-wrapper bg-color-blue">
-                        <div class="text2">Application Bar</div>
-                     </div>
-                  </a>
-
-                  <a class="tile app wide bg-color-greenDark" href="./table.html">
-                     <div class="image-wrapper">
-                        <img src="content/img/My Apps.png" alt=""/>
-                     </div>
-                     <div class="app-label">Styled Table</div>
-                  </a>
-
-                  <a class="tile app bg-color-purple" href="./listviews.html">
-                     <div class="image-wrapper">
-                        <span class="icon icon-list-2"></span>
-                     </div>
-                     <span class="app-label">ListView</span>
-                  </a>
-
-                  <a class="tile app bg-color-red" href="./charms-demo.html">
-                     <div class="image-wrapper">
-                        <span class="icon icon-publish"></span>
-                     </div>
-                     <span class="app-label">[TODO] Charms</span>
-                  </a>
-
-                  <a class="tile app bg-color-yellow" href="./images.html">
-                     <div class="image-wrapper">
-                        <span class="icon icon-images"></span>
-                     </div>
-                     <span class="app-label">[TODO] Images</span>
-                  </a>
-
-                  <a class="tile app bg-color-blueDark" href="./icons.html">
-                     <div class="image-wrapper">
-                        <span class="icon icon-IcoMoon" ></span>
-                     </div>
-                     <span class="app-label">Icons</span>
-                  </a>
-
-               </div>
-
-               <div id="section2" class="metro-section tile-span-4">
-
-                  <a class="tile wide imagetext bg-color-blue" href="./scaffolding.html">
-                     <div class="image-wrapper">
-                        <img src="content/img/My Apps.png" />
-                     </div>
-                     <div class="column-text">
-                        <div class="text">Grid system</div>
-                        <div class="text">Layouts</div>
-                        <div class="text">Responsive design</div>
-                     </div>
-                     <span class="app-label">SCAFFOLDING</span>
-                  </a>
-
-                  <a class="tile wide imagetext bg-color-blueDark" href="./base-css.html">
-                     <div class="image-wrapper">
-                        <img src="content/img/Coding app.png" />
-                     </div>
-                     <div class="column-text">
-                        <div class="text">Typography</div>
-                        <div class="text">Tables</div>
-                        <div class="text">Forms</div>
-                        <div class="text">Buttons</div>
-                     </div>
-                     <span class="app-label">BASE CSS</span>
-                  </a>
-
-                  <a class="tile app bg-color-orange" href="./components.html">
-                     <div class="image-wrapper">
-                        <img src="content/img/RegEdit.png" alt="" />
-                     </div>
-                     <span class="app-label">COMPONENTS</span>
-                  </a>
-
-                  <a class="tile app bg-color-red" href="./javascript.html">
-                     <div class="image-wrapper">
-                        <img src="content/img/Devices.png" alt="" />
-                     </div>
-                     <span class="app-label">JAVASCRIPT</span>
-                  </a>
-
-               </div>
-
-   <div class="tile wide imagetext bg-color-green" data-role="tile-slider" data-param-period="3000">
-    <div class="tile-content">
-       <h2>tina@live.com</h2>
-       <h5>Re: Wedding Annoucement!</h5>
-       <p>
-       Huh! Waw!!! I'm really excited to celebrate with you all. Thanks for...
-       </p>
-     </div>
-     <div class="tile-content">
-       <h2>tina@live.com</h2>
-       <h5>Re: Wedding Annoucement!</h5>
-       <p>
-       Huh! Waw!!! I'm really excited to celebrate with you all. Thanks for...
-       </p>
-     </div>
- <div class="image-wrapper">
-       <img class="icon" src="/images/Mail128.png">
-    </div>
-   </div>
-
-
-
-
-
+        <div id="section1" class="metro-section tile-span-4">
+          {% for post in site.posts limit:3 %}
+          <a class="tile wide imagetext {% cycle 'bg-color-pink', 'bg-color-greenDark', 'bg-color-gree' %} " href="{{post.url}}">
+            <div class="image-wrapper">
+              <span class="icon icon-article"></span>
             </div>
-         </div>
-      </div>
-   </div>
+            <div class="column-text">
+              <div class="text4">{{post.content | strip_html | truncate: 50}}</div>
+            </div>
+            <div class="app-label">{{post.title}}</div>
+          </a>
+          {%endfor%}
 
+          <a class="tile app bg-color-purple" href="/archives.html">
+            <div class="image-wrapper">
+              <span class="icon icon-archive"></span>
+            </div>
+            <span class="app-label">存档</span>
+          </a>
+          <a class="tile app bg-color-red" href="/categories.html">
+            <div class="image-wrapper">
+              <span class="icon icon-folder"></span>
+            </div>
+            <span class="app-label">分类</span>
+          </a>
+          <a class="tile app bg-color-blue" href="/atom.xml">
+            <div class="image-wrapper">
+              <span class="icon icon-feed-2"></span>
+            </div>
+            <span class="app-label">RSS</span>
+          </a>
+        </div>
+
+        <div id="section2" class="metro-section tile-span-4">
+
+          <a class="tile app bg-color-orange" href="https://github.com/lihuazhang">
+            <div class="image-wrapper">
+              <span class="icon icon-github"></span>
+            </div>
+            <span class="app-label">Github</span>
+          </a>
+
+          <a class="tile app bg-color-red" href="http://weibo.com/lihua2046">
+            <img class="icon" src="/images/weibo.png">
+          </a>
+
+          <div class="tile wide imagetext bg-color-darken">
+            <audio src="/music/chongshi.mp3"  autoplay=true>
+              Your browser does not support the audio element.
+            </audio>
+            <div class="image-wrapper">
+              <img class="icon" src="/images/chongshi.jpg"/>
+            </div>
+
+            <div class="column-text">
+              <div class="text4">
+                I walked ten thousand miles,ten thousands miles to reach you
+              </div>
+              <div class="text4">
+                And every gasp to breath,I grabbed it just to find you
+              </div>
+            </div>
+            <div class="app-label">虫师</div>
+          </div>
+
+          <a class="tile imagetext bg-color-blue" href="/about_me.html">
+            <div class="image-wrapper">
+              <img src="/images/head.png"/>
+            </div>
+            <span class="brand-label">About Me</span>
+          </a>
+
+          <div class="tile" id="weather">
+            <iframe src="http://www.thinkpage.cn/weather/weather.aspx?uid=&cid=101010100&l=&p=CMA&a=1&u=C&s=13&m=0&x=1&d=0&fc=&bgc=2E93D9&bc=&ti=1&in=1&li=2&ct=iframe" frameborder="0" scrolling="no" width="150" height="162" allowTransparency="true"></iframe>
+          </div>
+
+          <a href="http://dota.baicaisi.net" class="tile wide imagetext bg-color-red">
+            <div class="image-wrapper">
+              <img class="icon" src="/images/dota.jpg"/>
+            </div>
+            <div class="column-text">
+              <div class="text4">
+                白菜丝工作组为你倾情打造
+              </div>
+              <div class="text4">
+                属于你的移动 Dota！
+              </div>
+            </div>
+            <div class="app-label">圣剑传说</div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 

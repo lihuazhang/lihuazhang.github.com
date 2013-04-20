@@ -14,18 +14,16 @@ border-radius: 0px;
 }
 
 .entry {
-  padding-top: 30px;
+  padding-top: 20px;
+  padding-bottom: 20px;
   border-bottom: 1px dashed #ddd;
   text-align: left;
 }
-.entry>header {
-  text-align: center;
-  color: #000;
+
+.entry h2, .entry h3, .entry h4, .entry ol, .entry ul, .entry p, .entry pre, .entry blockquote {
+  margin-bottom: 14px;
 }
 
-.entry .entry-title {
-  color: #000;
-}
 
 .entry .entry-meta {
   color: #999999;
@@ -33,7 +31,28 @@ border-radius: 0px;
   line-height: 2;
 }
 
-.entry .entry-meta:before {
-  font-family: 'IcoMoon';
-  content: "I";
+#comment {
+  margin-top: 20px;
+}
+
+.brand-icon {
+margin: 5px 15px;
+width: 32px;
+height: 32px;
+}
+
+.brand-label {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  min-height: 30px;
+  line-height: 30px;
+  background-color: #000;
+  opacity: 0.6;
+  text-align: center;
+}
+
+#weather {
+  background-color: #2E93D9;
 }

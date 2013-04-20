@@ -4,16 +4,24 @@ layout: page
 
 <article class="entry" id="{{ page.id }}">
   <header>
-    <h1 class="entry-title">{{ page.title }}</h1>
     <p class="entry-meta">
-      <time>{{ page.date | date: '%Y/%m/%d %A' }}</time>
+      <i aria-hidden="true" class="icon-pen-alt-fill"></i> <time>{{ page.date | date: '%Y-%m-%d' }}</time>
+      <i aria-hidden="true" class="icon-folder"></i> <a href="{{root_url}}/categories.html#{{page.categories}}-ref"> {{ page.categories }} </a>
+      {% for tag in page.tags %}
+        {% if forloop.first%}
+          <i aria-hidden="true" class="icon-tag"></i>
+        {% endif %}
+        {{ tag }} {% if forloop.last == false %}, {% endif %}
+      {%endfor%}
+      <i aria-hidden="true" class="icon-comments-3"></i> <a href="#comment">comments</a>
     </p>
   </header>
-
   {{ content }}
-
-  <footer>
-    {% if page.previous %}<a href="{{ page.previous.url }}">&laquo; {{ page.previous.title }}</a>{% endif %}
-    {% if page.next %}<a href="{{ page.next.url }}">{{ page.next.title }} &raquo;</a>{% endif %}
-  </footer>
 </article>
+
+{% if site.duoshuo_show_comment_count == true %}
+<section id="comment">
+  {% include duoshuo.html %}
+</section>
+{% endif %}
+
