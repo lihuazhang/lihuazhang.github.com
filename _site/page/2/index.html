@@ -103,22 +103,7 @@
               <span class="icon icon-article"></span>
             </div>
             <div class="column-text">
-              <div class="text4">一直只知道 *nux 下的命令，对 windows 知之甚少，其实 windows 下也有很多强大的命令。
-
-比如在 linux 下查看一个 mysql 的端口，
-➜  octopress git:(source) ✗ netstat -an | grep 3306 # mac 下的命令没有 linux 下来的丰富啊，没有 p 选项。
-tcp4       0      0  *.3306                 *.*                    LISTEN
-
-root@li493-58:~# netstat -anp | grep 3306 # 这是 ubuntu 下面的。
-tcp        0      0 0.0.0.0:3306            0.0.0.0:*               LISTEN      2509/mysqld
-
-很方便吧。那么如果在 windows 下呢？
-netstat -ano | findstr 3306 # 这里会把 pid 告诉你，比如 pid 是 1278
-
-tasklist /fi &quot;pid eq 1278&quot; # 这样就找到了 1278 对应的进程
-
-也是很简单的吧！
-</div>
+              <div class="text4">一直只知道 *nux 下的命令，对 windows 知之甚少，其实 windows 下也有很多强大的命令。 比如在 linux 下查看一个 mysql 的端口， ➜...</div>
             </div>
             <div class="column-text">
               <div class="text4">...</div>
@@ -131,23 +116,7 @@ tasklist /fi &quot;pid eq 1278&quot; # 这样就找到了 1278 对应的进程
               <span class="icon icon-article"></span>
             </div>
             <div class="column-text">
-              <div class="text4">我工作 6 年。 2 年徐汇， 2 年 黄浦， 2 年 浦东。我住宝山区。我从一开始的愿望就是能踏着晨光上班，踩着夕阳下班。
-从来或者很少实现。有几次生病的下午，实在顶不住，请假回家，当地铁从地下穿入高空的时候，晴脆的阳光撒进车厢，我就想
-什么时候我可以不用朝九晚六。
-
-8 at my house 说起来有段历史。2009 年，我在 DE 项目工作，8atmyHouse 就是这个项目的一个公用密码，很忙，每个人都希望
-晚上八点能到家。不知道别人怎样，反正我能刚刚好，想起来在 google 上海的那段时间算得上是我职业生涯最快活的一段了。
-
-离开之后，去了更远的张江集电港的 AMD， 每天 6 点出门，晚上 9 点到家。早上刮的干净的脸庞，晚上已胡子拉渣。除了感叹上海之大之外，
-也恨宝山怎么没有高科技。三个月之后实在受不了，投了几份简历之后，有幸去了稍微近一点的浦东南路的智涌。上班一个小半时，下班一个半小时，
-每天在跨越整个上海，从浦西到浦东，放在过去，就是每天去上海上班。
-
-我到智涌后，也沿袭了 8atmyHouse 做密码的习惯。同事总会问， 为什么用这个密码，我说希望八点能在家坐在沙发上看看电视看看书。他们又会问，
-能行么？我说看运气，如果永远踩着点，不落下任何一班车，那晚上8点半的时候，我可以坐在家里的电脑前。否则那八成还在回家的路上。同事问的多了，
-后来连老板也调侃我，比如最近夏令时了，是不是应该改成 7atmyHouse 。我其实想说这不是都靠老板你了么？
-
-八点在家，说起来是多么容易的事情啊，这 6 年却有几次？也许再有猎头找我的时候，我一定告诉他，我要求不高，8 at my home!
-</div>
+              <div class="text4">我工作 6 年。 2 年徐汇， 2 年 黄浦， 2 年 浦东。我住宝山区。我从一开始的愿望就是能踏着晨光上班，踩着夕阳下班。 从来或者很少实现。有几次生病的下午，实在顶不住，请假回家，当地铁从地下穿入高空的时候，晴脆的阳光撒进车厢，我就想 什么时候我可以不用朝九晚六。 8 at...</div>
             </div>
             <div class="column-text">
               <div class="text4">...</div>
@@ -160,66 +129,7 @@ tasklist /fi &quot;pid eq 1278&quot; # 这样就找到了 1278 对应的进程
               <span class="icon icon-article"></span>
             </div>
             <div class="column-text">
-              <div class="text4">ShiLongLu 问你有什么办法测试百度的登录窗口呢？这是差不多2个月前的问题了，我一直忙于 Dota 圣剑传说。恰巧春节有时间看了下。
-
-百度登陆的时候是弹出一个对话框，如图：
-
-
-
-但是这个对话框是用 iframe 实现的。
-&lt;iframe height=&quot;100%&quot; frameborder=&quot;0&quot; width=&quot;100%&quot; scrolling=&quot;no&quot; src=&quot;http://www.baidu.com/cache/user/html/login-1.2.html&quot; marginheight=&quot;0&quot; marginwidth=&quot;0&quot; id=&quot;login_iframe&quot;&gt;
-...
-...
-...
-&lt;/iframe&gt;
-
-所以在填写用户名和密码的时候，需要先 switch 到这个 frame 上去， 
-
-
-When working inside a frame, you should use Capybara&#39;s within_frame method.
-
-
-(Object) withinframe(frameid)
-
-
-Execute the given block within the given iframe given the id of that iframe. Only works on some drivers (e.g. Selenium)
-
-Parameters:
-frame_id (String) — Id of the frame
-
-
-所以我们的实现基本如下：
-
-baidu.feature:
-Given I am on baidu.com
-When I  click &quot;登录&quot;
-And I switch to login form
-And I enter &quot;lihuazhang@hotmail.com&quot; for &quot;帐号&quot;
-And I enter &quot;204646&quot; for &quot;密码&quot;
-And I click &quot;登录&quot; button
-Then I should see &quot;zhangzuichi&quot;
-
-step_definition.rb:
-When /^I enter &quot;(.*?)&quot; for &quot;(.*?)&quot;$/ do |value, key|
-  if key == &quot;帐号&quot;
-    within_frame &#39;login_iframe&#39; do
-      fill_in &#39;pass_login_username_0&#39;, :with =&gt; value
-    end
-  else
-     within_frame &#39;login_iframe&#39; do
-      fill_in &#39;pass_login_password_0&#39;, :with =&gt; value
-    end
-  end
-end
-
-When /^I click &quot;(.*?)&quot; button$/ do |arg1|
-  within_frame &#39;login_iframe&#39; do
-    click_button &#39;pass_login_input_submit_0&#39;
-  end
-end
-
-大致如此，在 firefox 下测试通过。
-</div>
+              <div class="text4">ShiLongLu 问你有什么办法测试百度的登录窗口呢？这是差不多2个月前的问题了，我一直忙于 Dota 圣剑传说。恰巧春节有时间看了下。 百度登陆的时候是弹出一个对话框，如图：  但是这个对话框是用 iframe 实现的。 &lt;iframe...</div>
             </div>
             <div class="column-text">
               <div class="text4">...</div>
