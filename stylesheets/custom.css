@@ -60,3 +60,31 @@ height: 32px;
 #recent-comments, #recent-comments a {
   color: white;
 }
+#panorama-scroll-next, #panorama-scroll-prev {
+  color: #4F1ACB;
+}
+
+#panorama-scroll-prev .win-commandimage,
+#panorama-scroll-next .win-commandimage{
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  font-family: 'IcoMoon';
+  font-size: 20px;
+  font-weight: normal;
+  line-height: 32px;
+  text-align: center;
+  text-decoration: none;
+  vertical-align: baseline;
+  vertical-align: 24%;
+  border-style: solid;
+  border-width: 2px;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+  outline: 0;
+  color: #4F1ACB;
+}
+
+
+
