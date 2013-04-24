@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
   <id>http://8atmyhouse.com</id>
   <title><![CDATA[8:00 PM at My House]]></title>
-  <updated>2013-04-21T14:50:26+08:00</updated>
+  <updated>2013-04-23T23:13:47+08:00</updated>
   
   <author>
     <name><![CDATA[晋恒温]]></name>
@@ -11,6 +11,23 @@
   
   <link href="http://8atmyhouse.com/atom.xml" rel="self" />
 
+  
+  <entry>
+    <id>http://8atmyhouse.com/blog/new-post</id>
+    <title><![CDATA[new post]]></title>
+    <updated>2013-04-23T00:00:00+08:00</updated>
+    <link href="http://8atmyhouse.com/blog/new-post.html" />
+    <content type="html"><![CDATA[<p>test!</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <id>http://8atmyhouse.com/blog/aaasd</id>
+    <title><![CDATA[aaasd]]></title>
+    <updated>2013-04-23T00:00:00+08:00</updated>
+    <link href="http://8atmyhouse.com/blog/aaasd.html" />
+    <content type="html"><![CDATA[]]></content>
+  </entry>
   
   <entry>
     <id>http://8atmyhouse.com/blog/windowsxia-cha-zhao-zhan-yong-duan-kou-de-jin-cheng</id>
