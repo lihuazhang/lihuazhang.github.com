@@ -5,13 +5,13 @@ category: WebDriver
 comments: true
 ---
 <p>
-<h6>1. Learn Maven3 first.</h6>
+<h3>1. Learn Maven3 first.</h3>
   This is quite simple. Go through <a href="http://maven.apache.org/guides/getting-started/maven-in-five-minutes.html">Maven in 5 Minutes</a>
   That's quite enough.
 </p>
 
 <p>
-<h6>2. Set up project</h6>
+<h3>2. Set up project</h3>
 Using the command in Maven in 5 Minutes to create a project using your own groupId and artifactId.
 <pre class="prettyprint">
 mvn archetype:generate -DgroupId=com.ahchoo.automation -DartifactId=ahcoo -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
@@ -45,7 +45,7 @@ Then run <code class="cmd">mvn clean install</code>
 </p>
 
 <p>
-<h6>3. Using eclipse to import this project</h6>
+<h3>3. Using eclipse to import this project</h3>
 install <a href="http://eclipse.org/m2e/">m2eclipse</a> and
 run command in the project root directory:
 <pre class="prettyprint">
