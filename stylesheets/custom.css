@@ -3,6 +3,11 @@ html, body {
   color: #000000;
   font-size: 16px;
 }
+
+hr {
+  border-bottom-color: #839496;
+}
+
 #authorname {
   margin-top: 12px;
 }
