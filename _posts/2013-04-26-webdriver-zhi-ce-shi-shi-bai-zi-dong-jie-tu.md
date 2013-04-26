@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "webdriver 之测试失败自动截图"
+title: "WebDriver 之测试失败自动截图"
 category: WebDriver
 tags: [test-china.org]
 ---
