@@ -20,7 +20,7 @@ isHome: true
               <span class="icon icon-article"></span>
             </div>
             <div class="column-text">
-              <div class="text4">{{post.content | truncatewords 25 | strip_html }}</div>
+              <div class="text4">{{post.content | raw_content | truncatewords 20 }}</div>
             </div>
             <div class="column-text">
               <div class="text4">...</div>

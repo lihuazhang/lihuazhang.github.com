@@ -28,6 +28,7 @@ GEM
       yajl-ruby (~> 1.1.0)
     redcarpet (2.2.2)
     sass (3.2.7)
+    stringex (1.4.0)
     syntax (1.0.0)
     yajl-ruby (1.1.0)
 
@@ -38,3 +39,4 @@ DEPENDENCIES
   compass
   jekyll
   redcarpet
+  stringex
