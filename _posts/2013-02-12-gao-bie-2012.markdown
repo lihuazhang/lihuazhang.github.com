@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "告别2012"
+title: "告别"
 date: 2013-02-12 10:57
 comments: true
 categories: 生活杂记
