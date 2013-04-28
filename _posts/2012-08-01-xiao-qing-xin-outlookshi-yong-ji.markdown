@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "小清新-outlook试用记"
+title: "小清新 outlook 试用记"
 date: 2012-08-01 21:05
 comments: true
 categories: 试用
