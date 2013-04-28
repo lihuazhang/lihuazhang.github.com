@@ -1,9 +1,8 @@
 ---
 layout: post
-title: "小清新 outlook 试用记"
-date: 2012-08-01 21:05
-comments: true
+title: "小清新 Outlook 试用记"
 categories: 试用
+tags: [Metro]
 ---
 
 我不得不说，outlook 不错。Metro 风格像清新的风让人觉得惬意。目前 outlook 提供从 hotmail 升级和注册新用户两种方式。
