@@ -279,6 +279,12 @@ tags: [test-china.org]
 我在项目中最早是用第一种方法，后来改用第二种，主要是因为，在自定义的监听器里， 它遇到所有的异常都会截图，这个时候，如果你用了 condition wait 一个 Ajax 的元素， 那就会很悲剧，你会发现在你的目录下面有无数的截图。当初我没有找到解决方法，期待有人提出。
 
 
+{% highlight ruby linenos %}
+def foo
+  puts 'foo'
+end
+{% endhighlight %}
+
 ## Refer ##
 
 
