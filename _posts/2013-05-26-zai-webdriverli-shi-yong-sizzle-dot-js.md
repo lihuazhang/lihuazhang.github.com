@@ -24,10 +24,63 @@ WebDriver 同样使用 XPATH 和 CSS locator。孰优孰劣，google 一下，�
 个人一直使用 XPATH， 对 XPATH 的强大也深有体会。作为一个软件测试人员，坚持一点`什么好用，用什么`，
 所以想体会一把 CSS locator， 至于争论，请移步 [using xpath is better of CSS selector?](https://groups.google.com/forum/?fromgroups#!topic/webdriver/raDyUewHFGI)
 
-##CSS
+WebDriver 中有 8 种定位方法，
 
-在 Selenium 1 的时代， CSS 定位是用 Sizzle 库实现的，但是到了 Selenium 2 时代，webdriver 首先考虑native的实现，只有当native 不存在的时候，才会
+
+1. By.className
+2. By.id
+3. By.linkText
+4. By.name
+5. By.partialLinkText
+6. By.tagName
+7. By.xpath
+8. By.cssSelector
+
+其他 6 种其实都是由 XPATH 和 CssSelector 来实现的。
+
+<table>
+   <tr>
+      <td>Original</td>
+      <td>CSS</td>
+      <td>XPath</td>
+   </tr>
+   <tr>
+      <td>By.className("foo");</td>
+      <td>By.cssSelector(".foo");</td>
+      <td>By.xpath("//*[@class='foo']");</td>
+   </tr>
+   <tr>
+      <td>By.id("bar");</td>
+      <td>By.cssSelector("#bar");</td>
+      <td>By.xpath("//*[@id='bar']");</td>
+   </tr>
+   <tr>
+      <td>By.linkText("Click Me");</td>
+      <td>N/A (可以利用sizzle :contains(text) 实现 )</td>
+      <td>By.xpath("//a[text()='Click Me']");</td>
+   </tr>
+   <tr>
+      <td>By.name("fee");</td>
+      <td>By.cssSelector("[name='fee']");</td>
+      <td>By.xpath("//*[@name='fee']");</td>
+   </tr>
+   <tr>
+      <td>By.partialLinkText("some");</td>
+      <td>N/A (可以利用sizzle :contains(text) 实现 )</td>
+      <td>By.xpath("//a[contains(text(),'some')]");</td>
+   </tr>
+   <tr>
+      <td>By.tagname("div");</td>
+      <td>By.cssSelector("div");</td>
+      <td>By.xpath("//div");</td>
+   </tr>
+</table>
+
+
+其实在 Selenium 1 的时代， CSS 定位是用 Sizzle 库实现的，但是到了 Selenium 2 时代，webdriver 首先考虑native的实现，只有当native 不存在的时候，才会
 去使用Sizzle。
 
 > Native browser support is used by default, so please refer to w3c css selectors <http://www.w3.org/TR/CSS/#selectors> for a list of generally available css selectors. If a browser does not have native support for css queries, then Sizzle is used. 
  
+按道理来说，既然都用 Sizzle 做了备选，应该不用人为植入 Sizzle 支持，但是由于各种 driver 的实现不同，总会出现一些不一致，所以不如主动植入 Sizzle 来的省心。
+
