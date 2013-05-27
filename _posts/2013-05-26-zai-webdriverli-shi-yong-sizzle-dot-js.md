@@ -91,6 +91,8 @@ WebDriver 中有 8 种定位方法，
 
 >A pure-JavaScript CSS selector engine designed to be easily dropped in to a host library.
 
+做为 JQuery 的定位器，Sizzle 号称最快的 DOM 选择器。它可以和 JQuery 结合， 也可以单独使用。
+
 Sizzle 支持:
 
 1. IE6+
