@@ -36,7 +36,8 @@ WebDriver 中有 8 种定位方法，
 7. By.xpath
 8. By.cssSelector
 
-其他 6 种其实都是由 XPATH 和 CssSelector 来实现的。
+其他 6 种其实都是由 XPATH 和 CssSelector 来实现的。参考[Selecting WebDriver locators](http://darrellgrainger.blogspot.com/2011/12/selecting-webdriver-locators.html)
+
 
 <table  class="table">
    <tr>
@@ -83,5 +84,20 @@ WebDriver 中有 8 种定位方法，
 
 > Native browser support is used by default, so please refer to w3c css selectors <http://www.w3.org/TR/CSS/#selectors> for a list of generally available css selectors. If a browser does not have native support for css queries, then Sizzle is used. 
  
-按道理来说，既然都用 Sizzle 做了备选，应该不用人为植入 Sizzle 支持，但是由于各种 driver 的实现不同，总会出现一些不一致，所以不如主动植入 Sizzle 来的省心。
+按道理来说，既然都用 Sizzle 做了备选，应该不用人为植入 Sizzle 支持，但是由于各种 driver 的实现不同，总会出现一些不一致，所以不如主动来的省心。
+
+
+##Sizzle
+
+>A pure-JavaScript CSS selector engine designed to be easily dropped in to a host library.
+
+Sizzle 支持:
+
+1. IE6+
+2. FF3.0+
+3. Chrome 5+
+4. Safari 3+
+5. Opera 9+
+
+详细可参见[文档](https://github.com/jquery/sizzle/wiki/Sizzle-Documentation)
 
