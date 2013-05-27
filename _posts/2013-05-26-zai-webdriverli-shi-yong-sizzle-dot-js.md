@@ -38,7 +38,7 @@ WebDriver 中有 8 种定位方法，
 
 其他 6 种其实都是由 XPATH 和 CssSelector 来实现的。
 
-<table>
+<table  class="table">
    <tr>
       <td>Original</td>
       <td>CSS</td>
@@ -75,6 +75,7 @@ WebDriver 中有 8 种定位方法，
       <td>By.xpath("//div");</td>
    </tr>
 </table>
+
 
 
 其实在 Selenium 1 的时代， CSS 定位是用 Sizzle 库实现的，但是到了 Selenium 2 时代，webdriver 首先考虑native的实现，只有当native 不存在的时候，才会
