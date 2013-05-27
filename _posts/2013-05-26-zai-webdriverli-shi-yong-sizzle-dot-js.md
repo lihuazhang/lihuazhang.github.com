@@ -103,3 +103,313 @@ Sizzle 支持:
 
 详细可参见[文档](https://github.com/jquery/sizzle/wiki/Sizzle-Documentation)
 
+
+##方案
+
+网上的方案大抵有 2 个:
+
+### 1. 自定义一个 Selector 类，封装 Sizzle.js 脚本。
+
+`SizzleSelector.java`
+
+```java
+
+package my.webdriver.helper;
+
+import java.util.List;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.WebElement;
+ 
+@SuppressWarnings("unchecked")
+public class SizzleSelector {
+    private JavascriptExecutor driver;
+ 
+    public SizzleSelector(WebDriver webDriver) {
+        driver = (JavascriptExecutor) webDriver;
+    }
+ 
+    public WebElement findElementBySizzleCss(String using) {
+        injectSizzleIfNeeded();
+        String javascriptExpression = createSizzleSelectorExpression(using);
+        List<WebElement> elements = (List<WebElement>) driver
+                .executeScript(javascriptExpression);
+        if (elements.size() > 0)
+            return (WebElement) elements.get(0);
+        return null;
+    }
+ 
+    public List<WebElement> findElementsBySizzleCss(String using) {
+        injectSizzleIfNeeded();
+        String javascriptExpression = createSizzleSelectorExpression(using);
+        return (List<WebElement>) driver.executeScript(javascriptExpression);
+    }
+ 
+    private String createSizzleSelectorExpression(String using) {
+        return "return Sizzle(\"" + using + "\")";
+    }
+ 
+    private void injectSizzleIfNeeded() {
+        if (!sizzleLoaded())
+            injectSizzle();
+    }
+ 
+    public Boolean sizzleLoaded() {
+        Boolean loaded;
+        try {
+            loaded = (Boolean) driver.executeScript("return Sizzle()!=null");
+        } catch (WebDriverException e) {
+            loaded = false;
+        }
+        return loaded;
+    }
+ 
+    public void injectSizzle() {
+        driver.executeScript(" var headID = document.getElementsByTagName(\"head\")[0];"
+                + "var newScript = document.createElement('script');"
+                + "newScript.type = 'text/javascript';"
+                + "newScript.src = 'https://raw.github.com/jquery/sizzle/master/sizzle.js';"
+                + "headID.appendChild(newScript);");
+    }
+}
+
+```
+在需要使用 SizzleSelector 的时候，使用它。
+
+```java
+
+package my.webdriver.pageobject;
+
+import my.webdriver.helper.SizzleSelector;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+
+public class SearchResultPage {
+
+    private final WebDriver driver;
+    private SizzleSelector sizzler;
+
+    public SearchResultPage(WebDriver driver) {
+        this.driver = driver;
+        sizzler = new SizzleSelector(driver);
+    }
+
+    By resultStats = By.id("resultStats");
+
+    public String getResultStats() {
+        // 下面两个输出的结果应该一样
+        System.out.println(sizzler.findElementsBySizzleCss("a:contains(翻译此页)").size());
+        System.out.println(driver.findElements(By.xpath("//a[contains(text(), '翻译此页')]")).size());
+       
+        return driver.findElement(resultStats).getText();
+    }
+
+}
+
+```
+
+### 2. 扩展 By 和 ByCssSelector 类
+
+```java
+
+package my.webdriver.helper;
+
+import java.lang.reflect.Method;
+import java.util.List;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.InvalidElementStateException;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.SearchContext;
+import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.internal.FindsByCssSelector;
+import org.openqa.selenium.remote.RemoteWebElement;
+
+public abstract class ByExtended extends By {
+
+    
+    public static By cssSelector(final String selector) {
+        if (selector == null)
+            throw new IllegalArgumentException(
+                    "Cannot find elements when the selector is null");
+
+        return new ByCssSelectorExtended(selector);
+    }
+    
+
+    public static class ByCssSelectorExtended extends ByCssSelector {
+
+        private String ownSelector;
+
+        public ByCssSelectorExtended(String selector) {
+            super(selector);
+            ownSelector = selector;
+        }
+
+        @Override
+        public WebElement findElement(SearchContext context) {
+            try {
+                if (context instanceof FindsByCssSelector) {
+                    return ((FindsByCssSelector) context)
+                            .findElementByCssSelector(ownSelector);
+                }
+            } catch (InvalidElementStateException e) {
+                return findElementBySizzleCss(context, ownSelector);
+            } catch (WebDriverException e) {
+                if (e.getMessage().startsWith(
+                        "An invalid or illegal string was specified")) {
+                    return findElementBySizzleCss(context, ownSelector);
+                }
+                throw e;
+            }
+            throw new WebDriverException("Driver does not support finding an element by selector: " + ownSelector);
+        }
+
+        @Override
+        public List<WebElement> findElements(SearchContext context) {
+            try {
+                if (context instanceof FindsByCssSelector) {
+                    return ((FindsByCssSelector) context)
+                            .findElementsByCssSelector(ownSelector);
+                }
+            } catch (InvalidElementStateException e) {
+                return findElementsBySizzleCss(context, ownSelector);
+            } catch (WebDriverException e) {
+                if (e.getMessage().startsWith(
+                        "An invalid or illegal string was specified")) {
+                    return findElementsBySizzleCss(context, ownSelector);
+                }
+                throw e;
+            }
+            throw new WebDriverException("Driver does not support finding an element by selector: " + ownSelector);
+        }
+
+        @Override
+        public String toString() {
+            return "ByExtended.selector: " + ownSelector;
+        }
+
+
+         /********************************* SIZZLE SUPPORT CODE**************************************/
+    
+
+        /**
+         * Find element by sizzle css.
+         * @param context 
+         * 
+         * @param cssLocator
+         *            the cssLocator
+         * @return the web element
+         */
+        @SuppressWarnings("unchecked")
+        public WebElement findElementBySizzleCss(SearchContext context, String cssLocator) {
+            List<WebElement> elements = findElementsBySizzleCss(context, cssLocator);
+            if (elements != null && elements.size() > 0 ) {
+                return elements.get(0);
+            }
+            return null;
+        }
+
+        private void fixLocator(SearchContext context, String cssLocator,
+                WebElement element) {
+
+            if (element instanceof RemoteWebElement) {
+                try {
+                    Class[] parameterTypes = new Class[] { SearchContext.class,
+                            String.class, String.class };
+                    Method m = element.getClass().getDeclaredMethod(
+                            "setFoundBy", parameterTypes);
+                    m.setAccessible(true);
+                    Object[] parameters = new Object[] { context,
+                            "css selector", cssLocator };
+                    m.invoke(element, parameters);
+                } catch (Exception fail) {
+                    //NOOP Would like to log here? 
+                }
+            }
+        }
+
+
+        /**
+         * Find elements by sizzle css.
+         * 
+         * @param cssLocator
+         *            the cssLocator
+         * @return the list of the web elements that match this locator
+         */
+        @SuppressWarnings("unchecked")
+        public List<WebElement> findElementsBySizzleCss(SearchContext context, String cssLocator) {
+            injectSizzleIfNeeded();
+            String javascriptExpression = createSizzleSelectorExpression(cssLocator);
+            List<WebElement> elements = (List<WebElement>) ((JavascriptExecutor) getDriver())
+                    .executeScript(javascriptExpression);
+            if (elements.size() > 0) {
+                for (WebElement el : elements) { 
+                    fixLocator(context, cssLocator, el);
+                }
+            }
+            return elements;
+        }
+
+        private JavascriptExecutor getDriver() {
+            
+            // 从上下文中取出当前的 driver
+            return null;
+        }
+
+        /**
+         * Creates the sizzle selector expression.
+         * 
+         * @param cssLocator
+         *            the cssLocator
+         * @return string that represents the sizzle selector expression.
+         */
+        private String createSizzleSelectorExpression(String cssLocator) {
+            return "return Sizzle(\"" + cssLocator + "\")";
+        }
+
+        /**
+         * Inject sizzle if needed.
+         */
+        private void injectSizzleIfNeeded() {
+            if (!sizzleLoaded())
+                injectSizzle();
+        }
+
+        /**
+         * Check if the Sizzle library is loaded.
+         * 
+         * @return the true if Sizzle is loaded in the web page 
+         */
+        public Boolean sizzleLoaded() {
+            Boolean loaded;
+            try {
+                loaded = (Boolean) ((JavascriptExecutor) getDriver())
+                        .executeScript("return Sizzle()!=null");
+            } catch (WebDriverException e) {
+                loaded = false;
+            }
+            return loaded;
+        }
+
+        /**
+         * Inject sizzle 1.8.2
+         */
+        public void injectSizzle() {
+            ((JavascriptExecutor) getDriver())
+                    .executeScript(" var headID = document.getElementsByTagName(\"head\")[0];"
+                            + "var newScript = document.createElement('script');"
+                            + "newScript.type = 'text/javascript';"
+                            + "newScript.src = 'https://raw.github.com/jquery/sizzle/1.8.2/sizzle.js';"
+                            + "headID.appendChild(newScript);");
+        }
+        /**
+         * ******************** SIZZLE SUPPORT CODE
+         */
+
+    }
+}
+
+```
