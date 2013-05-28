@@ -413,3 +413,66 @@ public abstract class ByExtended extends By {
 }
 
 ```
+
+其实两种方案原理是一样的，前者简单，后者优雅，老样子，什么方便用什么。
+
+P.S 推荐使用 Gradle 来构建项目，比起 Maven 一大堆 XML 清爽了不少。虽然我自己胡子一把，看上去重口味，但是对于代码还是喜欢小清新。
+看下 `build.gradle` 脚本
+
+```java
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+group = 'my.webdriver'
+
+ext {
+    projTitle = 'WebDriver on Google'
+    projVersion = '1.0'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '2.+'
+    compile group: 'junit', name: 'junit', version: '4.+'
+}
+
+```
+
+想下 pom.xml
+
+```xml
+<project>
+...
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.10</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>2.20.0</version>
+            </dependency>
+            </dependencies></scope></version></artifactId></groupId>
+        </dependency>
+    </dependencies>
+...
+</project>
+
+```
+
+怎样，心动了吧！
+
+
+###Refer
+====
+
+天下文章一大抄^^
+
+1. [ADDING THE SIZZLE CSS SELECTOR LIBRARY IN WEBDRIVER](http://seleniumtestingworld.blogspot.com/2013/01/adding-sizzle-css-selector-library-and.html)
+2. [Injecting the Sizzle CSS selector library](http://selenium.polteq.com/en/injecting-the-sizzle-css-selector-library/)
