@@ -65,3 +65,5 @@ stat
 echo "Usage: tomcat start|stop|restart|status"
 esac
 ```
+
+参见 http://www.techpaste.com/2012/01/shell-script-control-stopstartrestartstatus-tomcat-application-server/
