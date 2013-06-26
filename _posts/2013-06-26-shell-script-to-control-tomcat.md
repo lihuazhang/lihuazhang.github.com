@@ -1,3 +1,11 @@
+---
+layout: post
+title: "能马上用起来的控制 tomcat 的脚本"
+description: ""
+categories: linux
+tags: []
+---
+
 难的在网上找到的能马上用起来的 shell 脚本，心情愉悦啊！
 
 
