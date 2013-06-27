@@ -6,6 +6,34 @@ categories: ruby
 tags: []
 ---
 
+看 [Capistrano](https://github.com/capistrano) 源码， 在 `capistrano / bin / capify` 下，发现
+`here doc` 的写法，
+
+```ruby
+...
+...
+def unindent(string)
+  indentation = string[/\A\s*/]
+  string.strip.gsub(/^#{indentation}/, "")
+end
+...
+...
+
+ "Capfile" => unindent(<<-FILE),
+
+    load 'deploy'
+
+    # Uncomment if you are using Rails' asset pipeline
+    # load 'deploy/assets'
+
+    load 'config/deploy' # remove this line to skip loading any of the default tasks
+  FILE
+
+```
+
+
+孤陋寡闻的我立马google 了一把找到篇好文，抄下来分享：
+
 Heredocs come in handy when you have to deal with
 larger multi-line strings in the source code itself. 
 However, it usually breaks the indents:
