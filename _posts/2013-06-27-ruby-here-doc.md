@@ -1,4 +1,14 @@
-Heredocs come in handy when you have to deal with larger multi-line strings in the source code itself. However, it usually breaks the indents:
+---
+layout: post
+title: "ruby 的 Heredocs"
+description: ""
+categories: ruby
+tags: []
+---
+
+Heredocs come in handy when you have to deal with
+larger multi-line strings in the source code itself. 
+However, it usually breaks the indents:
 
 ```ruby
 class Poem
