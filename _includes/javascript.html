@@ -12,6 +12,14 @@
 <script type="text/javascript" src="{{ root_url }}/scripts/tile-slider.js"></script>
 <script type="text/javascript" src="{{ root_url }}/scripts/enquire.min.js"></script>
 <script type="text/javascript">
+
+      $(".metro").metro();
+      $('.panorama').panorama({
+        nicescroll: true,
+        showscrollbuttons: false,
+        keyboard: true
+      });
+
 enquire.register("screen and (max-width: 767px)", {
    
     match : function() {
@@ -37,14 +45,6 @@ enquire.register("screen and (max-width: 767px)", {
       $("body").css("padding-bottom", "88px");
       $(".container-fluid").css("padding-left", "70px");
       $(".container-fluid").css("padding-right", "70px");
-      $(".metro").metro();
-      $('.panorama').panorama({
-        nicescroll: false,
-        showscrollbuttons: true,
-        keyboard: true
-});
-
-
     }
 });
 
