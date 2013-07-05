@@ -10,11 +10,42 @@
 <script type="text/javascript" src="{{ root_url }}/scripts/bootmetro-panorama.js"></script>
 <script type="text/javascript" src="{{ root_url }}/scripts/holder.js"></script>
 <script type="text/javascript" src="{{ root_url }}/scripts/tile-slider.js"></script>
+<script type="text/javascript" src="{{ root_url }}/scripts/enquire.min.js"></script>
 <script type="text/javascript">
-$(".metro").metro();
-$('.panorama').panorama({
-  nicescroll: false,
-  showscrollbuttons: true,
-  keyboard: true
+enquire.register("screen and (max-width: 767px)", {
+   
+    match : function() {
+      $("#header-container").hide();
+      $("#top-info").css("float", "left");
+      $(".carousel-control").hide();
+      $("#section2").hide();
+      $(".tile").css("float", "none");
+      $(".small").hide();
+      $("#section1").css("width", "auto");
+      $("body").css("padding", "10px");
+      $(".container-fluid").css("padding", "0px");
+    },
+    unmatch : function() {
+      $("#header-container").show();
+      $("#top-info").css("float", "right");
+      $(".carousel-control").show();
+      $("#section2").show();
+      $(".tile").css("float", "left");
+      $(".small").show();
+      $("#section1").css("width", "640px");
+      $("body").css("padding-top", "24px");
+      $("body").css("padding-bottom", "88px");
+      $(".container-fluid").css("padding-left", "70px");
+      $(".container-fluid").css("padding-right", "70px");
+      $(".metro").metro();
+      $('.panorama').panorama({
+        nicescroll: false,
+        showscrollbuttons: true,
+        keyboard: true
 });
+
+
+    }
+});
+
 </script>

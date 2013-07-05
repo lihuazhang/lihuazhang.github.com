@@ -28,21 +28,6 @@ isHome: true
             <div class="app-label">{{post.title}}</div>
           </a>
           {%endfor%}
-
-          <a class="tile app bg-color-purple" href="/archives.html">
-            <div class="image-wrapper">
-              <span class="icon icon-archive"></span>
-            </div>
-            <span class="app-label">存档</span>
-          </a>
-          <a class="tile app bg-color-pink" href="/categories.html">
-            <div class="image-wrapper">
-              <span class="icon icon-folder"></span>
-            </div>
-            <span class="app-label">分类</span>
-          </a>
-
-
           <div class="tile wide text" id="recent-comments">
               <ul class="ds-recent-comments" data-num-items="2" data-excerpt-length="10"  data-show-title="0"></ul>
               <!--多说js加载开始，一个页面只需要加载一次 -->
@@ -62,7 +47,20 @@ isHome: true
           </div>
 
 
-          <a class="tile imagetext bg-color-blue" href="/about.html">
+          <a class="tile small app bg-color-purple" href="/archives.html">
+            <div class="image-wrapper">
+              <span class="icon icon-archive"></span>
+            </div>
+            <span class="app-label">存档</span>
+          </a>
+          <a class="tile small app bg-color-pink" href="/categories.html">
+            <div class="image-wrapper">
+              <span class="icon icon-folder"></span>
+            </div>
+            <span class="app-label">分类</span>
+          </a>
+
+          <a class="tile small imagetext bg-color-blue" href="/about.html">
             <div class="image-wrapper">
               <img src="/images/head.png"/>
             </div>
@@ -71,7 +69,7 @@ isHome: true
 
 
 
-          <a class="tile app bg-color-blue" href="/atom.xml">
+          <a class="tile small app bg-color-blue" href="/atom.xml">
             <div class="image-wrapper">
               <span class="icon icon-feed-2"></span>
             </div>
