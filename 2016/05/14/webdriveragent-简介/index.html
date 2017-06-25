@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="恒温" />
+
+
+
+<meta name="description" content="WebDriverAgent 是什么 去年的 SeleniumConf 上，Facebook 推出了一款新的iOS移动测试框架 —— WebDriverAgent，当时的推文上，写的还只支持模拟器。半年过过去了，如今在看官方github —— https://github.com/facebook/WebDriverAgent，已经宣称支持真机测试了（亲测的确支持）。我把它的 ReadMe 搬运过">
+<meta name="keywords" content="移动测试">
+<meta property="og:type" content="article">
+<meta property="og:title" content="WebDriverAgent 简介">
+<meta property="og:url" content="http://lihuazhang.github.io/2016/05/14/webdriveragent-简介/index.html">
+<meta property="og:site_name" content="八点在家">
+<meta property="og:description" content="WebDriverAgent 是什么 去年的 SeleniumConf 上，Facebook 推出了一款新的iOS移动测试框架 —— WebDriverAgent，当时的推文上，写的还只支持模拟器。半年过过去了，如今在看官方github —— https://github.com/facebook/WebDriverAgent，已经宣称支持真机测试了（亲测的确支持）。我把它的 ReadMe 搬运过">
+<meta property="og:image" content="https://testerhome.com/photo/2016/0b2b5ddb75af0e237e6f41765d5c475e.png">
+<meta property="og:image" content="https://testerhome.com/photo/2016/4ec84edc2288aaad14c28574f09c0eb1.gif">
+<meta property="og:image" content="https://testerhome.com/photo/2016/44dcfc909b7851c9d0a85fec55206469.png">
+<meta property="og:image" content="https://testerhome.com/photo/2016/250fe86d690bd3d70ce6ae97cbc11c5b.png">
+<meta property="og:image" content="https://testerhome.com/photo/2016/7187dc2d1ce51566a03769fc55e823d4.png">
+<meta property="og:image" content="https://testerhome.com/photo/2016/01f1f5fa3e36f4ce4c1b4af186b76bfe.png">
+<meta property="og:updated_time" content="2017-06-25T08:01:09.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="WebDriverAgent 简介">
+<meta name="twitter:description" content="WebDriverAgent 是什么 去年的 SeleniumConf 上，Facebook 推出了一款新的iOS移动测试框架 —— WebDriverAgent，当时的推文上，写的还只支持模拟器。半年过过去了，如今在看官方github —— https://github.com/facebook/WebDriverAgent，已经宣称支持真机测试了（亲测的确支持）。我把它的 ReadMe 搬运过">
+<meta name="twitter:image" content="https://testerhome.com/photo/2016/0b2b5ddb75af0e237e6f41765d5c475e.png">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="八点在家" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>WebDriverAgent 简介 | 八点在家</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: false,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: undefined
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/images/avatar.jpeg" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">恒温</a></h1>
+        </hgroup>
+
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="mailto:lihuazhang@hotmail.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="https://github.com/lihuazhang" title="GitHub"></a>
+                            
+                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metro/">Metro</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/capybara/">capybara</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cucumber/">cucumber</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/factory-gril/">factory_gril</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nexus-7-2013/">nexus 7 2013</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pageobject/">pageobject</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/test-china-org/">test-china.org</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vim/">vim</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xpath/">xpath</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/南京/">南京</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/性能测试/">性能测试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/游戏开发/">游戏开发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/生活/">生活</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/移动测试/">移动测试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/翻译/">翻译</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/陆犯焉识/">陆犯焉识</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">恒温</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/images/avatar.jpeg" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">恒温</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto:lihuazhang@hotmail.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/lihuazhang" title="GitHub"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-webdriveragent-简介" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/05/14/webdriveragent-简介/" class="article-date">
+      <time datetime="2016-05-14T10:49:52.000Z" itemprop="datePublished">2016-05-14</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      WebDriverAgent 简介
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/移动测试/">移动测试</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/移动测试/">移动测试</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h1 id="WebDriverAgent-是什么"><a href="#WebDriverAgent-是什么" class="headerlink" title="WebDriverAgent 是什么"></a>WebDriverAgent 是什么</h1><p><img src="https://testerhome.com/photo/2016/0b2b5ddb75af0e237e6f41765d5c475e.png" alt=""></p>
+<p>去年的 SeleniumConf 上，Facebook 推出了一款新的iOS移动测试框架 —— WebDriverAgent，当时的推文上，写的还只支持模拟器。半年过过去了，如今在看官方github —— <a href="https://github.com/facebook/WebDriverAgent，已经宣称支持真机测试了（亲测的确支持）。我把它的" target="_blank" rel="external">https://github.com/facebook/WebDriverAgent，已经宣称支持真机测试了（亲测的确支持）。我把它的</a> ReadMe 搬运过来：</p>
+<blockquote>
+<p>WebDriverAgent 在 iOS 端实现了一个 <a href="https://w3c.github.io/webdriver/webdriver-spec.html" target="_blank" rel="external">WebDriver server</a> ，借助这个 server 我们可以远程控制 iOS 设备。你可以启动、杀死应用，点击、滚动视图，或者确定页面展示是否正确。This makes it a perfect tool for application end-to-end testing or general purpose device automation.（它说它是iOS上一个完美的e2e的自动化解决方案） It works by linking <code>XCTest.framework</code> and calling Apple’s API to execute commands directly on a device.（链接<code>XCTest.framework</code>调用苹果的API直接在设备上执行命令） WebDriverAgent is developed and used at Facebook for end-to-end testing and is successfully adopted by <a href="http://appium.io/" target="_blank" rel="external">Appium</a>. （Appium封装工作正在进行中，如果一旦封装好，那么以后就可以直接用Appium提供的binding了。）It is currently maintained by <a href="https://github.com/marekcirkos" target="_blank" rel="external">Marek Cirkos</a> and <a href="https://github.com/mmmulani" target="_blank" rel="external">Mehdi Mulani</a>.</p>
+</blockquote>
+<a id="more"></a>
+<h3 id="它有如下特性："><a href="#它有如下特性：" class="headerlink" title="它有如下特性："></a>它有如下特性：</h3><ul>
+<li>真机和模拟器都支持</li>
+<li>实现了大部分的 <a href="https://w3c.github.io/webdriver/webdriver-spec.html" target="_blank" rel="external">WebDriver spec</a></li>
+<li><a href="https://github.com/facebook/WebDriverAgent/wiki/USB-support" target="_blank" rel="external">USB support</a> for devices，所谓的usb支持，指的是设备不需要上网，目前client binding 还没有。</li>
+<li>提供了一个 Inspector</li>
+<li>Easy development cycle as it can be launched &amp; debugged directly via Xcode</li>
+<li>Unsupported yet, but works with tvOS &amp; OSX</li>
+</ul>
+<p><img src="https://testerhome.com/photo/2016/4ec84edc2288aaad14c28574f09c0eb1.gif" alt=""></p>
+<h1 id="WebDriverAgent-的使用"><a href="#WebDriverAgent-的使用" class="headerlink" title="WebDriverAgent 的使用"></a>WebDriverAgent 的使用</h1><p>To get the project set up just run bootstrap script:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">./Scripts/bootstrap.sh</div></pre></td></tr></table></figure>
+<p>It will:</p>
+<ul>
+<li>fetch all dependencies with <a href="https://github.com/Carthage/Carthage" target="_blank" rel="external">Carthage</a></li>
+<li>build Inspector bundle using <a href="https://www.npmjs.com/" target="_blank" rel="external">npm</a></li>
+</ul>
+<p>After it is finished you can simply open <code>WebDriverAgent.xcodeproj</code> and start <code>WebDriverAgentRunner</code> test and start sending <a href="https://github.com/facebook/WebDriverAgent/wiki/Queries" target="_blank" rel="external">requests</a>.</p>
+<p>More about how to start WebDriverAgent <a href="https://github.com/facebook/WebDriverAgent/wiki/Starting-WebDriverAgent" target="_blank" rel="external">here</a>.</p>
+<p>官方的文档讲的很清晰，基本没有什么坑。Carthage 是用来解决 xcode project 依赖的，大家可能知道 <a href="https://cocoapods.org/" target="_blank" rel="external">cocoapod</a>，那你就把 Carthage 理解成和 cocoapod 一样的东西就可以了，可以通过 <code>brew install carthage</code> 安装。npm 是用来构建 Inspector， Inspector 是一个 react 的应用，通过往 WebDriverAgent 发 HTTP 请求，返回页面的结构。</p>
+<p>下面是我运行 ./Scripts/bootstrap.sh 的结果：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">➜  WebDriverAgent git:(master) ./Scripts/bootstrap.sh</div><div class="line">Fetching dependencies</div><div class="line">*** Checking out KissXML at <span class="string">"5.0.3"</span></div><div class="line">*** Checking out peertalk at <span class="string">"5a0495a7b7d81b68e25ea1933c755b677cb040da"</span></div><div class="line">*** Checking out RoutingHTTPServer at <span class="string">"v1.0.0"</span></div><div class="line">*** Downloading ocmock.framework binary at <span class="string">"OCMock 3.2.2"</span></div><div class="line">*** Checking out ocmock at <span class="string">"v3.2.2"</span></div><div class="line">*** xcodebuild output can be found <span class="keyword">in</span> /var/folders/11/wh7ypz2s7q17lxxjphxd4z6h0000gn/T/carthage-xcodebuild.XhkH5T.log</div><div class="line">*** Building scheme <span class="string">"OCMock iOS"</span> <span class="keyword">in</span> OCMock.xcodeproj</div><div class="line">2016-05-14 17:45:36.012 xcodebuild[14231:270807] [MT] DVTPlugInManager: Required plug-in compatibility UUID ACA8656B-FEA8-4B6D-8E4A-93F4C95C362C <span class="keyword">for</span> KSImageNamed.ideplugin (com.ksuther.KSImageNamed) not present</div><div class="line">2016-05-14 17:45:36.159 xcodebuild[14231:270807] [MT] PluginLoading: Required plug-in compatibility UUID ACA8656B-FEA8-4B6D-8E4A-93F4C95C362C <span class="keyword">for</span> plug-in at path <span class="string">'~/Library/Application Support/Developer/Shared/Xcode/Plug-ins/UncrustifyPlugin.xcplugin'</span> not present <span class="keyword">in</span> DVTPlugInCompatibilityUUIDs</div><div class="line">2016-05-14 17:45:36.160 xcodebuild[14231:270807] [MT] PluginLoading: Required plug-in compatibility UUID ACA8656B-FEA8-4B6D-8E4A-93F4C95C362C <span class="keyword">for</span> plug-in at path <span class="string">'~/Library/Application Support/Developer/Shared/Xcode/Plug-ins/Alcatraz.xcplugin'</span> not present <span class="keyword">in</span> DVTPlugInCompatibilityUUIDs</div><div class="line">2016-05-14 17:45:46.318 xcodebuild[14494:271598] [MT] DVTPlugInManager: Required plug-in compatibility UUID ACA8656B-FEA8-4B6D-8E4A-93F4C95C362C <span class="keyword">for</span> KSImageNamed.ideplugin (com.ksuther.KSImageNamed) not present</div><div class="line">2016-05-14 17:45:46.376 xcodebuild[14494:271598] [MT] PluginLoading: Required plug-in compatibility UUID ACA8656B-FEA8-4B6D-8E4A-93F4C95C362C <span class="keyword">for</span> plug-in at path <span class="string">'~/Library/Application Support/Developer/Shared/Xcode/Plug-ins/UncrustifyPlugin.xcplugin'</span> not present <span class="keyword">in</span> DVTPlugInCompatibilityUUIDs</div><div class="line">2016-05-14 17:45:46.377 xcodebuild[14494:271598] [MT] PluginLoading: Required plug-in compatibility UUID ACA8656B-FEA8-4B6D-8E4A-93F4C95C362C <span class="keyword">for</span> plug-in at path <span class="string">'~/Library/Application Support/Developer/Shared/Xcode/Plug-ins/Alcatraz.xcplugin'</span> not present <span class="keyword">in</span> DVTPlugInCompatibilityUUIDs</div><div class="line">Building Inspector</div><div class="line">Creating bundle directory...</div><div class="line">Building inspector.js...</div><div class="line"></div><div class="line">&gt; web-driver-inspector@1.0.0 build /Users/lihuazhang/code/WebDriverAgent/Inspector</div><div class="line">&gt; webpack --progress --colors</div><div class="line"></div><div class="line">Hash: 536587fce0cad79f8558</div><div class="line">Version: webpack 1.12.2</div><div class="line">Time: 2794ms</div><div class="line">       Asset    Size  Chunks             Chunk Names</div><div class="line">inspector.js  706 kB       0  [emitted]  main</div><div class="line">   [0] multi main 28 bytes &#123;0&#125; [built]</div><div class="line">    + 182 hidden modules</div><div class="line">Done</div><div class="line">➜  WebDriverAgent git:(master)</div></pre></td></tr></table></figure>
+<p>build 好之后就是启动 WebDriverAgent，官方提供了四种方式：</p>
+<ol>
+<li><p>使用 XCode</p>
+</li>
+<li><p>用 xcodebuild</p>
+</li>
+<li><p>Using fbsimctl from FBSimulatorControl framework</p>
+</li>
+<li><p>Using FBSimulatorControl framework directly</p>
+</li>
+</ol>
+<p>我使用 XCode (如果自动化的话，可以使用 xcodebuild)，打开 WebDriverAgent.xcodeproj，IDE 的显示是这样的：</p>
+<p><img src="https://testerhome.com/photo/2016/44dcfc909b7851c9d0a85fec55206469.png" alt=""></p>
+<p>先不要纠结其他，我们只看 <code>UITestingUITests.m</code>，这是一个 XCTestCase 的实现类，我们直接运行，真机或者模拟器都可以。我用的模拟器，运行之后，会在模拟器安装一个 WebDriverAgentRunner 的应用。我们看下运行的日志：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">2016-05-15 01:19:43.019 XCTRunner[29300:524372] Running tests...</div><div class="line">01:19:43.218 XCTRunner[29300:524495] _XCT_testBundleReadyWithProtocolVersion:minimumVersion: reply received</div><div class="line">01:19:43.228 XCTRunner[29300:524495] _IDE_startExecutingTestPlanWithProtocolVersion:16</div><div class="line">2016-05-15 01:19:44.732 XCTRunner[29300:524372] Continuing to run tests <span class="keyword">in</span> the background with task ID 1</div><div class="line">Test Suite <span class="string">'Selected tests'</span> started at 2016-05-15 01:19:45.319</div><div class="line">Test Suite <span class="string">'UITestingUITests'</span> started at 2016-05-15 01:19:45.322</div><div class="line">Test Case <span class="string">'-[UITestingUITests testRunner]'</span> started.</div><div class="line">2016-05-15 01:19:45.323 XCTRunner[29300:524372] -[_XCTestDriverTestObserver testCaseWillStart:] UITestingUITests testRunner</div><div class="line">    t =     0.00s     Start Test</div><div class="line">2016-05-15 01:19:45.324 XCTRunner[29300:524372] -[UITestingUITests testRunner] started activity &lt;XCActivityRecord: 0x7f8acb721660&gt; 2016-05-14 17:19:45 +0000: Start Test</div><div class="line">2016-05-15 01:19:45.327 XCTRunner[29300:524372] -[UITestingUITests testRunner] finished activity &lt;XCActivityRecord: 0x7f8acb721660&gt; 2016-05-14 17:19:45 +0000: Start Test (0.00271106s)</div><div class="line">    t =     0.01s     Set Up</div><div class="line">2016-05-15 01:19:45.328 XCTRunner[29300:524372] -[UITestingUITests testRunner] started activity &lt;XCActivityRecord: 0x7f8acb7219e0&gt; 2016-05-14 17:19:45 +0000: Set Up</div><div class="line">2016-05-15 01:19:45.330 XCTRunner[29300:524372] -[UITestingUITests testRunner] finished activity &lt;XCActivityRecord: 0x7f8acb7219e0&gt; 2016-05-14 17:19:45 +0000: Set Up (0.00130302s)</div><div class="line">2016-05-15 01:19:45.331 XCTRunner[29300:524372] Built at May 15 2016 01:19:32</div><div class="line">2016-05-15 01:19:45.386 XCTRunner[29300:524372] ServerURLHere-&gt;http://192.168.0.105:8100&lt;-ServerURLHere</div><div class="line">2016-05-15 01:19:45.386 XCTRunner[29300:524372] Listening on USB</div></pre></td></tr></table></figure>
+<p>关键字是：</p>
+<p><strong>2016-05-15 01:19:45.386 XCTRunner[29300:524372] ServerURLHere-&gt;<a href="http://192.168.0.105:8100" target="_blank" rel="external">http://192.168.0.105:8100</a>&lt;-ServerURLHere</strong></p>
+<p>这个意思是告诉我们，设备中起了一个服务器，我们可以用 <code>http://192.168.0.105:8100</code> 访问到。下面就是在浏览器打开返回的内容：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">value: "Unhandled endpoint: / -- http://192.168.0.105:8100/ with parameters &#123; wildcards = ( "" ); &#125;",</div><div class="line">sessionId: null,</div><div class="line">status: 1</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>通道找到了，接下来就是看如何造请求了。官方问题提供了文档：<a href="https://github.com/facebook/WebDriverAgent/wiki/Queries。最简单的`status`，http://192.168.0.105:8100/status，" target="_blank" rel="external">https://github.com/facebook/WebDriverAgent/wiki/Queries。最简单的`status`，http://192.168.0.105:8100/status，</a></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">value: &#123;</div><div class="line">state: "success",</div><div class="line">os: &#123;</div><div class="line">name: "iPhone OS",</div><div class="line">version: "9.3"</div><div class="line">&#125;,</div><div class="line">ios: &#123;</div><div class="line">simulatorVersion: "9.3"</div><div class="line">&#125;,</div><div class="line">build: &#123;</div><div class="line">time: "May 15 2016 01:19:33"</div><div class="line">&#125;</div><div class="line">&#125;,</div><div class="line">sessionId: null,</div><div class="line">status: 0</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>其他的 API 有兴趣的人可以直接看文档。</p>
+<p>服务端有了，就剩下客户端了，但是目前为止没有一个官方的客户端binding，Facebook 的同学没有放出来，看这个issue——<a href="https://github.com/facebook/WebDriverAgent/issues/115" target="_blank" rel="external">https://github.com/facebook/WebDriverAgent/issues/115</a></p>
+<p><img src="https://testerhome.com/photo/2016/250fe86d690bd3d70ce6ae97cbc11c5b.png" alt=""></p>
+<p>所以目前为止如果要使用 WebDriverAgent 就要自己实现一套客户端代码。</p>
+<h2 id="WebDriverAgent-Inspector-的使用"><a href="#WebDriverAgent-Inspector-的使用" class="headerlink" title="WebDriverAgent Inspector 的使用"></a>WebDriverAgent Inspector 的使用</h2><p>直接在浏览器端打开 <a href="http://192.168.0.105:8100/inspector，就可以看见如下界面：" target="_blank" rel="external">http://192.168.0.105:8100/inspector，就可以看见如下界面：</a></p>
+<p><img src="https://testerhome.com/photo/2016/7187dc2d1ce51566a03769fc55e823d4.png" alt=""></p>
+<p>inspector 不是很强大，无法实现交互，不过大致能帮大家定位元素。</p>
+<h2 id="WebDriverAgent-简单原理"><a href="#WebDriverAgent-简单原理" class="headerlink" title="WebDriverAgent 简单原理"></a>WebDriverAgent 简单原理</h2><p><img src="https://testerhome.com/photo/2016/01f1f5fa3e36f4ce4c1b4af186b76bfe.png" alt=""></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>WebDriverAgent 取代 UIAutomation 或者 XCUITesting 做为 Appium 底部驱动看来是时间问题了。原因如下：</p>
+<ol>
+<li><p>支持真机和模拟器</p>
+</li>
+<li><p>不受 instruments 单实例的限制</p>
+</li>
+<li><p>Facebook 出品</p>
+<p>​</p>
+</li>
+</ol>
+
+      
+    </div>
+    
+  </div>
+  
+    
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2016/06/25/踩不到点的小男孩/">
+                    踩不到点的小男孩
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2015/12/29/南京之行/">
+                    南京之行
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#WebDriverAgent-是什么"><span class="toc-number">1.</span> <span class="toc-text">WebDriverAgent 是什么</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#它有如下特性："><span class="toc-number">1.0.1.</span> <span class="toc-text">它有如下特性：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#WebDriverAgent-的使用"><span class="toc-number">2.</span> <span class="toc-text">WebDriverAgent 的使用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#WebDriverAgent-Inspector-的使用"><span class="toc-number">2.1.</span> <span class="toc-text">WebDriverAgent Inspector 的使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#WebDriverAgent-简单原理"><span class="toc-number">2.2.</span> <span class="toc-text">WebDriverAgent 简单原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">2.3.</span> <span class="toc-text">总结</span></a></li></ol></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+
+
+    
+        <section id="comments">
+    <style> aside.comment-bar { margin: auto 30px; }</style>
+    <div id="disqus_thread"></div>
+    <script>
+        var disqus_config = function(){
+            this.page.url = 'http://lihuazhang.github.io/2016/05/14/webdriveragent-简介/';
+            this.page.identifier = '2016/05/14/webdriveragent-简介/';
+        };
+        var loadComment = function(){
+            var d = document, s = d.createElement('script');
+            s.src = '//8atmyhouse.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        }
+    </script>
+    
+    <script> loadComment(); </script>
+
+</section>
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2016/06/25/踩不到点的小男孩/" title="上一篇: 踩不到点的小男孩">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2015/12/29/南京之行/" title="下一篇: 南京之行">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/06/25/随便写写/">随便写写</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/29/烟/">烟</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/25/踩不到点的小男孩/">踩不到点的小男孩</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/14/webdriveragent-简介/">WebDriverAgent 简介</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/29/南京之行/">南京之行</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/17/2013-03-15-8atmyhouse/">8atmyHouse</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/12/26/2013-12-26-fan-yi-android-and-ios-support/">[翻译]Android and iOS Support</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/10/15/2013-10-15-you-xi-kai-fa-chang-yong-gai-nian/">游戏开发常用概念</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/10/09/2013-10-09-cron-jobs-and-random-times-within-giving-hours/">Cron jobs and random times, within giving hours</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/09/24/2013-09-24-fluentwait-with-webelement/">FluentWait with WebElement</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/09/14/2013-09-14-gatling-shi-yong/">Gatling 试用 1</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/08/29/2013-08-29-add-hover-event-to-capybara/">add hover event to capybara</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/08/25/2013-08-25-du-lu-fan-yan-shi/">读陆犯焉识</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/08/21/2013-08-21-wo-de-nexus-7-ruan-jian-lie-biao/">我的 nexus 7 2013 软件列表</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/08/16/2013-08-16-vim-cha-jian-tui-jian/">vim 插件推荐</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/08/12/2013-08-12-install-vim74-from-source/">Install vim74 from source</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/08/08/2013-08-08-cucumberhe-capybaraxia-de-pageobject/">Cucumber 和 Capybara 下的 PageObject</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/08/07/2013-08-07-step-defintionshi-kong/">由 step definition 失控引发的讨论和思考</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/08/06/2013-08-06-git-revert/">git revert</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/08/02/2013-08-02-ba-yue-er-ri-gong-zuo-suo-shi/">8-02-工作琐事</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/07/30/2013-07-30-gong-zuo-ri-ji-7-31/">7-31-工作琐事</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/07/11/2013-07-11-wo-de-vimrc/">我的 vimrc</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/06/27/2013-06-27-ruby-here-doc/">ruby 的 Heredocs</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/06/26/2013-06-26-shell-script-to-control-tomcat/">能马上用起来的控制 tomcat 的脚本</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/05/26/2013-05-26-zai-webdriverli-shi-yong-sizzle-dot-js/">在WebDriver里使用Sizzle.js</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/05/12/2013-05-12-wo-de-mu-qin/">我的母亲</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/04/30/2013-04-30-webdriver-zhi-ce-shi-shi-bai-zi-dong-jie-tu/">WebDriver 之测试失败自动截图</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/04/29/2013-04-29-jmeter-bing-qi-pu-zhi-xpath-extractor/">Jmeter 兵器谱之 Xpath Extractor</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/04/28/2013-04-28-jmeter-bing-qi-pu-zhi-foreach-controller/">JMeter 兵器谱之 ForEach Controller</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/04/27/2013-04-27-jmeter-bing-qi-pu-zhi-regular-expression-extractor/">Jmeter 兵器谱之 Regular Expression Extractor</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/04/26/2013-04-26-htmlunit-jie-shao/">HtmlUnit 介绍</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/03/21/2013-03-21-windowsxia-cha-zhao-zhan-yong-duan-kou-de-jin-cheng/">windows 下查找占用端口的进程</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/02/12/2013-02-12-shi-yong-capybara-deng-lu-bai-du/">使用 capybara 登陆百度</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/02/12/2013-02-12-gao-bie-2012/">告别2012</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/08/06/2012-08-06-ying-she-windows-cmdke-yi-du-qu-de-ci-pan-qu-dong/">映射 Windows cmd 可以读取的磁盘驱动</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/08/05/2012-08-05-surround-dot-vim/">surround.vim</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/08/01/2012-08-01-xiao-qing-xin-outlookshi-yong-ji/">小清新 Outlook 试用记</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/04/25/2012-04-25-webdriver-4-jia-shang-xie-zi/">WebDriver 4: 加上叶子</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/04/24/2012-04-24-sauce-ondemandshi-yong/">Sauce OnDemand试用</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/04/23/2012-04-23-mysql5-qing-kong-rootmi-ma/">mysql5 清空root密码</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/04/21/2012-04-21-webdriver-3-more-pageobjects/">WebDriver 3: more PageObjects - PageFactory</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/04/20/2012-04-20-webdriver2/">WebDriver 2: PageObject</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/04/19/2012-04-19-capybara-plus-cucumber-plus-webdriverzi-dong-hua-ce-shi-kuang-jia/">使用 Capybara， Cucumber 和 WebDriver 实现自动化测试</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/04/06/2012-04-06-webdriver-1-post/">WebDriver 1: Set up WebDriver using Maven3</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/03/08/2012-03-08-learn-vim-3-post/">vim学习 jsctags</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/03/07/2012-03-07-learn-vim-2-post/">vim学习 shiftwidth, tabstop, softtabstop和expandtab</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/03/07/2012-03-07-learn-vim-1-post/">vim学习 listchars</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/03/04/2012-03-04-zsh-config-post/">oh my zsh</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/02/23/2012-02-23-use-spf13-vim-config-post/">vim配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/02/19/2012-02-19-add-google-pretty-code-post/">Add google pretty code support</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2012-2017 恒温
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

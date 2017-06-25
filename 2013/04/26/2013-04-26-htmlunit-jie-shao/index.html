@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="恒温" />
+
+
+
+<meta name="description" content="在 @Lily 的 Juint4 + WebDriver 入门篇 中， Lily 问起了 HtmlUnit Driver。对 HtmlUnit Driver 我倒是没有接触太多， 所以特意去找了些文章看看。 在 selenium 官方 wiki 上说：  This is currently the fastest and most lightweight implementation of Web">
+<meta name="keywords" content="test-china.org">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HtmlUnit 介绍">
+<meta property="og:url" content="http://lihuazhang.github.io/2013/04/26/2013-04-26-htmlunit-jie-shao/index.html">
+<meta property="og:site_name" content="八点在家">
+<meta property="og:description" content="在 @Lily 的 Juint4 + WebDriver 入门篇 中， Lily 问起了 HtmlUnit Driver。对 HtmlUnit Driver 我倒是没有接触太多， 所以特意去找了些文章看看。 在 selenium 官方 wiki 上说：  This is currently the fastest and most lightweight implementation of Web">
+<meta property="og:updated_time" content="2015-12-16T13:41:55.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="HtmlUnit 介绍">
+<meta name="twitter:description" content="在 @Lily 的 Juint4 + WebDriver 入门篇 中， Lily 问起了 HtmlUnit Driver。对 HtmlUnit Driver 我倒是没有接触太多， 所以特意去找了些文章看看。 在 selenium 官方 wiki 上说：  This is currently the fastest and most lightweight implementation of Web">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="八点在家" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>HtmlUnit 介绍 | 八点在家</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: false,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: undefined
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/images/avatar.jpeg" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">恒温</a></h1>
+        </hgroup>
+
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="mailto:lihuazhang@hotmail.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="https://github.com/lihuazhang" title="GitHub"></a>
+                            
+                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metro/">Metro</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/capybara/">capybara</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cucumber/">cucumber</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/factory-gril/">factory_gril</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nexus-7-2013/">nexus 7 2013</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pageobject/">pageobject</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/test-china-org/">test-china.org</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vim/">vim</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xpath/">xpath</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/南京/">南京</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/性能测试/">性能测试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/游戏开发/">游戏开发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/生活/">生活</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/移动测试/">移动测试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/翻译/">翻译</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/陆犯焉识/">陆犯焉识</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">恒温</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/images/avatar.jpeg" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">恒温</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto:lihuazhang@hotmail.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/lihuazhang" title="GitHub"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-2013-04-26-htmlunit-jie-shao" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2013/04/26/2013-04-26-htmlunit-jie-shao/" class="article-date">
+      <time datetime="2013-04-26T13:37:00.000Z" itemprop="datePublished">2013-04-26</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      HtmlUnit 介绍
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/WebDriver/">WebDriver</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/test-china-org/">test-china.org</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>在 @Lily 的 <a href="http://test-china.org/topics/8" target="_blank" rel="external">Juint4 + WebDriver 入门篇</a> 中， Lily 问起了 HtmlUnit Driver。对 HtmlUnit Driver 我倒是没有接触太多， 所以特意去找了些文章看看。</p>
+<p>在 <a href="http://code.google.com/p/selenium/wiki/HtmlUnitDriver" target="_blank" rel="external">selenium 官方 wiki</a> 上说：</p>
+<blockquote>
+<p>This is currently the fastest and most lightweight implementation of WebDriver. As the name suggests, this is based on HtmlUnit.</p>
+</blockquote>
+<p>所以想要了解 HtmlUnit Driver， 就必先追根溯源地研究下 HtmlUnit。</p>
+<blockquote>
+<p>HtmlUnit is a “GUI-Less browser for Java programs”. It models HTML documents and provides an API that allows you to invoke pages, fill out forms, click links, etc… just like you do in your “normal” browser.</p>
+</blockquote>
+<p>简单来说， HtmlUnit 就是没有界面的，你看不见的，但是却能做浏览器的活的 JAVA 版本的浏览器。需要说明的是，<strong>HtmlUnit 本身不是一个测试框架， 它真的只是一个模拟浏览器行为的程序。</strong> 所以需要和 Junit 或者 TestNG 等测试框架配合起来使用。同时，很多开源的工具也使用 HtmlUnit 来模拟浏览器行为，比如大名鼎鼎的 WebDriver。</p>
+<p>下面，搬抄一把 HtmlUnit 的入门指南：</p>
+<h2 id="建立项目"><a href="#建立项目" class="headerlink" title="建立项目"></a>建立项目</h2><p>使用 maven 创建一个 htmlunit 的试用项目</p>
+<pre><code>mvn archetype:generate -DgroupId=com.testchina -DartifactId=my-htmlunit-test -DinteractiveMode=false
+</code></pre><p>（不得不夸下 Maven， 构建的好工具啊。）</p>
+<p>修改 pom.xml， 加入 HtmlUnit 依赖， 升级 Junit 为4.10。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">xmlns</span>=<span class="string">"http://maven.apache.org/POM/4.0.0"</span> <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span></div><div class="line">  <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"</span>&gt;</div><div class="line">  <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></div><div class="line"></div><div class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.testchina<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>my-htmlunit-test<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">packaging</span>&gt;</span>jar<span class="tag">&lt;/<span class="name">packaging</span>&gt;</span></div><div class="line"></div><div class="line">  <span class="tag">&lt;<span class="name">name</span>&gt;</span>my-htmlunit-test<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://maven.apache.org<span class="tag">&lt;/<span class="name">url</span>&gt;</span></div><div class="line"></div><div class="line">  <span class="tag">&lt;<span class="name">properties</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">project.build.sourceEncoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">project.build.sourceEncoding</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></div><div class="line"></div><div class="line">  <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.10<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>net.sourceforge.htmlunit<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>htmlunit<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.10<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line"></div><div class="line">  <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>然后，执行：</p>
+<ol>
+<li><code>mvn install</code></li>
+<li><code>mvn eclipse:eclipse</code></li>
+</ol>
+<p>之后， 就可以在 eclipse 里导入项目。接着，我们来写第一个例子。</p>
+<h2 id="试用"><a href="#试用" class="headerlink" title="试用"></a>试用</h2><p><strong>第一个例子：</strong></p>
+<p>a. 访问 <a href="http://htmlunit.sourceforge.net" target="_blank" rel="external">http://htmlunit.sourceforge.net</a></p>
+<p>b. 验证网页的 titile</p>
+<p>c. 验证网页内容</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> com.testchina;</div><div class="line"></div><div class="line"><span class="keyword">import</span> <span class="keyword">static</span> org.junit.Assert.*;</div><div class="line"><span class="keyword">import</span> org.junit.Test;</div><div class="line"><span class="keyword">import</span> com.gargoylesoftware.htmlunit.WebClient;</div><div class="line"><span class="keyword">import</span> com.gargoylesoftware.htmlunit.html.HtmlPage;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyHtmlUnitTest</span> </span>&#123;</div><div class="line">    <span class="meta">@Test</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">homePage</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        <span class="keyword">final</span> WebClient webClient = <span class="keyword">new</span> WebClient(); <span class="comment">// 建立 WebClient。</span></div><div class="line">        <span class="keyword">final</span> HtmlPage page = webClient.getPage(<span class="string">"http://htmlunit.sourceforge.net"</span>); <span class="comment">// 访问网站，返回页面对象。</span></div><div class="line">        assertEquals(<span class="string">"HtmlUnit - Welcome to HtmlUnit"</span>, page.getTitleText()); <span class="comment">// 验证 title。</span></div><div class="line">        <span class="comment">/** 验证网页内容 */</span></div><div class="line">        <span class="keyword">final</span> String pageAsXml = page.asXml();</div><div class="line">        assertTrue(pageAsXml.contains(<span class="string">"&lt;body class=\"composite\"&gt;"</span>));</div><div class="line">        <span class="keyword">final</span> String pageAsText = page.asText();</div><div class="line">        assertTrue(pageAsText.contains(<span class="string">"Support for the HTTP and HTTPS protocols"</span>));</div><div class="line">        webClient.closeAllWindows();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>第二个例子: 指定浏览器</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Test</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">homePage_Firefox</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">    <span class="keyword">final</span> WebClient webClient = <span class="keyword">new</span> WebClient(BrowserVersion.FIREFOX_10);</div><div class="line">    <span class="keyword">final</span> HtmlPage page = webClient</div><div class="line">            .getPage(<span class="string">"http://htmlunit.sourceforge.net"</span>);</div><div class="line">    assertEquals(<span class="string">"HtmlUnit - Welcome to HtmlUnit"</span>, page.getTitleText());</div><div class="line"></div><div class="line">    webClient.closeAllWindows();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>很简单，在初始化 WebClient 的时候，传入浏览器版本， 目前 2.10 里面支持：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/** Register plugins for the browser versions. */</span></div><div class="line">   <span class="keyword">static</span> &#123;</div><div class="line">       INTERNET_EXPLORER_6.initDefaultFeatures();</div><div class="line">       INTERNET_EXPLORER_7.initDefaultFeatures();</div><div class="line">       INTERNET_EXPLORER_8.initDefaultFeatures();</div><div class="line"></div><div class="line">       FIREFOX_3.initDefaultFeatures();</div><div class="line">       FIREFOX_3_6.initDefaultFeatures();</div><div class="line">       FIREFOX_10.initDefaultFeatures();</div><div class="line"></div><div class="line">       <span class="keyword">final</span> PluginConfiguration flash = <span class="keyword">new</span> PluginConfiguration(<span class="string">"Shockwave Flash"</span>,</div><div class="line">           <span class="string">"Shockwave Flash 9.0 r31"</span>, <span class="string">"libflashplayer.so"</span>);</div><div class="line">       flash.getMimeTypes().add(<span class="keyword">new</span> PluginConfiguration.MimeType(<span class="string">"application/x-shockwave-flash"</span>,</div><div class="line">           <span class="string">"Shockwave Flash"</span>, <span class="string">"swf"</span>));</div><div class="line">       FIREFOX_3.getPlugins().add(flash);</div><div class="line">       FIREFOX_3_6.getPlugins().add(flash);</div><div class="line">       FIREFOX_10.getPlugins().add(flash);</div><div class="line"></div><div class="line">       CHROME_16.initDefaultFeatures();</div><div class="line">       CHROME_16.setApplicationCodeName(<span class="string">"Mozilla"</span>);</div><div class="line">       CHROME_16.setPlatform(<span class="string">"MacIntel"</span>);</div><div class="line">       CHROME_16.setCpuClass(<span class="keyword">null</span>);</div><div class="line">       CHROME_16.setBrowserLanguage(<span class="string">"undefined"</span>);</div><div class="line">       <span class="comment">// there are other issues with Chrome; a different productSub, etc.</span></div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<p><strong>第三个例子： 获取页面元素</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Test</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getElements</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">    <span class="keyword">final</span> WebClient webClient = <span class="keyword">new</span> WebClient();</div><div class="line">    <span class="keyword">final</span> HtmlPage page = webClient.getPage(<span class="string">"http://htmlunit.sourceforge.net"</span>);</div><div class="line">    <span class="comment">//get list of all divs</span></div><div class="line">    <span class="keyword">final</span> List&lt;?&gt; divs = page.getByXPath(<span class="string">"//div"</span>); <span class="comment">// 返回所有的div</span></div><div class="line">    System.out.println(((HtmlDivision)divs.get(<span class="number">0</span>)).asText()); <span class="comment">// 得到第一个 Div 节点的内容。</span></div><div class="line"></div><div class="line">    <span class="comment">/** 返回所有的超链接， 并打印 name 属性*/</span></div><div class="line">    <span class="keyword">final</span> List&lt;HtmlAnchor&gt; anchors = page.getAnchors();</div><div class="line">    <span class="keyword">for</span> (HtmlAnchor anchor : anchors) &#123;</div><div class="line">        System.out.println(anchor.getAttribute(<span class="string">"name"</span>));</div><div class="line">    &#125;</div><div class="line">    webClient.closeAllWindows();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>第四个例子： 提交表单</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Test</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">submittingForm</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">    <span class="keyword">final</span> WebClient webClient = <span class="keyword">new</span> WebClient();</div><div class="line"></div><div class="line">    <span class="comment">// Get the first page</span></div><div class="line">    <span class="keyword">final</span> HtmlPage page1 = webClient.getPage(<span class="string">"http://some_url"</span>);</div><div class="line"></div><div class="line">    <span class="comment">// Get the form that we are dealing with and within that form,</span></div><div class="line">    <span class="comment">// find the submit button and the field that we want to change.</span></div><div class="line">    <span class="keyword">final</span> HtmlForm form = page1.getFormByName(<span class="string">"myform"</span>);</div><div class="line"></div><div class="line">    <span class="keyword">final</span> HtmlSubmitInput button = form.getInputByName(<span class="string">"submitbutton"</span>);</div><div class="line">    <span class="keyword">final</span> HtmlTextInput textField = form.getInputByName(<span class="string">"userid"</span>);</div><div class="line"></div><div class="line">    <span class="comment">// Change the value of the text field</span></div><div class="line">    textField.setValueAttribute(<span class="string">"root"</span>);</div><div class="line"></div><div class="line">    <span class="comment">// Now submit the form by clicking the button and get back the second page.</span></div><div class="line">    <span class="keyword">final</span> HtmlPage page2 = button.click();</div><div class="line"></div><div class="line">    webClient.closeAllWindows();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<hr>
+<p>是不是很棒？ 所有浏览器能做的，它都能做，我们再来看下它的特性：</p>
+<ul>
+<li>支持 HTTP and HTTPS 协议</li>
+<li>支持 cookies</li>
+<li>支持 Post， Get， Head， Delete</li>
+<li>支持代理</li>
+<li>能分析 HTTP responses</li>
+<li>能自定义 HTTP request head</li>
+<li>支持 Javascript</li>
+</ul>
+<p>于是有<br><strong>第五个例子： 使用 javascript</strong></p>
+<p>这里的 Javascript 的意思，是指 HtmlUnit 可以通过 js 引擎执行 javascript 代码。</p>
+<blockquote>
+<p>HtmlUnit provides excellent JavaScript support, simulating the behavior of the configured browser (Firefox or Internet Explorer). It uses the Rhino JavaScript engine for the core language (plus workarounds for some Rhino bugs) and provides the implementation for the objects specific to execution in a browser.</p>
+</blockquote>
+<p>比如我们的页面有一个 alert 事件：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span><span class="tag">&lt;<span class="name">head</span>&gt;</span><span class="tag">&lt;<span class="name">title</span>&gt;</span>Alert sample<span class="tag">&lt;/<span class="name">title</span>&gt;</span><span class="tag">&lt;/<span class="name">head</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">body</span> <span class="attr">onload</span>=<span class="string">'alert("foo");'</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span><span class="tag">&lt;/<span class="name">html</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>我们如何捕捉它呢？</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Test</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">alerts</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">    <span class="keyword">final</span> WebClient webClient = <span class="keyword">new</span> WebClient();</div><div class="line"></div><div class="line">    <span class="keyword">final</span> List collectedAlerts = <span class="keyword">new</span> ArrayList();</div><div class="line">    webClient.setAlertHandler(<span class="keyword">new</span> CollectingAlertHandler(collectedAlerts));</div><div class="line"></div><div class="line">    <span class="comment">// Since we aren't actually manipulating the page, we don't assign</span></div><div class="line">    <span class="comment">// it to a variable - it's enough to know that it loaded.</span></div><div class="line">    webClient.getPage(<span class="string">"http://tciludev01/test.html"</span>);</div><div class="line"></div><div class="line">    <span class="keyword">final</span> List expectedAlerts = Collections.singletonList(<span class="string">"foo"</span>);</div><div class="line">    assertEquals(expectedAlerts, collectedAlerts);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>是不是很轻巧？ 像真正的浏览器一样， HtmlUnit 可以响应各种 Javascript 事件， 执行各种 Javascript 代码。</p>
+<hr>
+<p>对于 HtmlUnit， 我就初略看了看， 总的印象是轻，不用启动笨重的浏览器就能做到和浏览器一样的行为， 和 Junit4 很好的搭配，可以<br>写出轻巧优美的测试案例， 同时也能为测试省去不少时间。这在前期测试驱动开发的时候，特别是 Web 应用开发，可以节省去不少时间。</p>
+<p>参见:</p>
+<p><a href="http://htmlunit.sourceforge.net/" target="_blank" rel="external">http://htmlunit.sourceforge.net/</a></p>
+<p><a href="http://maven.apache.org/guides/getting-started/maven-in-five-minutes.html" target="_blank" rel="external">http://maven.apache.org/guides/getting-started/maven-in-five-minutes.html</a></p>
+<p><a href="http://code.google.com/p/selenium/wiki/HtmlUnitDriver" target="_blank" rel="external">http://code.google.com/p/selenium/wiki/HtmlUnitDriver</a></p>
+<p><a href="http://htmlunit.sourceforge.net/javascript-howto.html" target="_blank" rel="external">http://htmlunit.sourceforge.net/javascript-howto.html</a></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2013/04/27/2013-04-27-jmeter-bing-qi-pu-zhi-regular-expression-extractor/">
+                    Jmeter 兵器谱之 Regular Expression Extractor
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2013/03/21/2013-03-21-windowsxia-cha-zhao-zhan-yong-duan-kou-de-jin-cheng/">
+                    windows 下查找占用端口的进程
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#建立项目"><span class="toc-number">1.</span> <span class="toc-text">建立项目</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#试用"><span class="toc-number">2.</span> <span class="toc-text">试用</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+
+
+    
+        <section id="comments">
+    <style> aside.comment-bar { margin: auto 30px; }</style>
+    <div id="disqus_thread"></div>
+    <script>
+        var disqus_config = function(){
+            this.page.url = 'http://lihuazhang.github.io/2013/04/26/2013-04-26-htmlunit-jie-shao/';
+            this.page.identifier = '2013/04/26/2013-04-26-htmlunit-jie-shao/';
+        };
+        var loadComment = function(){
+            var d = document, s = d.createElement('script');
+            s.src = '//8atmyhouse.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        }
+    </script>
+    
+    <script> loadComment(); </script>
+
+</section>
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2013/04/27/2013-04-27-jmeter-bing-qi-pu-zhi-regular-expression-extractor/" title="上一篇: Jmeter 兵器谱之 Regular Expression Extractor">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2013/03/21/2013-03-21-windowsxia-cha-zhao-zhan-yong-duan-kou-de-jin-cheng/" title="下一篇: windows 下查找占用端口的进程">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/06/25/随便写写/">随便写写</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/29/烟/">烟</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/25/踩不到点的小男孩/">踩不到点的小男孩</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/14/webdriveragent-简介/">WebDriverAgent 简介</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/29/南京之行/">南京之行</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/17/2013-03-15-8atmyhouse/">8atmyHouse</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/12/26/2013-12-26-fan-yi-android-and-ios-support/">[翻译]Android and iOS Support</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/10/15/2013-10-15-you-xi-kai-fa-chang-yong-gai-nian/">游戏开发常用概念</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/10/09/2013-10-09-cron-jobs-and-random-times-within-giving-hours/">Cron jobs and random times, within giving hours</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/09/24/2013-09-24-fluentwait-with-webelement/">FluentWait with WebElement</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/09/14/2013-09-14-gatling-shi-yong/">Gatling 试用 1</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/08/29/2013-08-29-add-hover-event-to-capybara/">add hover event to capybara</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/08/25/2013-08-25-du-lu-fan-yan-shi/">读陆犯焉识</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/08/21/2013-08-21-wo-de-nexus-7-ruan-jian-lie-biao/">我的 nexus 7 2013 软件列表</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/08/16/2013-08-16-vim-cha-jian-tui-jian/">vim 插件推荐</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/08/12/2013-08-12-install-vim74-from-source/">Install vim74 from source</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/08/08/2013-08-08-cucumberhe-capybaraxia-de-pageobject/">Cucumber 和 Capybara 下的 PageObject</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/08/07/2013-08-07-step-defintionshi-kong/">由 step definition 失控引发的讨论和思考</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/08/06/2013-08-06-git-revert/">git revert</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/08/02/2013-08-02-ba-yue-er-ri-gong-zuo-suo-shi/">8-02-工作琐事</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/07/30/2013-07-30-gong-zuo-ri-ji-7-31/">7-31-工作琐事</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/07/11/2013-07-11-wo-de-vimrc/">我的 vimrc</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/06/27/2013-06-27-ruby-here-doc/">ruby 的 Heredocs</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/06/26/2013-06-26-shell-script-to-control-tomcat/">能马上用起来的控制 tomcat 的脚本</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/05/26/2013-05-26-zai-webdriverli-shi-yong-sizzle-dot-js/">在WebDriver里使用Sizzle.js</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/05/12/2013-05-12-wo-de-mu-qin/">我的母亲</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/04/30/2013-04-30-webdriver-zhi-ce-shi-shi-bai-zi-dong-jie-tu/">WebDriver 之测试失败自动截图</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/04/29/2013-04-29-jmeter-bing-qi-pu-zhi-xpath-extractor/">Jmeter 兵器谱之 Xpath Extractor</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/04/28/2013-04-28-jmeter-bing-qi-pu-zhi-foreach-controller/">JMeter 兵器谱之 ForEach Controller</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/04/27/2013-04-27-jmeter-bing-qi-pu-zhi-regular-expression-extractor/">Jmeter 兵器谱之 Regular Expression Extractor</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/04/26/2013-04-26-htmlunit-jie-shao/">HtmlUnit 介绍</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/03/21/2013-03-21-windowsxia-cha-zhao-zhan-yong-duan-kou-de-jin-cheng/">windows 下查找占用端口的进程</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/02/12/2013-02-12-shi-yong-capybara-deng-lu-bai-du/">使用 capybara 登陆百度</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/02/12/2013-02-12-gao-bie-2012/">告别2012</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/08/06/2012-08-06-ying-she-windows-cmdke-yi-du-qu-de-ci-pan-qu-dong/">映射 Windows cmd 可以读取的磁盘驱动</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/08/05/2012-08-05-surround-dot-vim/">surround.vim</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/08/01/2012-08-01-xiao-qing-xin-outlookshi-yong-ji/">小清新 Outlook 试用记</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/04/25/2012-04-25-webdriver-4-jia-shang-xie-zi/">WebDriver 4: 加上叶子</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/04/24/2012-04-24-sauce-ondemandshi-yong/">Sauce OnDemand试用</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/04/23/2012-04-23-mysql5-qing-kong-rootmi-ma/">mysql5 清空root密码</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/04/21/2012-04-21-webdriver-3-more-pageobjects/">WebDriver 3: more PageObjects - PageFactory</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/04/20/2012-04-20-webdriver2/">WebDriver 2: PageObject</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/04/19/2012-04-19-capybara-plus-cucumber-plus-webdriverzi-dong-hua-ce-shi-kuang-jia/">使用 Capybara， Cucumber 和 WebDriver 实现自动化测试</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/04/06/2012-04-06-webdriver-1-post/">WebDriver 1: Set up WebDriver using Maven3</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/03/08/2012-03-08-learn-vim-3-post/">vim学习 jsctags</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/03/07/2012-03-07-learn-vim-2-post/">vim学习 shiftwidth, tabstop, softtabstop和expandtab</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/03/07/2012-03-07-learn-vim-1-post/">vim学习 listchars</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/03/04/2012-03-04-zsh-config-post/">oh my zsh</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/02/23/2012-02-23-use-spf13-vim-config-post/">vim配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/02/19/2012-02-19-add-google-pretty-code-post/">Add google pretty code support</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2012-2017 恒温
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="恒温" />
+
+
+
+<meta name="description" content="引子公司在新项目上 BDD 的开发模式，迄今已经差不多 2 个月了。按最初的分工，开发写 rspec， 测试写 cucumber，双线并行。加上最新配置好的 jenkins ci 环境，整个开发流程走的很顺，代码质量也得到了很好的控制。 今天按老样子写某个 component 的新加的feature的场景，写 step definition 的时候，发现 stepdef.rb 文件已经300 多行">
+<meta name="keywords" content="cucumber,pageobject">
+<meta property="og:type" content="article">
+<meta property="og:title" content="由 step definition 失控引发的讨论和思考">
+<meta property="og:url" content="http://lihuazhang.github.io/2013/08/07/2013-08-07-step-defintionshi-kong/index.html">
+<meta property="og:site_name" content="八点在家">
+<meta property="og:description" content="引子公司在新项目上 BDD 的开发模式，迄今已经差不多 2 个月了。按最初的分工，开发写 rspec， 测试写 cucumber，双线并行。加上最新配置好的 jenkins ci 环境，整个开发流程走的很顺，代码质量也得到了很好的控制。 今天按老样子写某个 component 的新加的feature的场景，写 step definition 的时候，发现 stepdef.rb 文件已经300 多行">
+<meta property="og:updated_time" content="2015-12-16T13:45:56.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="由 step definition 失控引发的讨论和思考">
+<meta name="twitter:description" content="引子公司在新项目上 BDD 的开发模式，迄今已经差不多 2 个月了。按最初的分工，开发写 rspec， 测试写 cucumber，双线并行。加上最新配置好的 jenkins ci 环境，整个开发流程走的很顺，代码质量也得到了很好的控制。 今天按老样子写某个 component 的新加的feature的场景，写 step definition 的时候，发现 stepdef.rb 文件已经300 多行">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="八点在家" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>由 step definition 失控引发的讨论和思考 | 八点在家</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: false,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: undefined
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/images/avatar.jpeg" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">恒温</a></h1>
+        </hgroup>
+
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="mailto:lihuazhang@hotmail.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="https://github.com/lihuazhang" title="GitHub"></a>
+                            
+                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metro/">Metro</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/capybara/">capybara</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cucumber/">cucumber</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/factory-gril/">factory_gril</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nexus-7-2013/">nexus 7 2013</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pageobject/">pageobject</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/test-china-org/">test-china.org</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vim/">vim</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xpath/">xpath</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/南京/">南京</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/性能测试/">性能测试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/游戏开发/">游戏开发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/生活/">生活</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/移动测试/">移动测试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/翻译/">翻译</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/陆犯焉识/">陆犯焉识</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">恒温</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/images/avatar.jpeg" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">恒温</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto:lihuazhang@hotmail.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/lihuazhang" title="GitHub"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-2013-08-07-step-defintionshi-kong" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2013/08/07/2013-08-07-step-defintionshi-kong/" class="article-date">
+      <time datetime="2013-08-07T13:37:00.000Z" itemprop="datePublished">2013-08-07</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      由 step definition 失控引发的讨论和思考
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/cucumber/">cucumber</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/cucumber/">cucumber</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/pageobject/">pageobject</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h2 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h2><p>公司在新项目上 BDD 的开发模式，迄今已经差不多 2 个月了。<br>按最初的分工，开发写 rspec， 测试写 cucumber，双线并行。<br>加上最新配置好的 jenkins ci 环境，整个开发流程走的很顺，<br>代码质量也得到了很好的控制。</p>
+<p>今天按老样子写某个 component 的新加的feature的场景，<br>写 step definition 的时候，发现 stepdef.rb 文件已经<br>300 多行了。 瞬间有种再不控制就爆炸的感觉。</p>
+<p>于是就把问题抛了出去：</p>
+<blockquote>
+<p>cucumber 的 step definition 爆了。。。 越写越多，真难控制！</p>
+</blockquote>
+<h2 id="讨论"><a href="#讨论" class="headerlink" title="讨论"></a>讨论</h2><p>我将问题抛在了 TestCirle 的群里，讨论地断断续续从下午一点到下午六点。我将每个人的发言总结下。</p>
+<p><em>MIC-Seeyon</em></p>
+<blockquote>
+<p>step_definition 之上抽象一些 common function，再之上是 page object 的应用。<br>这样基本就封装了大部分逻辑了。这样就算 step_definition 再有多，也不会有多少代码吧～</p>
+<p>如果有页面很多 ajax 操作，你可以把 ajax 的基础页写成 basePage，<br>然后其他的 ajax 业务写成不同的 page，继承 basePage 即可～</p>
+<p>如果觉得实现太重的话，可以分工程，通用的抽取出来，其他的不同模块或者业务，基于这部分 common 的，搞自己的 feature，自己实现～<br>这样对具体的编码的人来说就轻了～</p>
+<p>把握好 feature 的度, 整理一下测试用例的执行场景哦～</p>
+<p>step definition 里面有太多冗余的东西的话就会很重，需要去冗。<br>如果有的话，那也得做一层基本的网页操作的抽象～<br>我是说业务和交互级别的 actions<br>比如根据 label 操作 input<br>各种条目的选择，操作，内容获取<br>这些可能都跟你产品的前段设计有关哦～</p>
+<p>我们是这么做的：</p>
+<ol>
+<li>webdriver 的 api 操作封装一层</li>
+<li>然后产品使用的前段控件封装一层</li>
+<li>然后业务级别的逻辑跟操作封装一层</li>
+<li>然后常用的操作组合封装一个层</li>
+<li>最后才是 step definition</li>
+</ol>
+<p>cucumber就是一个驱动自动化测试的粘合剂</p>
+</blockquote>
+<p><em>横刀天笑</em></p>
+<blockquote>
+<p>逻辑肯定是在 page object 里的, page object 应该暴露业务接口，既然暴露业务接口，那肯定是包含业务逻辑的<br>比如我们酒店首页 HotelHomePage。有个搜索功能，那 肯定提供一个 search 的方法，search 里接受一个查询条件</p>
+<p>page object，应该从用户角度来看，你这个页面提供了哪些功能,从业务功能上来看 po，而不是从操作上, 然后 step defs 里是流程的描述</p>
+<p>持续交付里有一章讲自动化测试, 里面讲了一个三层:</p>
+<ol>
+<li>测试描述层(case)</li>
+<li>测试实现层，或者叫流程层</li>
+<li>应用接口层(比如使用 selenium 或 httpclient 之类的和应用程序打交道)</li>
+</ol>
+</blockquote>
+<p><em>插曲 -_-!</em></p>
+<blockquote>
+<p>如何做一个能害死人的自动化测试工具<br><a href="http://www.ltesting.net/ceshi/ceshijishu/zdcs/2013/0806/206547.html?1375845711" target="_blank" rel="external">http://www.ltesting.net/ceshi/ceshijishu/zdcs/2013/0806/206547.html?1375845711</a></p>
+</blockquote>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><p>我回想了下，这个项目一开始没采用 page object， 因为：</p>
+<ol>
+<li>以为项目不复杂，参考另一个公司 rails 项目的 cucumber features。</li>
+<li>使用了 pickle，导致 feature 撰写的时候， 有过多的 code 色彩，如果使用 page object 的话 就有点混搭的感觉，不伦不类了。</li>
+<li>最早之前用 page object 有些厌倦了。 特别 ajax render 的页面，导致继承 base 的页面过多。</li>
+</ol>
+<h3 id="关于第一点："><a href="#关于第一点：" class="headerlink" title="关于第一点："></a>关于第一点：</h3><p>接触过很多 rails 的项目， 往往是将 cucumber features 作为 High level 的 acceptance test， 挑选的场景的粒度都是比较粗。<br>而且 rails 项目的 cucumber 基本都是开发来写的，我一开始就把自己定位为开发。</p>
+<h3 id="关于第二点："><a href="#关于第二点：" class="headerlink" title="关于第二点："></a>关于第二点：</h3><p><a href="https://github.com/ianwhite/pickle" target="_blank" rel="external">pickle</a> 非常强大</p>
+<blockquote>
+<p>Pickle gives you cucumber steps that create your models easily from<br>factory-girl, machinist, or fabrication. You can also just use ActiveRecord as a factory but it’s not as cool.</p>
+</blockquote>
+<p>但是使用 pickle 的前提是你必须了解 model， 了解各种 model 的 factory， 也就是其实你已经<br>是从开发的角度来考虑如何测试代码了。 你在 steps 里面的数据设计，其实都是你知道的结果，并不是测试出来的。</p>
+<p>pickle 的使用，使 <code>Given</code>, <code>When</code> 和 <code>And</code> 对 测试和 stakeholder 不太友好。 这不像 page object 的风格。</p>
+<h3 id="关于第三点"><a href="#关于第三点" class="headerlink" title="关于第三点"></a>关于第三点</h3><p>我在前面一个项目中应用了 <code>Page Object</code>， 我在博客里也粗略地介绍过， 参考 <a href="/categories.html#webdriver-ref">webdriver</a><br>由于我们项目大量使用 ajax， 导致基于 basePage 的子页面各种各样的特别多。个人感觉也不太舒服。</p>
+<p>综上，所以一开始就忽略了 page object。</p>
+<h3 id="目前"><a href="#目前" class="headerlink" title="目前"></a>目前</h3><p>我们现在仅仅把 features 进行了分类（利用目录结构），将所有的 step definition 都放在了一个 rb 文件里。随着以后的不同的场景，失控也是时间问题。</p>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>目前看来， 这个项目的 cucumber 想要完成的是 <code>整个 UI 的自动化测试</code>。 要去冗，去重需要做的是：</p>
+<ol>
+<li>合并和参数化</li>
+<li>Page Object</li>
+</ol>
+
+      
+    </div>
+    
+  </div>
+  
+    
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2013/08/08/2013-08-08-cucumberhe-capybaraxia-de-pageobject/">
+                    Cucumber 和 Capybara 下的 PageObject
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2013/08/06/2013-08-06-git-revert/">
+                    git revert
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#引子"><span class="toc-number">1.</span> <span class="toc-text">引子</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#讨论"><span class="toc-number">2.</span> <span class="toc-text">讨论</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#思考"><span class="toc-number">3.</span> <span class="toc-text">思考</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#关于第一点："><span class="toc-number">3.1.</span> <span class="toc-text">关于第一点：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#关于第二点："><span class="toc-number">3.2.</span> <span class="toc-text">关于第二点：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#关于第三点"><span class="toc-number">3.3.</span> <span class="toc-text">关于第三点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#目前"><span class="toc-number">3.4.</span> <span class="toc-text">目前</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#结论"><span class="toc-number">4.</span> <span class="toc-text">结论</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+
+
+    
+        <section id="comments">
+    <style> aside.comment-bar { margin: auto 30px; }</style>
+    <div id="disqus_thread"></div>
+    <script>
+        var disqus_config = function(){
+            this.page.url = 'http://lihuazhang.github.io/2013/08/07/2013-08-07-step-defintionshi-kong/';
+            this.page.identifier = '2013/08/07/2013-08-07-step-defintionshi-kong/';
+        };
+        var loadComment = function(){
+            var d = document, s = d.createElement('script');
+            s.src = '//8atmyhouse.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        }
+    </script>
+    
+    <script> loadComment(); </script>
+
+</section>
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2013/08/08/2013-08-08-cucumberhe-capybaraxia-de-pageobject/" title="上一篇: Cucumber 和 Capybara 下的 PageObject">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2013/08/06/2013-08-06-git-revert/" title="下一篇: git revert">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/06/25/随便写写/">随便写写</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/29/烟/">烟</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/25/踩不到点的小男孩/">踩不到点的小男孩</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/14/webdriveragent-简介/">WebDriverAgent 简介</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/29/南京之行/">南京之行</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/17/2013-03-15-8atmyhouse/">8atmyHouse</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/12/26/2013-12-26-fan-yi-android-and-ios-support/">[翻译]Android and iOS Support</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/10/15/2013-10-15-you-xi-kai-fa-chang-yong-gai-nian/">游戏开发常用概念</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/10/09/2013-10-09-cron-jobs-and-random-times-within-giving-hours/">Cron jobs and random times, within giving hours</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/09/24/2013-09-24-fluentwait-with-webelement/">FluentWait with WebElement</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/09/14/2013-09-14-gatling-shi-yong/">Gatling 试用 1</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/08/29/2013-08-29-add-hover-event-to-capybara/">add hover event to capybara</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/08/25/2013-08-25-du-lu-fan-yan-shi/">读陆犯焉识</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/08/21/2013-08-21-wo-de-nexus-7-ruan-jian-lie-biao/">我的 nexus 7 2013 软件列表</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/08/16/2013-08-16-vim-cha-jian-tui-jian/">vim 插件推荐</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/08/12/2013-08-12-install-vim74-from-source/">Install vim74 from source</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/08/08/2013-08-08-cucumberhe-capybaraxia-de-pageobject/">Cucumber 和 Capybara 下的 PageObject</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/08/07/2013-08-07-step-defintionshi-kong/">由 step definition 失控引发的讨论和思考</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/08/06/2013-08-06-git-revert/">git revert</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/08/02/2013-08-02-ba-yue-er-ri-gong-zuo-suo-shi/">8-02-工作琐事</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/07/30/2013-07-30-gong-zuo-ri-ji-7-31/">7-31-工作琐事</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/07/11/2013-07-11-wo-de-vimrc/">我的 vimrc</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/06/27/2013-06-27-ruby-here-doc/">ruby 的 Heredocs</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/06/26/2013-06-26-shell-script-to-control-tomcat/">能马上用起来的控制 tomcat 的脚本</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/05/26/2013-05-26-zai-webdriverli-shi-yong-sizzle-dot-js/">在WebDriver里使用Sizzle.js</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/05/12/2013-05-12-wo-de-mu-qin/">我的母亲</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/04/30/2013-04-30-webdriver-zhi-ce-shi-shi-bai-zi-dong-jie-tu/">WebDriver 之测试失败自动截图</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/04/29/2013-04-29-jmeter-bing-qi-pu-zhi-xpath-extractor/">Jmeter 兵器谱之 Xpath Extractor</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/04/28/2013-04-28-jmeter-bing-qi-pu-zhi-foreach-controller/">JMeter 兵器谱之 ForEach Controller</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/04/27/2013-04-27-jmeter-bing-qi-pu-zhi-regular-expression-extractor/">Jmeter 兵器谱之 Regular Expression Extractor</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/04/26/2013-04-26-htmlunit-jie-shao/">HtmlUnit 介绍</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/03/21/2013-03-21-windowsxia-cha-zhao-zhan-yong-duan-kou-de-jin-cheng/">windows 下查找占用端口的进程</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/02/12/2013-02-12-shi-yong-capybara-deng-lu-bai-du/">使用 capybara 登陆百度</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/02/12/2013-02-12-gao-bie-2012/">告别2012</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/08/06/2012-08-06-ying-she-windows-cmdke-yi-du-qu-de-ci-pan-qu-dong/">映射 Windows cmd 可以读取的磁盘驱动</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/08/05/2012-08-05-surround-dot-vim/">surround.vim</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/08/01/2012-08-01-xiao-qing-xin-outlookshi-yong-ji/">小清新 Outlook 试用记</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/04/25/2012-04-25-webdriver-4-jia-shang-xie-zi/">WebDriver 4: 加上叶子</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/04/24/2012-04-24-sauce-ondemandshi-yong/">Sauce OnDemand试用</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/04/23/2012-04-23-mysql5-qing-kong-rootmi-ma/">mysql5 清空root密码</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/04/21/2012-04-21-webdriver-3-more-pageobjects/">WebDriver 3: more PageObjects - PageFactory</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/04/20/2012-04-20-webdriver2/">WebDriver 2: PageObject</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/04/19/2012-04-19-capybara-plus-cucumber-plus-webdriverzi-dong-hua-ce-shi-kuang-jia/">使用 Capybara， Cucumber 和 WebDriver 实现自动化测试</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/04/06/2012-04-06-webdriver-1-post/">WebDriver 1: Set up WebDriver using Maven3</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/03/08/2012-03-08-learn-vim-3-post/">vim学习 jsctags</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/03/07/2012-03-07-learn-vim-2-post/">vim学习 shiftwidth, tabstop, softtabstop和expandtab</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/03/07/2012-03-07-learn-vim-1-post/">vim学习 listchars</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/03/04/2012-03-04-zsh-config-post/">oh my zsh</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/02/23/2012-02-23-use-spf13-vim-config-post/">vim配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/02/19/2012-02-19-add-google-pretty-code-post/">Add google pretty code support</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2012-2017 恒温
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

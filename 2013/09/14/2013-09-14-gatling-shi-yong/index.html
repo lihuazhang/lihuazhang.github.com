@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="恒温" />
+
+
+
+<meta name="description" content="介绍 在微博上看到 Gatling，号称超越 jmeter 的性能测试工具。顿时手痒，想来个试用。 Gatling 格林机关枪，看名字就恨凶悍。 Gatling 的动机是因为性能测试工具已经无法测试当今的应用了。 比如：  LoadRunner 太贵了。 页面又改了，又要打开界面，重新录制。 客户说用 OpenSTA ， 我们只能用 windows 的虚拟机。 Jmeter 太弱了，并发的好假，还">
+<meta name="keywords" content="性能测试">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Gatling 试用 1">
+<meta property="og:url" content="http://lihuazhang.github.io/2013/09/14/2013-09-14-gatling-shi-yong/index.html">
+<meta property="og:site_name" content="八点在家">
+<meta property="og:description" content="介绍 在微博上看到 Gatling，号称超越 jmeter 的性能测试工具。顿时手痒，想来个试用。 Gatling 格林机关枪，看名字就恨凶悍。 Gatling 的动机是因为性能测试工具已经无法测试当今的应用了。 比如：  LoadRunner 太贵了。 页面又改了，又要打开界面，重新录制。 客户说用 OpenSTA ， 我们只能用 windows 的虚拟机。 Jmeter 太弱了，并发的好假，还">
+<meta property="og:image" content="http://lihuazhang.github.io/photos/gatling_gui.png">
+<meta property="og:image" content="http://lihuazhang.github.io/photos/run.png">
+<meta property="og:image" content="http://lihuazhang.github.io/photos/report.png">
+<meta property="og:image" content="http://lihuazhang.github.io/photos/gatling_report.png">
+<meta property="og:updated_time" content="2015-12-16T13:40:07.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Gatling 试用 1">
+<meta name="twitter:description" content="介绍 在微博上看到 Gatling，号称超越 jmeter 的性能测试工具。顿时手痒，想来个试用。 Gatling 格林机关枪，看名字就恨凶悍。 Gatling 的动机是因为性能测试工具已经无法测试当今的应用了。 比如：  LoadRunner 太贵了。 页面又改了，又要打开界面，重新录制。 客户说用 OpenSTA ， 我们只能用 windows 的虚拟机。 Jmeter 太弱了，并发的好假，还">
+<meta name="twitter:image" content="http://lihuazhang.github.io/photos/gatling_gui.png">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="八点在家" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>Gatling 试用 1 | 八点在家</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: false,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: undefined
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/images/avatar.jpeg" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">恒温</a></h1>
+        </hgroup>
+
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="mailto:lihuazhang@hotmail.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="https://github.com/lihuazhang" title="GitHub"></a>
+                            
+                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metro/">Metro</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/capybara/">capybara</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cucumber/">cucumber</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/factory-gril/">factory_gril</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nexus-7-2013/">nexus 7 2013</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pageobject/">pageobject</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/test-china-org/">test-china.org</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vim/">vim</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xpath/">xpath</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/南京/">南京</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/性能测试/">性能测试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/游戏开发/">游戏开发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/生活/">生活</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/移动测试/">移动测试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/翻译/">翻译</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/陆犯焉识/">陆犯焉识</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">恒温</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/images/avatar.jpeg" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">恒温</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto:lihuazhang@hotmail.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/lihuazhang" title="GitHub"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-2013-09-14-gatling-shi-yong" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2013/09/14/2013-09-14-gatling-shi-yong/" class="article-date">
+      <time datetime="2013-09-14T13:37:00.000Z" itemprop="datePublished">2013-09-14</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Gatling 试用 1
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/gatling/">gatling</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/性能测试/">性能测试</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><hr>
+<p>在微博上看到 <code>Gatling</code>，号称超越 <code>jmeter</code> 的性能测试工具。顿时手痒，想来个试用。</p>
+<p>Gatling <em>格林机关枪</em>，看名字就恨凶悍。</p>
+<p>Gatling 的动机是因为性能测试工具已经无法测试当今的应用了。</p>
+<p>比如：</p>
+<ol>
+<li>LoadRunner 太贵了。</li>
+<li>页面又改了，又要打开界面，重新录制。</li>
+<li>客户说用 <code>OpenSTA</code> ， 我们只能用 windows 的虚拟机。</li>
+<li>Jmeter 太弱了，并发的好假，还得建立集群，而且还不知道每个节点的信息能不能回收。。</li>
+<li>Grinder 又内存泄露了，苦逼的 python 开发。。。（不知道是哪个工具）</li>
+</ol>
+<p>看来业界对市场上的性能测试工具都恨之入骨。</p>
+<p>再来看下 Gatling：</p>
+<ol>
+<li><p>高效<br>Gatling 用了 actors 模型，真是一个好演员啊。</p>
+<blockquote>
+<p>Actor模型</p>
+<p>当一个请求来了之后， 则委派给一个Actor处理， 和事件驱动的区别是， 这些Actor之间不共享任何资源， 可进行并行处理， 事件驱动模型和Actor模型很容易被搞混淆， 如果事件驱动模型来一个请求则委派一个线程去处理并且这些线程之间不共享资源，不会出现锁的问题， 则可以认为这种事件驱动模型等价于Actor模型， Scala的Actor模型就是这么处理的， Actor会被代理到线程处理， 海量的Actor会被代理到一个JVM线程池处理，这样提升了很大的效率，而这种映射是scala帮你做好了； 而Erlang中Actor模型则更加彻底， 其实是OTP实现了操作系统中的线程的功能， 这些“线程”叫做process， 只不过这些process占用的资源很少， 也不共享任何资源， 这样每个actor可以跟process一一对应</p>
+</blockquote>
+</li>
+<li><p>Gatling 脚本是代码，而且优雅简洁</p>
+<p>其实就是 scala 和 scala 写的 DSL， 不觉得 scala 优雅啊。。。</p>
+</li>
+<li><p>Gatling 的报表很有意义。</p>
+</li>
+<li><p>Gatling 免费的，明显最重要的。</p>
+</li>
+</ol>
+<h1 id="上手"><a href="#上手" class="headerlink" title="上手"></a>上手</h1><hr>
+<p>略过下载安装之类的，实在要看，自己看 <a href="https://github.com/excilys/gatling/wiki/Getting-Started" target="_blank" rel="external">Getting-started</a> 吧。<br>我们按照 <a href="https://github.com/excilys/gatling/wiki/First-Steps-with-Gatling" target="_blank" rel="external">First Steps with Gatling</a> 走一遍。<br>这个 First Steps 就是测试一个 e-banking 的应用，很可惜这个应用放在 Cloud Foundry， 国内估计访问不了。</p>
+<p>这个应用的链接在：</p>
+<p><a href="http://excilysbank.gatling.cloudbees.net" target="_blank" rel="external">http://excilysbank.gatling.cloudbees.net</a></p>
+<p>主要实现了以下功能：</p>
+<blockquote>
+<ol>
+<li>Session management (login, logout)</li>
+<li>Accounts visualization</li>
+<li>Operations visualization by month</li>
+<li>Cards Operations visualization by month</li>
+<li>Transfers visualization and transfer performing</li>
+</ol>
+</blockquote>
+<h2 id="测试计划"><a href="#测试计划" class="headerlink" title="测试计划"></a>测试计划</h2><p>我们对一些具有代表性的场景进行性能测试，所以我们想象了下，用户会做的事情：</p>
+<ol>
+<li>用户访问应用</li>
+<li>用户获得认证并登陆</li>
+<li>用户访问具体的账号</li>
+<li>用户查看上个月的状况</li>
+<li>用户登出</li>
+</ol>
+<p>我们要用 Gatling 来录制这 5 个场景。</p>
+<h2 id="Gatling-Recorder"><a href="#Gatling-Recorder" class="headerlink" title="Gatling Recorder"></a>Gatling Recorder</h2><p>一般工具都提供 recorder 否则就弱爆了。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">~$ <span class="variable">$GATLING_HOME</span>/bin/recorder.sh</div></pre></td></tr></table></figure>
+<p>启动这个脚本之后，会跳出一个类似 jmeter 的界面，我们得配置下：</p>
+<ul>
+<li>package: com.excilys.ebi.bank.stress</li>
+<li>class name: MySimulation</li>
+<li>output folder: /Users/lihuazhang/Documents/Simulation</li>
+</ul>
+<p><img src="/photos/gatling_gui.png" alt="alt text"></p>
+<p>和 jmeter 一样， Gatling 的 recorder 一样也充当着浏览器和应用之间 proxy 的角色，从上图来看：</p>
+<ul>
+<li>http  8000</li>
+<li>https 8001</li>
+</ul>
+<p>所以必须在浏览器设置代理。然后在浏览器上的所有 request 都会被记录下来。当然 Gatling 也提供了 Filters 来过滤<br>无关信息：</p>
+<blockquote>
+<ul>
+<li>NONE: Doesn’t apply any filter one the requests, even if there are some declared;</li>
+<li>EXCEPT: Allows all requests to be logged except those which filters apply on the URI;</li>
+<li>ONLY: Allows only requests, which URI matches one of the filters, to be logged.</li>
+</ul>
+</blockquote>
+<p>更加具体的，不妨看下 <a href="https://github.com/excilys/gatling/wiki/Recorder#wiki-browser-config" target="_blank" rel="external">Recorder details</a></p>
+<h2 id="开始录制吧"><a href="#开始录制吧" class="headerlink" title="开始录制吧"></a>开始录制吧</h2><p>设置好代理之后，开始执行第一个场景：</p>
+<ol>
+<li><p>访问 <a href="http://excilysbank.gatling.cloudbees.net" target="_blank" rel="external">http://excilysbank.gatling.cloudbees.net</a></p>
+</li>
+<li><p>登陆</p>
+<p>username = user1</p>
+<p>password = password1</p>
+</li>
+<li><p>Click on PERSONNAL_CHECKING</p>
+</li>
+<li><p>Click on the previous month (for us it was November as we were in December)</p>
+</li>
+<li><p>Log out</p>
+</li>
+</ol>
+<p>然后点击 Recorder 上的 stop， 就会在之前设置的 output folder 里面生成 <code>MySimulation.scala</code> 文件。</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">package</span> com.excilys.ebi.bank.stress</div><div class="line"></div><div class="line"><span class="keyword">import</span> io.gatling.core.<span class="type">Predef</span>._</div><div class="line"><span class="keyword">import</span> io.gatling.core.session.<span class="type">Expression</span></div><div class="line"><span class="keyword">import</span> io.gatling.http.<span class="type">Predef</span>._</div><div class="line"><span class="keyword">import</span> io.gatling.jdbc.<span class="type">Predef</span>._</div><div class="line"><span class="keyword">import</span> io.gatling.http.<span class="type">Headers</span>.<span class="type">Names</span>._</div><div class="line"><span class="keyword">import</span> io.gatling.http.<span class="type">Headers</span>.<span class="type">Values</span>._</div><div class="line"><span class="keyword">import</span> scala.concurrent.duration._</div><div class="line"><span class="keyword">import</span> bootstrap._</div><div class="line"><span class="keyword">import</span> assertions._</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MySimulation</span> <span class="keyword">extends</span> <span class="title">Simulation</span> </span>&#123;</div><div class="line"></div><div class="line">  <span class="keyword">val</span> httpProtocol = http</div><div class="line">    .baseURL(<span class="string">"http://excilysbank.gatling.cloudbees.net"</span>)</div><div class="line">    .acceptHeader(<span class="string">"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"</span>)</div><div class="line">    .acceptEncodingHeader(<span class="string">"gzip, deflate"</span>)</div><div class="line">    .acceptLanguageHeader(<span class="string">"zh-cn,zh;q=0.8,en-us;q=0.5,en;q=0.3"</span>)</div><div class="line">    .connection(<span class="string">"keep-alive"</span>)</div><div class="line">    .userAgentHeader(<span class="string">"Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:23.0) Gecko/20100101 Firefox/23.0"</span>)</div><div class="line"></div><div class="line">  <span class="keyword">val</span> headers_1 = <span class="type">Map</span>(<span class="string">""</span><span class="string">"Cache-Control"</span><span class="string">""</span> -&gt; <span class="string">""</span><span class="string">"max-age=0"</span><span class="string">""</span>)</div><div class="line"></div><div class="line">  <span class="keyword">val</span> headers_3 = <span class="type">Map</span>(<span class="string">""</span><span class="string">"Accept"</span><span class="string">""</span> -&gt; <span class="string">""</span><span class="string">"text/css,*/*;q=0.1"</span><span class="string">""</span>)</div><div class="line"></div><div class="line">  <span class="keyword">val</span> headers_4 = <span class="type">Map</span>(<span class="string">""</span><span class="string">"Accept"</span><span class="string">""</span> -&gt; <span class="string">""</span><span class="string">"image/png,image/*;q=0.8,*/*;q=0.5"</span><span class="string">""</span>)</div><div class="line"></div><div class="line">  <span class="keyword">val</span> headers_6 = <span class="type">Map</span>(<span class="string">""</span><span class="string">"Accept"</span><span class="string">""</span> -&gt; <span class="string">""</span><span class="string">"*/*"</span><span class="string">""</span>)</div><div class="line"></div><div class="line">  <span class="keyword">val</span> headers_8 = <span class="type">Map</span>(<span class="string">""</span><span class="string">"Content-Type"</span><span class="string">""</span> -&gt; <span class="string">""</span><span class="string">"application/x-www-form-urlencoded"</span><span class="string">""</span>)</div><div class="line"></div><div class="line">  <span class="keyword">val</span> headers_11 = <span class="type">Map</span>(</div><div class="line">    <span class="string">""</span><span class="string">"Accept"</span><span class="string">""</span> -&gt; <span class="string">""</span><span class="string">"application/json, text/javascript, */*; q=0.01"</span><span class="string">""</span>,</div><div class="line">    <span class="string">""</span><span class="string">"X-Requested-With"</span><span class="string">""</span> -&gt; <span class="string">""</span><span class="string">"XMLHttpRequest"</span><span class="string">""</span>)</div><div class="line"></div><div class="line">  <span class="keyword">val</span> scn = scenario(<span class="string">"Scenario Name"</span>)</div><div class="line">    .exec(http(<span class="string">"request_1"</span>)</div><div class="line">      .get(<span class="string">""</span><span class="string">"/"</span><span class="string">""</span>)</div><div class="line">      .headers(headers_1))</div><div class="line">    .pause(<span class="number">2</span>)</div><div class="line">    .exec(http(<span class="string">"request_2"</span>)</div><div class="line">      .get(<span class="string">""</span><span class="string">"/img/favicon.ico"</span><span class="string">""</span>))</div><div class="line">    .pause(<span class="number">648</span> milliseconds)</div><div class="line">    .exec(http(<span class="string">"request_3"</span>)</div><div class="line">      .get(<span class="string">""</span><span class="string">"/gzip_N2030079394/bundles/all.css"</span><span class="string">""</span>)</div><div class="line">      .headers(headers_3))</div><div class="line">    .pause(<span class="number">819</span> milliseconds)</div><div class="line">    .exec(http(<span class="string">"request_4"</span>)</div><div class="line">      .get(<span class="string">""</span><span class="string">"/cb1024132465/img/background.png"</span><span class="string">""</span>)</div><div class="line">      .headers(headers_4))</div><div class="line">    .pause(<span class="number">23</span> milliseconds)</div><div class="line">    .exec(http(<span class="string">"request_5"</span>)</div><div class="line">      .get(<span class="string">""</span><span class="string">"/cb4077127084/img/small_window_content.png"</span><span class="string">""</span>)</div><div class="line">      .headers(headers_4))</div><div class="line">    .pause(<span class="number">2</span>)</div><div class="line">    .exec(http(<span class="string">"request_6"</span>)</div><div class="line">      .get(<span class="string">""</span><span class="string">"/gzip_N762261864/bundles/all.js"</span><span class="string">""</span>)</div><div class="line">      .headers(headers_6))</div><div class="line">    .pause(<span class="number">1</span>)</div><div class="line">    .exec(http(<span class="string">"request_7"</span>)</div><div class="line">      .get(<span class="string">""</span><span class="string">"/cb3761658453/img/sprite.png"</span><span class="string">""</span>)</div><div class="line">      .headers(headers_4))</div><div class="line">    .pause(<span class="number">30</span>)</div><div class="line">    .exec(http(<span class="string">"request_8"</span>)</div><div class="line">      .post(<span class="string">""</span><span class="string">"/login"</span><span class="string">""</span>)</div><div class="line">      .headers(headers_8)</div><div class="line">      .param(<span class="string">""</span><span class="string">"username"</span><span class="string">""</span>, <span class="string">""</span><span class="string">"user1"</span><span class="string">""</span>)</div><div class="line">      .param(<span class="string">""</span><span class="string">"password"</span><span class="string">""</span>, <span class="string">""</span><span class="string">"password1"</span><span class="string">""</span>))</div><div class="line">    .pause(<span class="number">3</span>)</div><div class="line">    .exec(http(<span class="string">"request_9"</span>)</div><div class="line">      .get(<span class="string">""</span><span class="string">"/cb2545837452/img/big_window_content.png"</span><span class="string">""</span>)</div><div class="line">      .headers(headers_4))</div><div class="line">    .pause(<span class="number">21</span>)</div><div class="line">    .exec(http(<span class="string">"request_10"</span>)</div><div class="line">      .get(<span class="string">""</span><span class="string">"/private/bank/account/ACC1/operations.html"</span><span class="string">""</span>))</div><div class="line">    .pause(<span class="number">3</span>)</div><div class="line">    .exec(http(<span class="string">"request_11"</span>)</div><div class="line">      .get(<span class="string">""</span><span class="string">"/private/bank/account/ACC1/year/2012/month/4/page/0/operations.json"</span><span class="string">""</span>)</div><div class="line">      .headers(headers_11))</div><div class="line">    .pause(<span class="number">43</span>)</div><div class="line">    .exec(http(<span class="string">"request_12"</span>)</div><div class="line">      .get(<span class="string">""</span><span class="string">"/private/bank/account/ACC1/year/2012/month/3/operations.html"</span><span class="string">""</span>))</div><div class="line">    .pause(<span class="number">663</span> milliseconds)</div><div class="line">    .exec(http(<span class="string">"request_13"</span>)</div><div class="line">      .get(<span class="string">""</span><span class="string">"/private/bank/account/ACC1/year/2012/month/3/page/0/operations.json"</span><span class="string">""</span>)</div><div class="line">      .headers(headers_11))</div><div class="line">    .pause(<span class="number">4</span>)</div><div class="line">    .exec(http(<span class="string">"request_14"</span>)</div><div class="line">      .get(<span class="string">""</span><span class="string">"/logout"</span><span class="string">""</span>))</div><div class="line"></div><div class="line">  setUp(scn.inject(atOnce(<span class="number">1</span> user))).protocols(httpProtocol)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="代码分析"><a href="#代码分析" class="headerlink" title="代码分析"></a>代码分析</h2><p>MySimulation class 可以分为 4 部分：</p>
+<ol>
+<li>The HTTP protocol configuration</li>
+<li>The headers definition</li>
+<li>The scenario definition</li>
+<li>The simulation definition</li>
+</ol>
+<p><em>The HTTP protocol configuration</em></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">val httpProtocol = http</div><div class="line">  .baseURL(&quot;http://excilysbank.gatling.cloudbees.net&quot;)</div><div class="line">  .acceptHeader(&quot;text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8&quot;)</div><div class="line">  .acceptEncodingHeader(&quot;gzip, deflate&quot;)</div><div class="line">  .acceptLanguageHeader(&quot;zh-cn,zh;q=0.8,en-us;q=0.5,en;q=0.3&quot;)</div><div class="line">  .connection(&quot;keep-alive&quot;)</div><div class="line">  .userAgentHeader(&quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:23.0) Gecko/20100101 Firefox/23.0&quot;)</div></pre></td></tr></table></figure>
+<p>除了设置 http 协议之外，最重要的就是指定了 baseUrl</p>
+<p><em>The headers definition</em></p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">val</span> headers_1 = <span class="type">Map</span>(<span class="string">""</span><span class="string">"Cache-Control"</span><span class="string">""</span> -&gt; <span class="string">""</span><span class="string">"max-age=0"</span><span class="string">""</span>)</div><div class="line"></div><div class="line">  <span class="keyword">val</span> headers_3 = <span class="type">Map</span>(<span class="string">""</span><span class="string">"Accept"</span><span class="string">""</span> -&gt; <span class="string">""</span><span class="string">"text/css,*/*;q=0.1"</span><span class="string">""</span>)</div><div class="line"></div><div class="line">  <span class="keyword">val</span> headers_4 = <span class="type">Map</span>(<span class="string">""</span><span class="string">"Accept"</span><span class="string">""</span> -&gt; <span class="string">""</span><span class="string">"image/png,image/*;q=0.8,*/*;q=0.5"</span><span class="string">""</span>)</div><div class="line"></div><div class="line">  <span class="keyword">val</span> headers_6 = <span class="type">Map</span>(<span class="string">""</span><span class="string">"Accept"</span><span class="string">""</span> -&gt; <span class="string">""</span><span class="string">"*/*"</span><span class="string">""</span>)</div><div class="line"></div><div class="line">  <span class="keyword">val</span> headers_8 = <span class="type">Map</span>(<span class="string">""</span><span class="string">"Content-Type"</span><span class="string">""</span> -&gt; <span class="string">""</span><span class="string">"application/x-www-form-urlencoded"</span><span class="string">""</span>)</div><div class="line"></div><div class="line">  <span class="keyword">val</span> headers_11 = <span class="type">Map</span>(</div><div class="line">    <span class="string">""</span><span class="string">"Accept"</span><span class="string">""</span> -&gt; <span class="string">""</span><span class="string">"application/json, text/javascript, */*; q=0.01"</span><span class="string">""</span>,</div><div class="line">    <span class="string">""</span><span class="string">"X-Requested-With"</span><span class="string">""</span> -&gt; <span class="string">""</span><span class="string">"XMLHttpRequest"</span><span class="string">""</span>)</div></pre></td></tr></table></figure>
+<p>每一个 header 都是一个 scala 的 Map。</p>
+<blockquote>
+<p>这些通用的 header 信息看上去没用，其实这些信息也额外增加了负载，也不容忽视的。</p>
+</blockquote>
+<p><em>The scenario definition</em></p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">val</span> scn = scenario(<span class="string">"Scenario Name"</span>)</div><div class="line">  .exec(http(<span class="string">"request_1"</span>)</div><div class="line">    .get(<span class="string">""</span><span class="string">"/"</span><span class="string">""</span>)</div><div class="line">    .headers(headers_1))</div><div class="line">  .pause(<span class="number">2</span>)</div><div class="line">  .exec(http(<span class="string">"request_2"</span>)</div><div class="line">    .get(<span class="string">""</span><span class="string">"/img/favicon.ico"</span><span class="string">""</span>))</div><div class="line">  .pause(<span class="number">648</span> milliseconds)</div><div class="line">  .exec(http(<span class="string">"request_3"</span>)</div><div class="line">    .get(<span class="string">""</span><span class="string">"/gzip_N2030079394/bundles/all.css"</span><span class="string">""</span>)</div><div class="line">    .headers(headers_3))</div><div class="line">  .pause(<span class="number">819</span> milliseconds)</div><div class="line">  .exec(http(<span class="string">"request_4"</span>)</div><div class="line">    .get(<span class="string">""</span><span class="string">"/cb1024132465/img/background.png"</span><span class="string">""</span>)</div><div class="line">    .headers(headers_4))</div><div class="line">  .pause(<span class="number">23</span> milliseconds)</div><div class="line">  .exec(http(<span class="string">"request_5"</span>)</div><div class="line">    .get(<span class="string">""</span><span class="string">"/cb4077127084/img/small_window_content.png"</span><span class="string">""</span>)</div><div class="line">    .headers(headers_4))</div><div class="line">  .pause(<span class="number">2</span>)</div><div class="line">  .exec(http(<span class="string">"request_6"</span>)</div><div class="line">    .get(<span class="string">""</span><span class="string">"/gzip_N762261864/bundles/all.js"</span><span class="string">""</span>)</div><div class="line">    .headers(headers_6))</div><div class="line">  .pause(<span class="number">1</span>)</div><div class="line">  .exec(http(<span class="string">"request_7"</span>)</div><div class="line">    .get(<span class="string">""</span><span class="string">"/cb3761658453/img/sprite.png"</span><span class="string">""</span>)</div><div class="line">    .headers(headers_4))</div><div class="line">  .pause(<span class="number">30</span>)</div><div class="line">  .exec(http(<span class="string">"request_8"</span>)</div><div class="line">    .post(<span class="string">""</span><span class="string">"/login"</span><span class="string">""</span>)</div><div class="line">    .headers(headers_8)</div><div class="line">    .param(<span class="string">""</span><span class="string">"username"</span><span class="string">""</span>, <span class="string">""</span><span class="string">"user1"</span><span class="string">""</span>)</div><div class="line">    .param(<span class="string">""</span><span class="string">"password"</span><span class="string">""</span>, <span class="string">""</span><span class="string">"password1"</span><span class="string">""</span>))</div><div class="line">  .pause(<span class="number">3</span>)</div><div class="line">  .exec(http(<span class="string">"request_9"</span>)</div><div class="line">    .get(<span class="string">""</span><span class="string">"/cb2545837452/img/big_window_content.png"</span><span class="string">""</span>)</div><div class="line">    .headers(headers_4))</div><div class="line">  .pause(<span class="number">21</span>)</div><div class="line">  .exec(http(<span class="string">"request_10"</span>)</div><div class="line">    .get(<span class="string">""</span><span class="string">"/private/bank/account/ACC1/operations.html"</span><span class="string">""</span>))</div><div class="line">  .pause(<span class="number">3</span>)</div><div class="line">  .exec(http(<span class="string">"request_11"</span>)</div><div class="line">    .get(<span class="string">""</span><span class="string">"/private/bank/account/ACC1/year/2012/month/4/page/0/operations.json"</span><span class="string">""</span>)</div><div class="line">    .headers(headers_11))</div><div class="line">  .pause(<span class="number">43</span>)</div><div class="line">  .exec(http(<span class="string">"request_12"</span>)</div><div class="line">    .get(<span class="string">""</span><span class="string">"/private/bank/account/ACC1/year/2012/month/3/operations.html"</span><span class="string">""</span>))</div><div class="line">  .pause(<span class="number">663</span> milliseconds)</div><div class="line">  .exec(http(<span class="string">"request_13"</span>)</div><div class="line">    .get(<span class="string">""</span><span class="string">"/private/bank/account/ACC1/year/2012/month/3/page/0/operations.json"</span><span class="string">""</span>)</div><div class="line">    .headers(headers_11))</div><div class="line">  .pause(<span class="number">4</span>)</div><div class="line">  .exec(http(<span class="string">"request_14"</span>)</div><div class="line">    .get(<span class="string">""</span><span class="string">"/logout"</span><span class="string">""</span>))</div></pre></td></tr></table></figure>
+<p>一个simluation 里面可以定义一个或者多个 scenario， 每个 scenario 是一个 scala 对象，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">val scn = scenario(&quot;Name of my Scenario&quot;)...</div></pre></td></tr></table></figure>
+<p>scenario 有两个方法：</p>
+<ul>
+<li>exec  - describe an action, usually a request sent to the tested application</li>
+<li>pause - simulate the thinking time of the user between pages</li>
+</ul>
+<p>每个 scenario 里会发送很多个 request， 也会思考好多次。所以你看到上面的代码都是 exec http request 和 pause。</p>
+<p>HTTP requests 的定义包括 名字，post 或者 get 方法，headers， 还有参数 :</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">http(&quot;request_3&quot;)</div><div class="line">  .post(&quot;/login&quot;)</div><div class="line">  .headers(headers_3)</div><div class="line">  .param(&quot;username&quot;, &quot;user1&quot;)</div><div class="line">  .param(&quot;password&quot;, &quot;password1&quot;)</div></pre></td></tr></table></figure>
+<p>这段代码会发送一个 POST 请求：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">POST http://excilysbank.gatling.cloudbees.net/login</div><div class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</div><div class="line">Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7</div><div class="line">Accept-Encoding: gzip,deflate</div><div class="line">Accept-Language: fr,en-us;q=0.7,en;q=0.3</div><div class="line">Host: excilysbank.gatling.cloudbees.net</div><div class="line">Keep-Alive: 115</div><div class="line">User-Agent: Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.2.17) Gecko/20110422 Ubuntu/9.10 Firefox/3.6.17</div><div class="line">Content-Length: 33</div><div class="line">Content-Type: application/x-www-form-urlencoded</div><div class="line">Referer: http://excilysbank.gatling.cloudbees.net/public/login.html</div><div class="line"></div><div class="line">username=user1&amp;password=password1</div></pre></td></tr></table></figure>
+<p><em>The simulation definition</em></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">setUp(scn.inject(atOnce(1 user))).protocols(httpProtocol)</div></pre></td></tr></table></figure>
+<h2 id="运行下吧！"><a href="#运行下吧！" class="headerlink" title="运行下吧！"></a>运行下吧！</h2><p>首先我们要把这个 Simulation move 到 user-files/simulations/下。</p>
+<p>然后运行<code>$GATHING_HOME/bin/gatling.sh</code>, Gatling 会找到 MySimulation。</p>
+<p><img src="/photos/run.png" alt=""></p>
+<p>选择 MySimulation，一路回车，然后等待运行结束，生成 report：</p>
+<p><img src="/photos/report.png" alt=""></p>
+<h2 id="分析报表吧！"><a href="#分析报表吧！" class="headerlink" title="分析报表吧！"></a>分析报表吧！</h2><p>Gatling 生成的报表非常漂亮而且有意义。每个图表的具体含义可以参考 <a href="https://github.com/excilys/gatling/wiki/Reports" target="_blank" rel="external">Reports</a><br>这样子的报表几乎可以直接呈给领导，都不需要自己采集数据绘图了。</p>
+<p><img src="/photos/gatling_report.png" alt=""></p>
+<h1 id="下一节"><a href="#下一节" class="headerlink" title="下一节"></a>下一节</h1><p>到目前为止，我们都是照搬 Gatling wiki 来做的，其实就了解了下基本情况。下一节，应该搞个 project 试验下。</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2013/09/24/2013-09-24-fluentwait-with-webelement/">
+                    FluentWait with WebElement
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2013/08/29/2013-08-29-add-hover-event-to-capybara/">
+                    add hover event to capybara
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#介绍"><span class="toc-number">1.</span> <span class="toc-text">介绍</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#上手"><span class="toc-number">2.</span> <span class="toc-text">上手</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#测试计划"><span class="toc-number">2.1.</span> <span class="toc-text">测试计划</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Gatling-Recorder"><span class="toc-number">2.2.</span> <span class="toc-text">Gatling Recorder</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#开始录制吧"><span class="toc-number">2.3.</span> <span class="toc-text">开始录制吧</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#代码分析"><span class="toc-number">2.4.</span> <span class="toc-text">代码分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#运行下吧！"><span class="toc-number">2.5.</span> <span class="toc-text">运行下吧！</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分析报表吧！"><span class="toc-number">2.6.</span> <span class="toc-text">分析报表吧！</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#下一节"><span class="toc-number">3.</span> <span class="toc-text">下一节</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+
+
+    
+        <section id="comments">
+    <style> aside.comment-bar { margin: auto 30px; }</style>
+    <div id="disqus_thread"></div>
+    <script>
+        var disqus_config = function(){
+            this.page.url = 'http://lihuazhang.github.io/2013/09/14/2013-09-14-gatling-shi-yong/';
+            this.page.identifier = '2013/09/14/2013-09-14-gatling-shi-yong/';
+        };
+        var loadComment = function(){
+            var d = document, s = d.createElement('script');
+            s.src = '//8atmyhouse.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        }
+    </script>
+    
+    <script> loadComment(); </script>
+
+</section>
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2013/09/24/2013-09-24-fluentwait-with-webelement/" title="上一篇: FluentWait with WebElement">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2013/08/29/2013-08-29-add-hover-event-to-capybara/" title="下一篇: add hover event to capybara">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/06/25/随便写写/">随便写写</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/29/烟/">烟</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/25/踩不到点的小男孩/">踩不到点的小男孩</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/14/webdriveragent-简介/">WebDriverAgent 简介</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/29/南京之行/">南京之行</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/17/2013-03-15-8atmyhouse/">8atmyHouse</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/12/26/2013-12-26-fan-yi-android-and-ios-support/">[翻译]Android and iOS Support</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/10/15/2013-10-15-you-xi-kai-fa-chang-yong-gai-nian/">游戏开发常用概念</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/10/09/2013-10-09-cron-jobs-and-random-times-within-giving-hours/">Cron jobs and random times, within giving hours</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/09/24/2013-09-24-fluentwait-with-webelement/">FluentWait with WebElement</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/09/14/2013-09-14-gatling-shi-yong/">Gatling 试用 1</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/08/29/2013-08-29-add-hover-event-to-capybara/">add hover event to capybara</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/08/25/2013-08-25-du-lu-fan-yan-shi/">读陆犯焉识</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/08/21/2013-08-21-wo-de-nexus-7-ruan-jian-lie-biao/">我的 nexus 7 2013 软件列表</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/08/16/2013-08-16-vim-cha-jian-tui-jian/">vim 插件推荐</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/08/12/2013-08-12-install-vim74-from-source/">Install vim74 from source</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/08/08/2013-08-08-cucumberhe-capybaraxia-de-pageobject/">Cucumber 和 Capybara 下的 PageObject</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/08/07/2013-08-07-step-defintionshi-kong/">由 step definition 失控引发的讨论和思考</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/08/06/2013-08-06-git-revert/">git revert</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/08/02/2013-08-02-ba-yue-er-ri-gong-zuo-suo-shi/">8-02-工作琐事</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/07/30/2013-07-30-gong-zuo-ri-ji-7-31/">7-31-工作琐事</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/07/11/2013-07-11-wo-de-vimrc/">我的 vimrc</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/06/27/2013-06-27-ruby-here-doc/">ruby 的 Heredocs</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/06/26/2013-06-26-shell-script-to-control-tomcat/">能马上用起来的控制 tomcat 的脚本</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/05/26/2013-05-26-zai-webdriverli-shi-yong-sizzle-dot-js/">在WebDriver里使用Sizzle.js</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/05/12/2013-05-12-wo-de-mu-qin/">我的母亲</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/04/30/2013-04-30-webdriver-zhi-ce-shi-shi-bai-zi-dong-jie-tu/">WebDriver 之测试失败自动截图</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/04/29/2013-04-29-jmeter-bing-qi-pu-zhi-xpath-extractor/">Jmeter 兵器谱之 Xpath Extractor</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/04/28/2013-04-28-jmeter-bing-qi-pu-zhi-foreach-controller/">JMeter 兵器谱之 ForEach Controller</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/04/27/2013-04-27-jmeter-bing-qi-pu-zhi-regular-expression-extractor/">Jmeter 兵器谱之 Regular Expression Extractor</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/04/26/2013-04-26-htmlunit-jie-shao/">HtmlUnit 介绍</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/03/21/2013-03-21-windowsxia-cha-zhao-zhan-yong-duan-kou-de-jin-cheng/">windows 下查找占用端口的进程</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/02/12/2013-02-12-shi-yong-capybara-deng-lu-bai-du/">使用 capybara 登陆百度</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/02/12/2013-02-12-gao-bie-2012/">告别2012</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/08/06/2012-08-06-ying-she-windows-cmdke-yi-du-qu-de-ci-pan-qu-dong/">映射 Windows cmd 可以读取的磁盘驱动</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/08/05/2012-08-05-surround-dot-vim/">surround.vim</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/08/01/2012-08-01-xiao-qing-xin-outlookshi-yong-ji/">小清新 Outlook 试用记</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/04/25/2012-04-25-webdriver-4-jia-shang-xie-zi/">WebDriver 4: 加上叶子</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/04/24/2012-04-24-sauce-ondemandshi-yong/">Sauce OnDemand试用</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/04/23/2012-04-23-mysql5-qing-kong-rootmi-ma/">mysql5 清空root密码</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/04/21/2012-04-21-webdriver-3-more-pageobjects/">WebDriver 3: more PageObjects - PageFactory</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/04/20/2012-04-20-webdriver2/">WebDriver 2: PageObject</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/04/19/2012-04-19-capybara-plus-cucumber-plus-webdriverzi-dong-hua-ce-shi-kuang-jia/">使用 Capybara， Cucumber 和 WebDriver 实现自动化测试</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/04/06/2012-04-06-webdriver-1-post/">WebDriver 1: Set up WebDriver using Maven3</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/03/08/2012-03-08-learn-vim-3-post/">vim学习 jsctags</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/03/07/2012-03-07-learn-vim-2-post/">vim学习 shiftwidth, tabstop, softtabstop和expandtab</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/03/07/2012-03-07-learn-vim-1-post/">vim学习 listchars</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/03/04/2012-03-04-zsh-config-post/">oh my zsh</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/02/23/2012-02-23-use-spf13-vim-config-post/">vim配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/02/19/2012-02-19-add-google-pretty-code-post/">Add google pretty code support</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2012-2017 恒温
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

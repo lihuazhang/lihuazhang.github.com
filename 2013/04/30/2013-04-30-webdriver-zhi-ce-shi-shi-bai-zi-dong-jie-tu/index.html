@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="恒温" />
+
+
+
+<meta name="description" content="写 webDriver 测试的时候最头疼的就是调试。 但也远不及运行的时候出错，再回头调试来的痛苦。总所周知， web 自动化的代码都非常脆弱，一份代码一会运行失败，一会运行成功也是很正常的事情。总的来说造成案例运行失败的原因大抵有两点：  环境问题： 比如网络不稳定啊 代码变动： 比如某个元素不在 遇到 bug ：这就是真的发现 bug 了  无论哪一种，遇到了都需要花一番时间去 debug。那">
+<meta name="keywords" content="test-china.org">
+<meta property="og:type" content="article">
+<meta property="og:title" content="WebDriver 之测试失败自动截图">
+<meta property="og:url" content="http://lihuazhang.github.io/2013/04/30/2013-04-30-webdriver-zhi-ce-shi-shi-bai-zi-dong-jie-tu/index.html">
+<meta property="og:site_name" content="八点在家">
+<meta property="og:description" content="写 webDriver 测试的时候最头疼的就是调试。 但也远不及运行的时候出错，再回头调试来的痛苦。总所周知， web 自动化的代码都非常脆弱，一份代码一会运行失败，一会运行成功也是很正常的事情。总的来说造成案例运行失败的原因大抵有两点：  环境问题： 比如网络不稳定啊 代码变动： 比如某个元素不在 遇到 bug ：这就是真的发现 bug 了  无论哪一种，遇到了都需要花一番时间去 debug。那">
+<meta property="og:updated_time" content="2015-12-16T13:43:59.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="WebDriver 之测试失败自动截图">
+<meta name="twitter:description" content="写 webDriver 测试的时候最头疼的就是调试。 但也远不及运行的时候出错，再回头调试来的痛苦。总所周知， web 自动化的代码都非常脆弱，一份代码一会运行失败，一会运行成功也是很正常的事情。总的来说造成案例运行失败的原因大抵有两点：  环境问题： 比如网络不稳定啊 代码变动： 比如某个元素不在 遇到 bug ：这就是真的发现 bug 了  无论哪一种，遇到了都需要花一番时间去 debug。那">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="八点在家" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>WebDriver 之测试失败自动截图 | 八点在家</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: false,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: undefined
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/images/avatar.jpeg" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">恒温</a></h1>
+        </hgroup>
+
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="mailto:lihuazhang@hotmail.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="https://github.com/lihuazhang" title="GitHub"></a>
+                            
+                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metro/">Metro</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/capybara/">capybara</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cucumber/">cucumber</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/factory-gril/">factory_gril</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nexus-7-2013/">nexus 7 2013</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pageobject/">pageobject</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/test-china-org/">test-china.org</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vim/">vim</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xpath/">xpath</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/南京/">南京</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/性能测试/">性能测试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/游戏开发/">游戏开发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/生活/">生活</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/移动测试/">移动测试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/翻译/">翻译</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/陆犯焉识/">陆犯焉识</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">恒温</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/images/avatar.jpeg" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">恒温</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto:lihuazhang@hotmail.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/lihuazhang" title="GitHub"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-2013-04-30-webdriver-zhi-ce-shi-shi-bai-zi-dong-jie-tu" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2013/04/30/2013-04-30-webdriver-zhi-ce-shi-shi-bai-zi-dong-jie-tu/" class="article-date">
+      <time datetime="2013-04-30T13:37:00.000Z" itemprop="datePublished">2013-04-30</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      WebDriver 之测试失败自动截图
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/WebDriver/">WebDriver</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/test-china-org/">test-china.org</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>写 webDriver 测试的时候最头疼的就是调试。 但也远不及运行的时候出错，再回头调试来的痛苦。总所周知， web 自动化的代码都非常脆弱，一份代码一会运行失败，一会运行成功也是很正常的事情。总的来说造成案例运行失败的原因大抵有两点：</p>
+<ul>
+<li>环境问题： 比如网络不稳定啊</li>
+<li>代码变动： 比如某个元素不在</li>
+<li>遇到 bug ：这就是真的发现 bug 了</li>
+</ul>
+<p>无论哪一种，遇到了都需要花一番时间去 debug。那如果这个时候有一张运行时候出错的截图，那就一目了然了。（即便不一目了然，也有很多帮助）</p>
+<p>在运行出错的时候，捕获错误并截图有两种思路：</p>
+<ol>
+<li>自定义一个 WeDdriver 的监听器，在出异常的时候截图。</li>
+<li>利用 Juint 的 TestRule， 自定义一个 Rule 在运行失败的时候截图。</li>
+</ol>
+<h2 id="自定义监听器"><a href="#自定义监听器" class="headerlink" title="自定义监听器"></a>自定义监听器</h2><hr>
+<p><strong>截图的原理</strong></p>
+<p>截图需要用到 RemoteWebDriver。在 <a href="http://code.google.com/p/selenium/wiki/RemoteWebDriver" target="_blank" rel="external">Selenium</a> 官方我们可以找到：</p>
+<blockquote>
+<p>One nice feature of the remote<br>webdriver is that exceptions often<br>have an attached screen shot, encoded<br>as a Base64 PNG. In order to get this<br>screenshot, you need to write code<br>similar to:</p>
+</blockquote>
+<pre><code>public String extractScreenShot(WebDriverException e) {
+  Throwable cause = e.getCause();
+  if (cause instanceof ScreenshotException) {
+    return ((ScreenshotException) cause).getBase64EncodedScreenshot();
+  }
+  return null;
+}
+</code></pre><p>意思就是说，每个异常都是 ScreenshotException 的对象，转码一下就可以用了。这是截图的本质。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.io.File;</div><div class="line"><span class="keyword">import</span> java.io.FileOutputStream;</div><div class="line"><span class="keyword">import</span> java.io.IOException;</div><div class="line"><span class="keyword">import</span> java.text.SimpleDateFormat;</div><div class="line"><span class="keyword">import</span> java.util.Date;</div><div class="line"></div><div class="line"><span class="keyword">import</span> org.openqa.selenium.WebDriver;</div><div class="line"><span class="keyword">import</span> org.openqa.selenium.internal.Base64Encoder;</div><div class="line"><span class="keyword">import</span> org.openqa.selenium.remote.ScreenshotException;</div><div class="line"><span class="keyword">import</span> org.openqa.selenium.support.events.AbstractWebDriverEventListener;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * This is an customized webdriver event listener.</div><div class="line"> * Now it implements onException method: webdriver will take a screenshot</div><div class="line"> * when it meets an exception. It's good but not so usable. And when we use</div><div class="line"> * WebDriverWait to wait for an element appearing, the webdriver will throw</div><div class="line"> * exception always and the onException will be excuted again and again, which</div><div class="line"> * generates a lot of screenshots.</div><div class="line"> * Put here for study</div><div class="line"> * Usage:</div><div class="line"> *      WebDriver driver = new FirefoxDriver();</div><div class="line"> *      WebDriverEventListener listener = new CustomWebDriverEventListener();</div><div class="line"> *      return new EventFiringWebDriver(driver).register(listener);</div><div class="line"> *</div><div class="line"> * <span class="doctag">@author</span> qa</div><div class="line"> *</div><div class="line"> */</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CustomWebDriverEventListener</span> <span class="keyword">extends</span></span></div><div class="line">        <span class="title">AbstractWebDriverEventListener</span> &#123;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onException</span><span class="params">(Throwable throwable, WebDriver driver)</span> </span>&#123;</div><div class="line"></div><div class="line">        Throwable cause = throwable.getCause();</div><div class="line">        <span class="keyword">if</span> (cause <span class="keyword">instanceof</span> ScreenshotException) &#123;</div><div class="line">            SimpleDateFormat formatter = <span class="keyword">new</span> SimpleDateFormat(</div><div class="line">                    <span class="string">"yyyy-MM-dd-hh-mm-ss"</span>);</div><div class="line">            String dateString = formatter.format(<span class="keyword">new</span> Date());</div><div class="line">            File of = <span class="keyword">new</span> File(dateString + <span class="string">"-exception.png"</span>);</div><div class="line">            FileOutputStream out = <span class="keyword">null</span>;</div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                out = <span class="keyword">new</span> FileOutputStream(of);</div><div class="line">                out.write(<span class="keyword">new</span> Base64Encoder()</div><div class="line">                        .decode(((ScreenshotException) cause)</div><div class="line">                                .getBase64EncodedScreenshot()));</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">                e.printStackTrace();</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">finally</span> &#123;</div><div class="line">                <span class="keyword">try</span> &#123;</div><div class="line">                    out.close();</div><div class="line">                &#125;</div><div class="line">                <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">                    e.printStackTrace();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>主要看 onException 这个方法的实现，很明显， 我们捕获了这个异常， 然后通过强制转换将图片提取出来，写入硬盘。</p>
+<p>然后就是使用这个监听器， 通常会在 setup 方法里面将这个监听器注册到 WebDriver 中去， 看代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Test</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setup</span><span class="params">()</span></span>&#123;</div><div class="line">    String remote_driver_url = <span class="string">"http://localhost:4444/wd/hub"</span>;</div><div class="line">    DesiredCapabilities capability = <span class="keyword">null</span>;</div><div class="line">    capability = DesiredCapabilities.firefox();</div><div class="line">    WebDriverEventListener eventListener = <span class="keyword">new</span> CustomWebDriverEventListener ();</div><div class="line">    WebDriver driver = <span class="keyword">new</span> EventFiringWebDriver(<span class="keyword">new</span> RemoteWebDriver(<span class="keyword">new</span> URL(</div><div class="line">                    remote_driver_url), capability)).register(eventListener);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在这之后，如果运行出错， WebDriver 抛出异常就会在相应的 classpath 下面生成 png 的截图。</p>
+<h2 id="自定义-TestRule"><a href="#自定义-TestRule" class="headerlink" title="自定义 TestRule"></a>自定义 TestRule</h2><hr>
+<p>和自定义 WebDriver 监听器不同， 自定义 TestRule 只有在这个 Rule 被执行的时候， 才去做一些我们预设的 CallBack。 所以这个截图动作，对于 WebDriver 而言， 是主动的。 那么，我们就需要自定义一个 RemoteWebDriver 来实现截图功能。 WebDriver 自身提供了 TakesScreenshot  这个接口， 我们只要实现它就可以了， 看代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.net.URL;</div><div class="line"></div><div class="line"><span class="keyword">import</span> org.openqa.selenium.OutputType;</div><div class="line"><span class="keyword">import</span> org.openqa.selenium.TakesScreenshot;</div><div class="line"><span class="keyword">import</span> org.openqa.selenium.WebDriverException;</div><div class="line"><span class="keyword">import</span> org.openqa.selenium.remote.CapabilityType;</div><div class="line"><span class="keyword">import</span> org.openqa.selenium.remote.DesiredCapabilities;</div><div class="line"><span class="keyword">import</span> org.openqa.selenium.remote.DriverCommand;</div><div class="line"><span class="keyword">import</span> org.openqa.selenium.remote.RemoteWebDriver;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CustomRemoteWebDriver</span> <span class="keyword">extends</span> <span class="title">RemoteWebDriver</span> <span class="keyword">implements</span></span></div><div class="line">        <span class="title">TakesScreenshot</span> &#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">CustomRemoteWebDriver</span><span class="params">(URL url, DesiredCapabilities dc)</span> </span>&#123;</div><div class="line">        <span class="keyword">super</span>(url, dc);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="keyword">public</span> &lt;X&gt; <span class="function">X <span class="title">getScreenshotAs</span><span class="params">(OutputType&lt;X&gt; target)</span></span></div><div class="line">            <span class="keyword">throws</span> WebDriverException &#123;</div><div class="line">        <span class="keyword">if</span> ((Boolean) getCapabilities().getCapability(</div><div class="line">                CapabilityType.TAKES_SCREENSHOT)) &#123;</div><div class="line">            <span class="keyword">return</span> target</div><div class="line">                    .convertFromBase64Png(execute(DriverCommand.SCREENSHOT)</div><div class="line">                            .getValue().toString());</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>然后，我们在加一个封装类， 将截图方法放进去。</p>
+<p> WebDriverWrapper.screenShot ：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line">    * Function to take the screen shot and save it to the classpath dir.</div><div class="line">    * Usually, you will find the png file under the project root.</div><div class="line">    *</div><div class="line">    * <span class="doctag">@param</span> driver</div><div class="line">    *            Webdriver instance</div><div class="line">    * <span class="doctag">@param</span> desc</div><div class="line">    *            The description of the png</div><div class="line">    */</div><div class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">screenShot</span><span class="params">(WebDriver driver, String desc)</span> </span>&#123;</div><div class="line">       Date currentTime = <span class="keyword">new</span> Date();</div><div class="line">       SimpleDateFormat formatter = <span class="keyword">new</span> SimpleDateFormat(<span class="string">"yyyy-MM-dd-hh-mm-ss"</span>);</div><div class="line">       String dateString = formatter.format(currentTime);</div><div class="line">       File scrFile = ((TakesScreenshot) driver)</div><div class="line">               .getScreenshotAs(OutputType.FILE);</div><div class="line">       <span class="keyword">try</span> &#123;</div><div class="line">           desc = desc.trim().equals(<span class="string">""</span>) ? <span class="string">""</span> : <span class="string">"-"</span> + desc.trim();</div><div class="line">           File screenshot = <span class="keyword">new</span> File(<span class="string">"screenshot"</span> + File.separator</div><div class="line">                   + dateString + desc + <span class="string">".png"</span>);</div><div class="line">           FileUtils.copyFile(scrFile, screenshot);</div><div class="line">       &#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">           e.printStackTrace();</div><div class="line">       &#125;</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<p>下面，就是添加 Junit 的 TestRule：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> org.junit.rules.TestRule;</div><div class="line"><span class="keyword">import</span> org.junit.runner.Description;</div><div class="line"><span class="keyword">import</span> org.junit.runners.model.Statement;</div><div class="line"><span class="keyword">import</span> org.openqa.selenium.WebDriver;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TakeScreenshotOnFailureRule</span> <span class="keyword">implements</span> <span class="title">TestRule</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> WebDriver driver;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">TakeScreenshotOnFailureRule</span><span class="params">(WebDriver driver)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.driver = driver;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> Statement <span class="title">apply</span><span class="params">(<span class="keyword">final</span> Statement base, Description description)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Statement() &#123;</div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">evaluate</span><span class="params">()</span> <span class="keyword">throws</span> Throwable </span>&#123;</div><div class="line">                <span class="keyword">try</span> &#123;</div><div class="line">                    base.evaluate();</div><div class="line">                &#125;</div><div class="line">                <span class="keyword">catch</span> (Throwable throwable) &#123;</div><div class="line">                    WebDriverWrapper.screenShot(driver, <span class="string">"assert-fail"</span>);</div><div class="line">                    <span class="keyword">throw</span> throwable;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>代码很简单，在抛出 evalate 方法的错误之前，截图。</p>
+<p>然后就是使用这个 TestRule， 很简单，只要在你的 测试用例里面加入：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyTest</span> </span>&#123;</div><div class="line">...</div><div class="line"><span class="meta">@Rule</span></div><div class="line"><span class="keyword">public</span> TestRule myScreenshot = <span class="keyword">new</span> TakeScreenshotOnFailureRule(driver);</div><div class="line">...</div><div class="line"><span class="meta">@Test</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test1</span><span class="params">()</span> </span>&#123;&#125;</div><div class="line"></div><div class="line"><span class="meta">@Test</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test2</span><span class="params">()</span> </span>&#123;&#125;</div><div class="line">...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>即可。关于 Junit 的 Rule 请自行 google！</p>
+<h2 id="两则的比较"><a href="#两则的比较" class="headerlink" title="两则的比较"></a>两则的比较</h2><hr>
+<p>总得来说，两种方法都很方便， 也很有效果， 基本都能截图成功。</p>
+<p>不同之处在于，</p>
+<ul>
+<li>RemoteWebDriver 监听器是在 RemoteWebDriver 抛出异常的时候截图。</li>
+<li>TestRule 是在 assert 失败的时候截图。</li>
+</ul>
+<p>我在项目中最早是用第一种方法，后来改用第二种，主要是因为，在自定义的监听器里， 它遇到所有的异常都会截图，这个时候，如果你用了 condition wait 一个 Ajax 的元素， 那就会很悲剧，你会发现在你的目录下面有无数的截图。当初我没有找到解决方法，期待有人提出。</p>
+<h2 id="Refer"><a href="#Refer" class="headerlink" title="Refer"></a>Refer</h2><hr>
+<ul>
+<li><a href="http://code.google.com/p/selenium/wiki/RemoteWebDriver" target="_blank" rel="external">http://code.google.com/p/selenium/wiki/RemoteWebDriver</a></li>
+<li><a href="http://magustest.com/blog/webdriver/webdriver-screenshot-on-exception/" target="_blank" rel="external">http://magustest.com/blog/webdriver/webdriver-screenshot-on-exception/</a></li>
+<li><a href="http://cwd.dhemery.com/2010/12/junit-rules/" target="_blank" rel="external">http://cwd.dhemery.com/2010/12/junit-rules/</a></li>
+</ul>
+
+      
+    </div>
+    
+  </div>
+  
+    
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2013/05/12/2013-05-12-wo-de-mu-qin/">
+                    我的母亲
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2013/04/29/2013-04-29-jmeter-bing-qi-pu-zhi-xpath-extractor/">
+                    Jmeter 兵器谱之 Xpath Extractor
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#自定义监听器"><span class="toc-number">1.</span> <span class="toc-text">自定义监听器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#自定义-TestRule"><span class="toc-number">2.</span> <span class="toc-text">自定义 TestRule</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#两则的比较"><span class="toc-number">3.</span> <span class="toc-text">两则的比较</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Refer"><span class="toc-number">4.</span> <span class="toc-text">Refer</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+
+
+    
+        <section id="comments">
+    <style> aside.comment-bar { margin: auto 30px; }</style>
+    <div id="disqus_thread"></div>
+    <script>
+        var disqus_config = function(){
+            this.page.url = 'http://lihuazhang.github.io/2013/04/30/2013-04-30-webdriver-zhi-ce-shi-shi-bai-zi-dong-jie-tu/';
+            this.page.identifier = '2013/04/30/2013-04-30-webdriver-zhi-ce-shi-shi-bai-zi-dong-jie-tu/';
+        };
+        var loadComment = function(){
+            var d = document, s = d.createElement('script');
+            s.src = '//8atmyhouse.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        }
+    </script>
+    
+    <script> loadComment(); </script>
+
+</section>
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2013/05/12/2013-05-12-wo-de-mu-qin/" title="上一篇: 我的母亲">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2013/04/29/2013-04-29-jmeter-bing-qi-pu-zhi-xpath-extractor/" title="下一篇: Jmeter 兵器谱之 Xpath Extractor">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/06/25/随便写写/">随便写写</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/29/烟/">烟</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/25/踩不到点的小男孩/">踩不到点的小男孩</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/14/webdriveragent-简介/">WebDriverAgent 简介</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/29/南京之行/">南京之行</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/17/2013-03-15-8atmyhouse/">8atmyHouse</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/12/26/2013-12-26-fan-yi-android-and-ios-support/">[翻译]Android and iOS Support</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/10/15/2013-10-15-you-xi-kai-fa-chang-yong-gai-nian/">游戏开发常用概念</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/10/09/2013-10-09-cron-jobs-and-random-times-within-giving-hours/">Cron jobs and random times, within giving hours</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/09/24/2013-09-24-fluentwait-with-webelement/">FluentWait with WebElement</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/09/14/2013-09-14-gatling-shi-yong/">Gatling 试用 1</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/08/29/2013-08-29-add-hover-event-to-capybara/">add hover event to capybara</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/08/25/2013-08-25-du-lu-fan-yan-shi/">读陆犯焉识</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/08/21/2013-08-21-wo-de-nexus-7-ruan-jian-lie-biao/">我的 nexus 7 2013 软件列表</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/08/16/2013-08-16-vim-cha-jian-tui-jian/">vim 插件推荐</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/08/12/2013-08-12-install-vim74-from-source/">Install vim74 from source</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/08/08/2013-08-08-cucumberhe-capybaraxia-de-pageobject/">Cucumber 和 Capybara 下的 PageObject</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/08/07/2013-08-07-step-defintionshi-kong/">由 step definition 失控引发的讨论和思考</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/08/06/2013-08-06-git-revert/">git revert</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/08/02/2013-08-02-ba-yue-er-ri-gong-zuo-suo-shi/">8-02-工作琐事</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/07/30/2013-07-30-gong-zuo-ri-ji-7-31/">7-31-工作琐事</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/07/11/2013-07-11-wo-de-vimrc/">我的 vimrc</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/06/27/2013-06-27-ruby-here-doc/">ruby 的 Heredocs</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/06/26/2013-06-26-shell-script-to-control-tomcat/">能马上用起来的控制 tomcat 的脚本</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/05/26/2013-05-26-zai-webdriverli-shi-yong-sizzle-dot-js/">在WebDriver里使用Sizzle.js</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/05/12/2013-05-12-wo-de-mu-qin/">我的母亲</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/04/30/2013-04-30-webdriver-zhi-ce-shi-shi-bai-zi-dong-jie-tu/">WebDriver 之测试失败自动截图</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/04/29/2013-04-29-jmeter-bing-qi-pu-zhi-xpath-extractor/">Jmeter 兵器谱之 Xpath Extractor</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/04/28/2013-04-28-jmeter-bing-qi-pu-zhi-foreach-controller/">JMeter 兵器谱之 ForEach Controller</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/04/27/2013-04-27-jmeter-bing-qi-pu-zhi-regular-expression-extractor/">Jmeter 兵器谱之 Regular Expression Extractor</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/04/26/2013-04-26-htmlunit-jie-shao/">HtmlUnit 介绍</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/03/21/2013-03-21-windowsxia-cha-zhao-zhan-yong-duan-kou-de-jin-cheng/">windows 下查找占用端口的进程</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/02/12/2013-02-12-shi-yong-capybara-deng-lu-bai-du/">使用 capybara 登陆百度</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/02/12/2013-02-12-gao-bie-2012/">告别2012</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/08/06/2012-08-06-ying-she-windows-cmdke-yi-du-qu-de-ci-pan-qu-dong/">映射 Windows cmd 可以读取的磁盘驱动</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/08/05/2012-08-05-surround-dot-vim/">surround.vim</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/08/01/2012-08-01-xiao-qing-xin-outlookshi-yong-ji/">小清新 Outlook 试用记</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/04/25/2012-04-25-webdriver-4-jia-shang-xie-zi/">WebDriver 4: 加上叶子</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/04/24/2012-04-24-sauce-ondemandshi-yong/">Sauce OnDemand试用</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/04/23/2012-04-23-mysql5-qing-kong-rootmi-ma/">mysql5 清空root密码</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/04/21/2012-04-21-webdriver-3-more-pageobjects/">WebDriver 3: more PageObjects - PageFactory</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/04/20/2012-04-20-webdriver2/">WebDriver 2: PageObject</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/04/19/2012-04-19-capybara-plus-cucumber-plus-webdriverzi-dong-hua-ce-shi-kuang-jia/">使用 Capybara， Cucumber 和 WebDriver 实现自动化测试</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/04/06/2012-04-06-webdriver-1-post/">WebDriver 1: Set up WebDriver using Maven3</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/03/08/2012-03-08-learn-vim-3-post/">vim学习 jsctags</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/03/07/2012-03-07-learn-vim-2-post/">vim学习 shiftwidth, tabstop, softtabstop和expandtab</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/03/07/2012-03-07-learn-vim-1-post/">vim学习 listchars</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/03/04/2012-03-04-zsh-config-post/">oh my zsh</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/02/23/2012-02-23-use-spf13-vim-config-post/">vim配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/02/19/2012-02-19-add-google-pretty-code-post/">Add google pretty code support</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2012-2017 恒温
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

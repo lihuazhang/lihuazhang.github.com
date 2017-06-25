@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="恒温" />
+
+
+
+<meta name="description" content="##XPATH vs CSS 2008年的时候， 开始使用 Selenium RC 来写 Web 自动化测试，用的是 XPATH 定位，在 Firefox 上工作的很好，可惜在 IE 上跑不起来。因为后来转去做开发工作，对此问题也没深究。时隔5年，09年时候转测试，已经4年多了。Selenium RC 都变成了 WebDriver， 从2013 GTAC 来看，WebDriver 逐渐成为 Web">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在WebDriver里使用Sizzle.js">
+<meta property="og:url" content="http://lihuazhang.github.io/2013/05/26/2013-05-26-zai-webdriverli-shi-yong-sizzle-dot-js/index.html">
+<meta property="og:site_name" content="八点在家">
+<meta property="og:description" content="##XPATH vs CSS 2008年的时候， 开始使用 Selenium RC 来写 Web 自动化测试，用的是 XPATH 定位，在 Firefox 上工作的很好，可惜在 IE 上跑不起来。因为后来转去做开发工作，对此问题也没深究。时隔5年，09年时候转测试，已经4年多了。Selenium RC 都变成了 WebDriver， 从2013 GTAC 来看，WebDriver 逐渐成为 Web">
+<meta property="og:updated_time" content="2015-12-16T13:52:17.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="在WebDriver里使用Sizzle.js">
+<meta name="twitter:description" content="##XPATH vs CSS 2008年的时候， 开始使用 Selenium RC 来写 Web 自动化测试，用的是 XPATH 定位，在 Firefox 上工作的很好，可惜在 IE 上跑不起来。因为后来转去做开发工作，对此问题也没深究。时隔5年，09年时候转测试，已经4年多了。Selenium RC 都变成了 WebDriver， 从2013 GTAC 来看，WebDriver 逐渐成为 Web">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="八点在家" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>在WebDriver里使用Sizzle.js | 八点在家</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: false,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: undefined
+    }
+</script>
+
+
+    <script> yiliaConfig.jquery_ui = [false]; </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/images/avatar.jpeg" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">恒温</a></h1>
+        </hgroup>
+
+        
+
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="mailto:lihuazhang@hotmail.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="https://github.com/lihuazhang" title="GitHub"></a>
+                            
+                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Metro/">Metro</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/capybara/">capybara</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/cucumber/">cucumber</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/factory-gril/">factory_gril</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nexus-7-2013/">nexus 7 2013</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pageobject/">pageobject</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/test-china-org/">test-china.org</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vim/">vim</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/xpath/">xpath</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/南京/">南京</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/性能测试/">性能测试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/游戏开发/">游戏开发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/生活/">生活</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/移动测试/">移动测试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/翻译/">翻译</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/陆犯焉识/">陆犯焉识</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">恒温</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/images/avatar.jpeg" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">恒温</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto:lihuazhang@hotmail.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/lihuazhang" title="GitHub"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-2013-05-26-zai-webdriverli-shi-yong-sizzle-dot-js" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2013/05/26/2013-05-26-zai-webdriverli-shi-yong-sizzle-dot-js/" class="article-date">
+      <time datetime="2013-05-26T13:37:00.000Z" itemprop="datePublished">2013-05-26</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      在WebDriver里使用Sizzle.js
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/WebDriver/">WebDriver</a>
+    </div>
+
+
+        
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>##XPATH vs CSS</p>
+<p>2008年的时候， 开始使用 Selenium RC 来写 Web 自动化测试，用的是 XPATH 定位，在 Firefox 上工作的很好，可惜在 IE 上跑不起来。<br>因为后来转去做开发工作，对此问题也没深究。时隔5年，09年时候转测试，已经4年多了。Selenium RC 都变成了 WebDriver， 从2013 GTAC 来看，<br>WebDriver 逐渐成为 Web 自动化的主流框架。</p>
+<p>WebDriver 同样使用 XPATH 和 CSS locator。孰优孰劣，google 一下，一大把，不过目前风向偏向 CSS， 理由如下</p>
+<ol>
+<li>更快(尤其在 IE 上)</li>
+<li>更简单</li>
+<li>更加可读</li>
+<li>符合 Jquery 定位逻辑</li>
+<li>XPATH 在不同浏览器上的实现可能不太一样，也许在 Firefox 工作，在 IE 上就不一定了。</li>
+<li>CSS 可以引入第三方的 Javascript 库来更好的定位元素， 比如马上要说的 Sizzle.js</li>
+</ol>
+<a id="more"></a>
+<p>个人一直使用 XPATH， 对 XPATH 的强大也深有体会。作为一个软件测试人员，坚持一点<code>什么好用，用什么</code>，<br>所以想体会一把 CSS locator， 至于争论，请移步 <a href="https://groups.google.com/forum/?fromgroups#!topic/webdriver/raDyUewHFGI" target="_blank" rel="external">using xpath is better of CSS selector?</a></p>
+<p>WebDriver 中有 8 种定位方法，</p>
+<ol>
+<li>By.className</li>
+<li>By.id</li>
+<li>By.linkText</li>
+<li>By.name</li>
+<li>By.partialLinkText</li>
+<li>By.tagName</li>
+<li>By.xpath</li>
+<li>By.cssSelector</li>
+</ol>
+<p>其他 6 种其实都是由 XPATH 和 CssSelector 来实现的。参考<a href="http://darrellgrainger.blogspot.com/2011/12/selecting-webdriver-locators.html" target="_blank" rel="external">Selecting WebDriver locators</a></p>
+<table class="pure-table"><br>   <tr><br>      <td>Original</td><br>      <td>CSS</td><br>      <td>XPath</td><br>   </tr><br>   <tr><br>      <td>By.className(“foo”);</td><br>      <td>By.cssSelector(“.foo”);</td><br>      <td>By.xpath(“//<em>[@class=’foo’]”);</em></td><br>   </tr><br>   <tr><br>      <td>By.id(“bar”);</td><br>      <td>By.cssSelector(“#bar”);</td><br>      <td>By.xpath(“//[@id=’bar’]”);</td><br>   </tr><br>   <tr><br>      <td>By.linkText(“Click Me”);</td><br>      <td>N/A (可以利用sizzle :contains(text) 实现 )</td><br>      <td>By.xpath(“//a[text()=’Click Me’]”);</td><br>   </tr><br>   <tr><br>      <td>By.name(“fee”);</td><br>      <td>By.cssSelector(“[name=’fee’]”);</td><br>      <td>By.xpath(“//*[@name=’fee’]”);</td><br>   </tr><br>   <tr><br>      <td>By.partialLinkText(“some”);</td><br>      <td>N/A (可以利用sizzle :contains(text) 实现 )</td><br>      <td>By.xpath(“//a[contains(text(),’some’)]”);</td><br>   </tr><br>   <tr><br>      <td>By.tagname(“div”);</td><br>      <td>By.cssSelector(“div”);</td><br>      <td>By.xpath(“//div”);</td><br>   </tr><br></table>
+
+
+
+<p>其实在 Selenium 1 的时代， CSS 定位是用 Sizzle 库实现的，但是到了 Selenium 2 时代，webdriver 首先考虑native的实现，只有当native 不存在的时候，才会<br>去使用Sizzle。</p>
+<blockquote>
+<p>Native browser support is used by default, so please refer to w3c css selectors <a href="http://www.w3.org/TR/CSS/#selectors" target="_blank" rel="external">http://www.w3.org/TR/CSS/#selectors</a> for a list of generally available css selectors. If a browser does not have native support for css queries, then Sizzle is used.</p>
+</blockquote>
+<p>按道理来说，既然都用 Sizzle 做了备选，应该不用人为植入 Sizzle 支持，但是由于各种 driver 的实现不同，总会出现一些不一致，所以不如主动来的省心。</p>
+<p>##Sizzle</p>
+<blockquote>
+<p>A pure-JavaScript CSS selector engine designed to be easily dropped in to a host library.</p>
+</blockquote>
+<p>做为 JQuery 的定位器，Sizzle 号称最快的 DOM 选择器。它可以和 JQuery 结合， 也可以单独使用。</p>
+<p>Sizzle 支持:</p>
+<ol>
+<li>IE6+</li>
+<li>FF3.0+</li>
+<li>Chrome 5+</li>
+<li>Safari 3+</li>
+<li>Opera 9+</li>
+</ol>
+<p>详细可参见<a href="https://github.com/jquery/sizzle/wiki/Sizzle-Documentation" target="_blank" rel="external">文档</a></p>
+<p>##方案</p>
+<p>网上的方案大抵有 2 个:</p>
+<h3 id="1-自定义一个-Selector-类，封装-Sizzle-js-脚本。"><a href="#1-自定义一个-Selector-类，封装-Sizzle-js-脚本。" class="headerlink" title="1. 自定义一个 Selector 类，封装 Sizzle.js 脚本。"></a>1. 自定义一个 Selector 类，封装 Sizzle.js 脚本。</h3><p><code>SizzleSelector.java</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">package</span> my.webdriver.helper;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.util.List;</div><div class="line"><span class="keyword">import</span> org.openqa.selenium.JavascriptExecutor;</div><div class="line"><span class="keyword">import</span> org.openqa.selenium.WebDriver;</div><div class="line"><span class="keyword">import</span> org.openqa.selenium.WebDriverException;</div><div class="line"><span class="keyword">import</span> org.openqa.selenium.WebElement;</div><div class="line"></div><div class="line"><span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SizzleSelector</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> JavascriptExecutor driver;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SizzleSelector</span><span class="params">(WebDriver webDriver)</span> </span>&#123;</div><div class="line">        driver = (JavascriptExecutor) webDriver;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> WebElement <span class="title">findElementBySizzleCss</span><span class="params">(String using)</span> </span>&#123;</div><div class="line">        injectSizzleIfNeeded();</div><div class="line">        String javascriptExpression = createSizzleSelectorExpression(using);</div><div class="line">        List&lt;WebElement&gt; elements = (List&lt;WebElement&gt;) driver</div><div class="line">                .executeScript(javascriptExpression);</div><div class="line">        <span class="keyword">if</span> (elements.size() &gt; <span class="number">0</span>)</div><div class="line">            <span class="keyword">return</span> (WebElement) elements.get(<span class="number">0</span>);</div><div class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> List&lt;WebElement&gt; <span class="title">findElementsBySizzleCss</span><span class="params">(String using)</span> </span>&#123;</div><div class="line">        injectSizzleIfNeeded();</div><div class="line">        String javascriptExpression = createSizzleSelectorExpression(using);</div><div class="line">        <span class="keyword">return</span> (List&lt;WebElement&gt;) driver.executeScript(javascriptExpression);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> String <span class="title">createSizzleSelectorExpression</span><span class="params">(String using)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="string">"return Sizzle(\""</span> + using + <span class="string">"\")"</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">injectSizzleIfNeeded</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (!sizzleLoaded())</div><div class="line">            injectSizzle();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> Boolean <span class="title">sizzleLoaded</span><span class="params">()</span> </span>&#123;</div><div class="line">        Boolean loaded;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            loaded = (Boolean) driver.executeScript(<span class="string">"return Sizzle()!=null"</span>);</div><div class="line">        &#125; <span class="keyword">catch</span> (WebDriverException e) &#123;</div><div class="line">            loaded = <span class="keyword">false</span>;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> loaded;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">injectSizzle</span><span class="params">()</span> </span>&#123;</div><div class="line">        driver.executeScript(<span class="string">" var headID = document.getElementsByTagName(\"head\")[0];"</span></div><div class="line">                + <span class="string">"var newScript = document.createElement('script');"</span></div><div class="line">                + <span class="string">"newScript.type = 'text/javascript';"</span></div><div class="line">                + <span class="string">"newScript.src = 'https://raw.github.com/jquery/sizzle/master/sizzle.js';"</span></div><div class="line">                + <span class="string">"headID.appendChild(newScript);"</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在需要使用 SizzleSelector 的时候，使用它。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">package</span> my.webdriver.pageobject;</div><div class="line"></div><div class="line"><span class="keyword">import</span> my.webdriver.helper.SizzleSelector;</div><div class="line"><span class="keyword">import</span> org.openqa.selenium.By;</div><div class="line"><span class="keyword">import</span> org.openqa.selenium.WebDriver;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SearchResultPage</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> WebDriver driver;</div><div class="line">    <span class="keyword">private</span> SizzleSelector sizzler;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SearchResultPage</span><span class="params">(WebDriver driver)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.driver = driver;</div><div class="line">        sizzler = <span class="keyword">new</span> SizzleSelector(driver);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    By resultStats = By.id(<span class="string">"resultStats"</span>);</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getResultStats</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// 下面两个输出的结果应该一样</span></div><div class="line">        System.out.println(sizzler.findElementsBySizzleCss(<span class="string">"a:contains(翻译此页)"</span>).size());</div><div class="line">        System.out.println(driver.findElements(By.xpath(<span class="string">"//a[contains(text(), '翻译此页')]"</span>)).size());</div><div class="line"></div><div class="line">        <span class="keyword">return</span> driver.findElement(resultStats).getText();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="2-扩展-By-和-ByCssSelector-类"><a href="#2-扩展-By-和-ByCssSelector-类" class="headerlink" title="2. 扩展 By 和 ByCssSelector 类"></a>2. 扩展 By 和 ByCssSelector 类</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div><div class="line">171</div><div class="line">172</div><div class="line">173</div><div class="line">174</div><div class="line">175</div><div class="line">176</div><div class="line">177</div><div class="line">178</div><div class="line">179</div><div class="line">180</div><div class="line">181</div><div class="line">182</div><div class="line">183</div><div class="line">184</div><div class="line">185</div><div class="line">186</div><div class="line">187</div><div class="line">188</div><div class="line">189</div><div class="line">190</div><div class="line">191</div><div class="line">192</div><div class="line">193</div><div class="line">194</div><div class="line">195</div><div class="line">196</div><div class="line">197</div><div class="line">198</div><div class="line">199</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">package</span> my.webdriver.helper;</div><div class="line"></div><div class="line"><span class="keyword">import</span> java.lang.reflect.Method;</div><div class="line"><span class="keyword">import</span> java.util.List;</div><div class="line"></div><div class="line"><span class="keyword">import</span> org.openqa.selenium.By;</div><div class="line"><span class="keyword">import</span> org.openqa.selenium.InvalidElementStateException;</div><div class="line"><span class="keyword">import</span> org.openqa.selenium.JavascriptExecutor;</div><div class="line"><span class="keyword">import</span> org.openqa.selenium.SearchContext;</div><div class="line"><span class="keyword">import</span> org.openqa.selenium.WebDriverException;</div><div class="line"><span class="keyword">import</span> org.openqa.selenium.WebElement;</div><div class="line"><span class="keyword">import</span> org.openqa.selenium.internal.FindsByCssSelector;</div><div class="line"><span class="keyword">import</span> org.openqa.selenium.remote.RemoteWebElement;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">ByExtended</span> <span class="keyword">extends</span> <span class="title">By</span> </span>&#123;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> By <span class="title">cssSelector</span><span class="params">(<span class="keyword">final</span> String selector)</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (selector == <span class="keyword">null</span>)</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(</div><div class="line">                    <span class="string">"Cannot find elements when the selector is null"</span>);</div><div class="line"></div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ByCssSelectorExtended(selector);</div><div class="line">    &#125;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">ByCssSelectorExtended</span> <span class="keyword">extends</span> <span class="title">ByCssSelector</span> </span>&#123;</div><div class="line"></div><div class="line">        <span class="keyword">private</span> String ownSelector;</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="title">ByCssSelectorExtended</span><span class="params">(String selector)</span> </span>&#123;</div><div class="line">            <span class="keyword">super</span>(selector);</div><div class="line">            ownSelector = selector;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> WebElement <span class="title">findElement</span><span class="params">(SearchContext context)</span> </span>&#123;</div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                <span class="keyword">if</span> (context <span class="keyword">instanceof</span> FindsByCssSelector) &#123;</div><div class="line">                    <span class="keyword">return</span> ((FindsByCssSelector) context)</div><div class="line">                            .findElementByCssSelector(ownSelector);</div><div class="line">                &#125;</div><div class="line">            &#125; <span class="keyword">catch</span> (InvalidElementStateException e) &#123;</div><div class="line">                <span class="keyword">return</span> findElementBySizzleCss(context, ownSelector);</div><div class="line">            &#125; <span class="keyword">catch</span> (WebDriverException e) &#123;</div><div class="line">                <span class="keyword">if</span> (e.getMessage().startsWith(</div><div class="line">                        <span class="string">"An invalid or illegal string was specified"</span>)) &#123;</div><div class="line">                    <span class="keyword">return</span> findElementBySizzleCss(context, ownSelector);</div><div class="line">                &#125;</div><div class="line">                <span class="keyword">throw</span> e;</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> WebDriverException(<span class="string">"Driver does not support finding an element by selector: "</span> + ownSelector);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> List&lt;WebElement&gt; <span class="title">findElements</span><span class="params">(SearchContext context)</span> </span>&#123;</div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                <span class="keyword">if</span> (context <span class="keyword">instanceof</span> FindsByCssSelector) &#123;</div><div class="line">                    <span class="keyword">return</span> ((FindsByCssSelector) context)</div><div class="line">                            .findElementsByCssSelector(ownSelector);</div><div class="line">                &#125;</div><div class="line">            &#125; <span class="keyword">catch</span> (InvalidElementStateException e) &#123;</div><div class="line">                <span class="keyword">return</span> findElementsBySizzleCss(context, ownSelector);</div><div class="line">            &#125; <span class="keyword">catch</span> (WebDriverException e) &#123;</div><div class="line">                <span class="keyword">if</span> (e.getMessage().startsWith(</div><div class="line">                        <span class="string">"An invalid or illegal string was specified"</span>)) &#123;</div><div class="line">                    <span class="keyword">return</span> findElementsBySizzleCss(context, ownSelector);</div><div class="line">                &#125;</div><div class="line">                <span class="keyword">throw</span> e;</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> WebDriverException(<span class="string">"Driver does not support finding an element by selector: "</span> + ownSelector);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</div><div class="line">            <span class="keyword">return</span> <span class="string">"ByExtended.selector: "</span> + ownSelector;</div><div class="line">        &#125;</div><div class="line"></div><div class="line"></div><div class="line">         <span class="comment">/********************************* SIZZLE SUPPORT CODE**************************************/</span></div><div class="line"></div><div class="line"></div><div class="line">        <span class="comment">/**</span></div><div class="line">         * Find element by sizzle css.</div><div class="line">         * <span class="doctag">@param</span> context</div><div class="line">         *</div><div class="line">         * <span class="doctag">@param</span> cssLocator</div><div class="line">         *            the cssLocator</div><div class="line">         * <span class="doctag">@return</span> the web element</div><div class="line">         */</div><div class="line">        <span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</div><div class="line">        <span class="function"><span class="keyword">public</span> WebElement <span class="title">findElementBySizzleCss</span><span class="params">(SearchContext context, String cssLocator)</span> </span>&#123;</div><div class="line">            List&lt;WebElement&gt; elements = findElementsBySizzleCss(context, cssLocator);</div><div class="line">            <span class="keyword">if</span> (elements != <span class="keyword">null</span> &amp;&amp; elements.size() &gt; <span class="number">0</span> ) &#123;</div><div class="line">                <span class="keyword">return</span> elements.get(<span class="number">0</span>);</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">fixLocator</span><span class="params">(SearchContext context, String cssLocator,</span></span></div><div class="line">                WebElement element) &#123;</div><div class="line"></div><div class="line">            <span class="keyword">if</span> (element <span class="keyword">instanceof</span> RemoteWebElement) &#123;</div><div class="line">                <span class="keyword">try</span> &#123;</div><div class="line">                    Class[] parameterTypes = <span class="keyword">new</span> Class[] &#123; SearchContext.class,</div><div class="line">                            String.class, String.class &#125;;</div><div class="line">                    Method m = element.getClass().getDeclaredMethod(</div><div class="line">                            <span class="string">"setFoundBy"</span>, parameterTypes);</div><div class="line">                    m.setAccessible(<span class="keyword">true</span>);</div><div class="line">                    Object[] parameters = <span class="keyword">new</span> Object[] &#123; context,</div><div class="line">                            <span class="string">"css selector"</span>, cssLocator &#125;;</div><div class="line">                    m.invoke(element, parameters);</div><div class="line">                &#125; <span class="keyword">catch</span> (Exception fail) &#123;</div><div class="line">                    <span class="comment">//NOOP Would like to log here?</span></div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line"></div><div class="line">        <span class="comment">/**</span></div><div class="line">         * Find elements by sizzle css.</div><div class="line">         *</div><div class="line">         * <span class="doctag">@param</span> cssLocator</div><div class="line">         *            the cssLocator</div><div class="line">         * <span class="doctag">@return</span> the list of the web elements that match this locator</div><div class="line">         */</div><div class="line">        <span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</div><div class="line">        <span class="function"><span class="keyword">public</span> List&lt;WebElement&gt; <span class="title">findElementsBySizzleCss</span><span class="params">(SearchContext context, String cssLocator)</span> </span>&#123;</div><div class="line">            injectSizzleIfNeeded();</div><div class="line">            String javascriptExpression = createSizzleSelectorExpression(cssLocator);</div><div class="line">            List&lt;WebElement&gt; elements = (List&lt;WebElement&gt;) ((JavascriptExecutor) getDriver())</div><div class="line">                    .executeScript(javascriptExpression);</div><div class="line">            <span class="keyword">if</span> (elements.size() &gt; <span class="number">0</span>) &#123;</div><div class="line">                <span class="keyword">for</span> (WebElement el : elements) &#123;</div><div class="line">                    fixLocator(context, cssLocator, el);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">return</span> elements;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">private</span> JavascriptExecutor <span class="title">getDriver</span><span class="params">()</span> </span>&#123;</div><div class="line"></div><div class="line">            <span class="comment">// 从上下文中取出当前的 driver</span></div><div class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">/**</span></div><div class="line">         * Creates the sizzle selector expression.</div><div class="line">         *</div><div class="line">         * <span class="doctag">@param</span> cssLocator</div><div class="line">         *            the cssLocator</div><div class="line">         * <span class="doctag">@return</span> string that represents the sizzle selector expression.</div><div class="line">         */</div><div class="line">        <span class="function"><span class="keyword">private</span> String <span class="title">createSizzleSelectorExpression</span><span class="params">(String cssLocator)</span> </span>&#123;</div><div class="line">            <span class="keyword">return</span> <span class="string">"return Sizzle(\""</span> + cssLocator + <span class="string">"\")"</span>;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">/**</span></div><div class="line">         * Inject sizzle if needed.</div><div class="line">         */</div><div class="line">        <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">injectSizzleIfNeeded</span><span class="params">()</span> </span>&#123;</div><div class="line">            <span class="keyword">if</span> (!sizzleLoaded())</div><div class="line">                injectSizzle();</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">/**</span></div><div class="line">         * Check if the Sizzle library is loaded.</div><div class="line">         *</div><div class="line">         * <span class="doctag">@return</span> the true if Sizzle is loaded in the web page</div><div class="line">         */</div><div class="line">        <span class="function"><span class="keyword">public</span> Boolean <span class="title">sizzleLoaded</span><span class="params">()</span> </span>&#123;</div><div class="line">            Boolean loaded;</div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                loaded = (Boolean) ((JavascriptExecutor) getDriver())</div><div class="line">                        .executeScript(<span class="string">"return Sizzle()!=null"</span>);</div><div class="line">            &#125; <span class="keyword">catch</span> (WebDriverException e) &#123;</div><div class="line">                loaded = <span class="keyword">false</span>;</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">return</span> loaded;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">/**</span></div><div class="line">         * Inject sizzle 1.8.2</div><div class="line">         */</div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">injectSizzle</span><span class="params">()</span> </span>&#123;</div><div class="line">            ((JavascriptExecutor) getDriver())</div><div class="line">                    .executeScript(<span class="string">" var headID = document.getElementsByTagName(\"head\")[0];"</span></div><div class="line">                            + <span class="string">"var newScript = document.createElement('script');"</span></div><div class="line">                            + <span class="string">"newScript.type = 'text/javascript';"</span></div><div class="line">                            + <span class="string">"newScript.src = 'https://raw.github.com/jquery/sizzle/1.8.2/sizzle.js';"</span></div><div class="line">                            + <span class="string">"headID.appendChild(newScript);"</span>);</div><div class="line">        &#125;</div><div class="line">        <span class="comment">/**</span></div><div class="line">         * ******************** SIZZLE SUPPORT CODE</div><div class="line">         */</div><div class="line"></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>其实两种方案原理是一样的，前者简单，后者优雅，老样子，什么方便用什么。</p>
+<p>P.S 推荐使用 Gradle 来构建项目，比起 Maven 一大堆 XML 清爽了不少。虽然我自己胡子一把，看上去重口味，但是对于代码还是喜欢小清新。<br>看下 <code>build.gradle</code> 脚本</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">apply plugin: <span class="string">'java'</span></div><div class="line">apply plugin: <span class="string">'eclipse'</span></div><div class="line">group = <span class="string">'my.webdriver'</span></div><div class="line"></div><div class="line">ext &#123;</div><div class="line">    projTitle = <span class="string">'WebDriver on Google'</span></div><div class="line">    projVersion = <span class="string">'1.0'</span></div><div class="line">&#125;</div><div class="line"></div><div class="line">repositories &#123;</div><div class="line">    mavenCentral()</div><div class="line">&#125;</div><div class="line"></div><div class="line">dependencies &#123;</div><div class="line">    compile group: <span class="string">'org.seleniumhq.selenium'</span>, name: <span class="string">'selenium-java'</span>, version: <span class="string">'2.+'</span></div><div class="line">    compile group: <span class="string">'junit'</span>, name: <span class="string">'junit'</span>, version: <span class="string">'4.+'</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>想下 pom.xml</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">project</span>&gt;</span></div><div class="line">...</div><div class="line">    <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.10<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.seleniumhq.selenium<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>selenium-java<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.20.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line">            <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line">            <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span><span class="tag">&lt;/<span class="name">scope</span>&gt;</span><span class="tag">&lt;/<span class="name">version</span>&gt;</span><span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span><span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></div><div class="line">...</div><div class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>怎样，心动了吧！</p>
+<h1 id="Refer"><a href="#Refer" class="headerlink" title="###Refer"></a>###Refer</h1><p>天下文章一大抄^^</p>
+<ol>
+<li><a href="http://seleniumtestingworld.blogspot.com/2013/01/adding-sizzle-css-selector-library-and.html" target="_blank" rel="external">ADDING THE SIZZLE CSS SELECTOR LIBRARY IN WEBDRIVER</a></li>
+<li><a href="http://selenium.polteq.com/en/injecting-the-sizzle-css-selector-library/" target="_blank" rel="external">Injecting the Sizzle CSS selector library</a></li>
+</ol>
+
+      
+    </div>
+    
+  </div>
+  
+    
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2013/06/26/2013-06-26-shell-script-to-control-tomcat/">
+                    能马上用起来的控制 tomcat 的脚本
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2013/05/12/2013-05-12-wo-de-mu-qin/">
+                    我的母亲
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-自定义一个-Selector-类，封装-Sizzle-js-脚本。"><span class="toc-number">1.</span> <span class="toc-text">1. 自定义一个 Selector 类，封装 Sizzle.js 脚本。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-扩展-By-和-ByCssSelector-类"><span class="toc-number">2.</span> <span class="toc-text">2. 扩展 By 和 ByCssSelector 类</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Refer"><span class="toc-number"></span> <span class="toc-text">###Refer</span></a>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+
+
+    
+        <section id="comments">
+    <style> aside.comment-bar { margin: auto 30px; }</style>
+    <div id="disqus_thread"></div>
+    <script>
+        var disqus_config = function(){
+            this.page.url = 'http://lihuazhang.github.io/2013/05/26/2013-05-26-zai-webdriverli-shi-yong-sizzle-dot-js/';
+            this.page.identifier = '2013/05/26/2013-05-26-zai-webdriverli-shi-yong-sizzle-dot-js/';
+        };
+        var loadComment = function(){
+            var d = document, s = d.createElement('script');
+            s.src = '//8atmyhouse.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        }
+    </script>
+    
+    <script> loadComment(); </script>
+
+</section>
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2013/06/26/2013-06-26-shell-script-to-control-tomcat/" title="上一篇: 能马上用起来的控制 tomcat 的脚本">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2013/05/12/2013-05-12-wo-de-mu-qin/" title="下一篇: 我的母亲">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/06/25/随便写写/">随便写写</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/29/烟/">烟</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/06/25/踩不到点的小男孩/">踩不到点的小男孩</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/05/14/webdriveragent-简介/">WebDriverAgent 简介</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/29/南京之行/">南京之行</a></li><li class="post-list-item"><a class="post-list-link" href="/2015/12/17/2013-03-15-8atmyhouse/">8atmyHouse</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/12/26/2013-12-26-fan-yi-android-and-ios-support/">[翻译]Android and iOS Support</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/10/15/2013-10-15-you-xi-kai-fa-chang-yong-gai-nian/">游戏开发常用概念</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/10/09/2013-10-09-cron-jobs-and-random-times-within-giving-hours/">Cron jobs and random times, within giving hours</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/09/24/2013-09-24-fluentwait-with-webelement/">FluentWait with WebElement</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/09/14/2013-09-14-gatling-shi-yong/">Gatling 试用 1</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/08/29/2013-08-29-add-hover-event-to-capybara/">add hover event to capybara</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/08/25/2013-08-25-du-lu-fan-yan-shi/">读陆犯焉识</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/08/21/2013-08-21-wo-de-nexus-7-ruan-jian-lie-biao/">我的 nexus 7 2013 软件列表</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/08/16/2013-08-16-vim-cha-jian-tui-jian/">vim 插件推荐</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/08/12/2013-08-12-install-vim74-from-source/">Install vim74 from source</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/08/08/2013-08-08-cucumberhe-capybaraxia-de-pageobject/">Cucumber 和 Capybara 下的 PageObject</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/08/07/2013-08-07-step-defintionshi-kong/">由 step definition 失控引发的讨论和思考</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/08/06/2013-08-06-git-revert/">git revert</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/08/02/2013-08-02-ba-yue-er-ri-gong-zuo-suo-shi/">8-02-工作琐事</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/07/30/2013-07-30-gong-zuo-ri-ji-7-31/">7-31-工作琐事</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/07/11/2013-07-11-wo-de-vimrc/">我的 vimrc</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/06/27/2013-06-27-ruby-here-doc/">ruby 的 Heredocs</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/06/26/2013-06-26-shell-script-to-control-tomcat/">能马上用起来的控制 tomcat 的脚本</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/05/26/2013-05-26-zai-webdriverli-shi-yong-sizzle-dot-js/">在WebDriver里使用Sizzle.js</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/05/12/2013-05-12-wo-de-mu-qin/">我的母亲</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/04/30/2013-04-30-webdriver-zhi-ce-shi-shi-bai-zi-dong-jie-tu/">WebDriver 之测试失败自动截图</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/04/29/2013-04-29-jmeter-bing-qi-pu-zhi-xpath-extractor/">Jmeter 兵器谱之 Xpath Extractor</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/04/28/2013-04-28-jmeter-bing-qi-pu-zhi-foreach-controller/">JMeter 兵器谱之 ForEach Controller</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/04/27/2013-04-27-jmeter-bing-qi-pu-zhi-regular-expression-extractor/">Jmeter 兵器谱之 Regular Expression Extractor</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/04/26/2013-04-26-htmlunit-jie-shao/">HtmlUnit 介绍</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/03/21/2013-03-21-windowsxia-cha-zhao-zhan-yong-duan-kou-de-jin-cheng/">windows 下查找占用端口的进程</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/02/12/2013-02-12-shi-yong-capybara-deng-lu-bai-du/">使用 capybara 登陆百度</a></li><li class="post-list-item"><a class="post-list-link" href="/2013/02/12/2013-02-12-gao-bie-2012/">告别2012</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/08/06/2012-08-06-ying-she-windows-cmdke-yi-du-qu-de-ci-pan-qu-dong/">映射 Windows cmd 可以读取的磁盘驱动</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/08/05/2012-08-05-surround-dot-vim/">surround.vim</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/08/01/2012-08-01-xiao-qing-xin-outlookshi-yong-ji/">小清新 Outlook 试用记</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/04/25/2012-04-25-webdriver-4-jia-shang-xie-zi/">WebDriver 4: 加上叶子</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/04/24/2012-04-24-sauce-ondemandshi-yong/">Sauce OnDemand试用</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/04/23/2012-04-23-mysql5-qing-kong-rootmi-ma/">mysql5 清空root密码</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/04/21/2012-04-21-webdriver-3-more-pageobjects/">WebDriver 3: more PageObjects - PageFactory</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/04/20/2012-04-20-webdriver2/">WebDriver 2: PageObject</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/04/19/2012-04-19-capybara-plus-cucumber-plus-webdriverzi-dong-hua-ce-shi-kuang-jia/">使用 Capybara， Cucumber 和 WebDriver 实现自动化测试</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/04/06/2012-04-06-webdriver-1-post/">WebDriver 1: Set up WebDriver using Maven3</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/03/08/2012-03-08-learn-vim-3-post/">vim学习 jsctags</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/03/07/2012-03-07-learn-vim-2-post/">vim学习 shiftwidth, tabstop, softtabstop和expandtab</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/03/07/2012-03-07-learn-vim-1-post/">vim学习 listchars</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/03/04/2012-03-04-zsh-config-post/">oh my zsh</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/02/23/2012-02-23-use-spf13-vim-config-post/">vim配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2012/02/19/2012-02-19-add-google-pretty-code-post/">Add google pretty code support</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2012-2017 恒温
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 5;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
